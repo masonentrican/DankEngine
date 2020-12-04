@@ -1,0 +1,3 @@
+[submodule "DankEngine/vendor/spdlog"]
+	path = DankEngine/vendor/spdlog
+	url = https://github.com/gabime/spdlog

@@ -4,6 +4,9 @@
     <Filter Include="DankEngine">
       <UniqueIdentifier>{D9DD78C5-C595-BA12-2E9D-936E1A745503}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DankEngine\Events">
+      <UniqueIdentifier>{9D5B81D2-0972-7F68-52E9-0A8ABE3E50F0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Dank.h" />
@@ -16,9 +19,15 @@
     <ClInclude Include="src\DankEngine\EntryPoint.h">
       <Filter>DankEngine</Filter>
     </ClInclude>
+    <ClInclude Include="src\DankEngine\Events\Event.h">
+      <Filter>DankEngine\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\DankEngine\Log.h">
       <Filter>DankEngine</Filter>
     </ClInclude>
+    <ClInclude Include="src\DankEngine\Events\KeyEvent.h" />
+    <ClInclude Include="src\DankEngine\Events\MouseEvent.h" />
+    <ClInclude Include="src\DankEngine\Events\ApplicationEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DankEngine\Application.cpp">

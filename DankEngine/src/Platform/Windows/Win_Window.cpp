@@ -1,6 +1,10 @@
 #include "dankpch.h"
 #include "Win_Window.h"
 
+// Windows specific implementation of the Windows object. Defines
+// the various attributes and interface functionality of a window on
+// windows operating systems. Currently hard coded for GLFW
+
 namespace Dank {
 
 	static bool s_GLFWInitialized = false;

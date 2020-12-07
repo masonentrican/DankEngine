@@ -5,6 +5,10 @@
 
 #include "GLFW/glfw3.h"
 
+// Windows specific declarations of the Windows object. Declares
+// the various interface functionality of a window on
+// windows operating systems. Currently hard coded for GLFW
+
 namespace Dank {
 
 	class Win_Window : public Window

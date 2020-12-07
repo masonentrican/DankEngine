@@ -5,6 +5,10 @@
 #include "spdlog/fmt/ostr.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
+// Declares the Dank Engine logging capabilities. Defines macros
+// to easily use various levels logging through both the engine API
+// and client project.
+
 namespace Dank {
 
 	class DANK_API Log

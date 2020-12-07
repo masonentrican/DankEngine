@@ -4,6 +4,7 @@
 #include "Events/Event.h"
 #include "Window.h"
 
+// The base dank engine application.
 namespace Dank {
 	class DANK_API Application
 	{

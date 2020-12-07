@@ -1,6 +1,8 @@
 #include "dankpch.h"
 #include "Log.h"
 
+// Defines initialization of our loggers, setting their general patterns and colors.
+
 namespace Dank {
 
 	std::shared_ptr<spdlog::logger> Log::s_CoreLogger;

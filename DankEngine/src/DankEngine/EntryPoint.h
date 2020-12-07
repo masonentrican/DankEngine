@@ -2,6 +2,9 @@
 
 #ifdef DANK_PLATFORM_WINDOWS
 
+// This is invoked by the sandbox exe to start the engine application. The instance
+// of the Dank Engine application obj is created here.
+
 extern Dank::Application* Dank::CreateApplication();
 
 int main(int argc, char** argv)

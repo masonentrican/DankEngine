@@ -2,7 +2,6 @@
 
 #include "dankpch.h"
 #include "DankEngine/Core.h"
-#include "DankEngine/Log.h"
 
 
 // ------------------------------------------------------------------------------------

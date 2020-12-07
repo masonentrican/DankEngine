@@ -19,15 +19,22 @@
     <ClInclude Include="src\DankEngine\EntryPoint.h">
       <Filter>DankEngine</Filter>
     </ClInclude>
+    <ClInclude Include="src\DankEngine\Events\ApplicationEvent.h">
+      <Filter>DankEngine\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\DankEngine\Events\Event.h">
+      <Filter>DankEngine\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DankEngine\Events\KeyEvent.h">
+      <Filter>DankEngine\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DankEngine\Events\MouseEvent.h">
       <Filter>DankEngine\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\DankEngine\Log.h">
       <Filter>DankEngine</Filter>
     </ClInclude>
-    <ClInclude Include="src\DankEngine\Events\KeyEvent.h" />
-    <ClInclude Include="src\DankEngine\Events\MouseEvent.h" />
-    <ClInclude Include="src\DankEngine\Events\ApplicationEvent.h" />
+    <ClInclude Include="src\dankpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DankEngine\Application.cpp">
@@ -36,5 +43,6 @@
     <ClCompile Include="src\DankEngine\Log.cpp">
       <Filter>DankEngine</Filter>
     </ClCompile>
+    <ClCompile Include="src\dankpch.cpp" />
   </ItemGroup>
 </Project>

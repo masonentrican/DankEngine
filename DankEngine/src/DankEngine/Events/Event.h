@@ -1,9 +1,7 @@
 #pragma once
 
+#include "dankpch.h"
 #include "DankEngine/Core.h"
-#include <iostream>
-#include <string>
-#include <functional>
 
 
 // ------------------------------------------------------------------------------------

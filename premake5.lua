@@ -18,6 +18,9 @@ project "DankEngine"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+	pchheader "dankpch.h"
+	pchsource "DankEngine/src/dankpch.cpp"
+
 	files
 	{
 		"%{prj.name}/src/**.h",

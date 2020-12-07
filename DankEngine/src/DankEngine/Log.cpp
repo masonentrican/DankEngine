@@ -1,3 +1,4 @@
+#include "dankpch.h"
 #include "Log.h"
 
 namespace Dank {

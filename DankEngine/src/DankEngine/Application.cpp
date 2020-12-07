@@ -1,3 +1,4 @@
+#include "dankpch.h"
 #include "Application.h"
 #include "DankEngine/Log.h"
 

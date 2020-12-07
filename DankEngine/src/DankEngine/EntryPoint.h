@@ -8,7 +8,7 @@ int main(int argc, char** argv)
 {
 	Dank::Log::Init();
 	DANK_CORE_WARN("Initialized Log");
-	DANK_INFO("App has started");
+	DANK_INFO("Sandbox has started");
 
 	auto app = Dank::CreateApplication();
 	app->Run();

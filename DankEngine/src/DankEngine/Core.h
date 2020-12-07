@@ -11,6 +11,24 @@
 #endif
 
 
+// Attempts to assert a given argument. If this fails, it is logged and a WINDOWS SPECIFIC
+// debug break is called. Crucial function calls can be wrapped in an assert to add debug
+// logs to our custom logger upon failure
+//
+// Example usage: 
+// int x = glfwInit(); 
+// DANK_CORE_ASSERT(x, "GLFW failed to init")
+//
+// Returns an engine log that glfw has failed to initialize
+#ifdef DANK_ENABLE_ASSERTS
+	#define DANK_ASSERT(x, ...) { if(!(x)) { DANK_ERROR("Assertion Failed: {0}", __VA_ARGS___); __debugbreak(); } }
+	#define DANK_CORE_ASSERT(x, ...) { if(!(x)) { DANK_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS___); __debugbreak(); } }
+#else
+	#define DANK_ASSERT(x, ...)
+	#define DANK_CORE_ASSERT(x, ...)
+#endif
+
+
 // General bitshift definition to give us a bit field.
 //
 // Example usage: Multiple categories can be applied to an event. By bitshifting multiple

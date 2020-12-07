@@ -35,6 +35,8 @@
       <Filter>DankEngine</Filter>
     </ClInclude>
     <ClInclude Include="src\dankpch.h" />
+    <ClInclude Include="src\DankEngine\Window.h" />
+    <ClInclude Include="src\Platform\windows\Win_Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DankEngine\Application.cpp">
@@ -44,5 +46,6 @@
       <Filter>DankEngine</Filter>
     </ClCompile>
     <ClCompile Include="src\dankpch.cpp" />
+    <ClCompile Include="src\Platform\Windows\Win_Window.cpp" />
   </ItemGroup>
 </Project>

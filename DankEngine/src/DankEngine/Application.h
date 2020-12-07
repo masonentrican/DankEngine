@@ -2,6 +2,7 @@
 
 #include "Core.h"
 #include "Events/Event.h"
+#include "Window.h"
 
 namespace Dank {
 	class DANK_API Application
@@ -11,6 +12,10 @@ namespace Dank {
 		virtual~Application();
 
 		void Run();
+
+	private:
+		std::unique_ptr<Window> _window;
+		bool _running = true;
 	};
 
 	// Defined in the client

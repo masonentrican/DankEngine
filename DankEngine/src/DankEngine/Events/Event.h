@@ -55,6 +55,7 @@ namespace Dank {
 	// Class members are virtual so they MUST be defined by the implementation.
 	class DANK_API Event
 	{
+		friend class EventDispatcher;
 	public:
 		virtual EventType GetEventType()    const = 0;
 		virtual const char* GetName()       const = 0;
@@ -70,7 +71,13 @@ namespace Dank {
 		bool _handled = false;
 	};
 
-	// Dispatches events based on their type by using an Alias Template
+	// Dispatches events based on their type by using an Alias Template. Dispatch can be called to check
+	// if the given event is of a given type. If so, it executes the function binded.
+	//
+	// Example Usage in Application Cpp
+	// EventDispatcher dispatcher(e);
+	// 
+	// dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
 	class EventDispatcher
 	{
 		// Template to pass in multiple data types where T is used - see Alias Template

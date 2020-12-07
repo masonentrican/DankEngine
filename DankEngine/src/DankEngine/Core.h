@@ -11,6 +11,10 @@
 #endif
 
 
+// Used to bind event callbacks easily. See Application cpp constructor for example
+#define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
+
+
 // Attempts to assert a given argument. If this fails, it is logged and a WINDOWS SPECIFIC
 // debug break is called. Crucial function calls can be wrapped in an assert to add debug
 // logs to our custom logger upon failure

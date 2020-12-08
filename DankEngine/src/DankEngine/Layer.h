@@ -3,8 +3,9 @@
 #include "DankEngine/Core.h"
 #include "DankEngine/Events/Event.h"
 
-
-
+// Layers are used to self contain certain functionality. We can have a gui layer,
+// a debug layer, a post process layer, etc. Layers are inhertited by new classes
+// to be defined by the client in their sandbox app.
 
 namespace Dank {
 

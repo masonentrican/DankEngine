@@ -8,12 +8,18 @@ workspace "DankEngine"
 		"Dist"
 	}
 
+	
+	startproject "Sandbox"
+
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "DankEngine/vendor/GLFW/include"
+IncludeDir["Glad"] = "DankEngine/vendor/Glad/include"
 
 include "DankEngine/vendor/GLFW"
+include "DankEngine/vendor/Glad"
+
 
 project "DankEngine"
 	location "DankEngine"
@@ -36,12 +42,14 @@ project "DankEngine"
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}"
 	}
 
 	links
 	{
 		"GLFW",
+		"Glad",
 		"opengl32.lib"
 	}
 
@@ -53,7 +61,8 @@ project "DankEngine"
 		defines
 		{
 			"DANK_PLATFORM_WINDOWS",
-			"DANK_BUILD_DLL"
+			"DANK_BUILD_DLL",
+			"GLFW_INCLUDE_NONE"
 		}
 
 		postbuildcommands 

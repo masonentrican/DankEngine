@@ -5,6 +5,8 @@
 #include "DankEngine/Events/MouseEvent.h"
 #include "DankEngine/Events/KeyEvent.h"
 
+#include <glad/glad.h>
+
 
 
 // Windows specific implementation of the Windows object. Defines
@@ -54,9 +56,15 @@ namespace Dank {
 			s_GLFWInitialized = true;
 		}
 
-		// GLFW Init requirements
+		// GLFW Init
 		_window = glfwCreateWindow((int)windowProperties.Width, (int)windowProperties.Height, windowProperties.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(_window);
+
+		// Glad Init
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		DANK_CORE_ASSERT(status, "Failed to initialize Glad");
+
+		// Set a pointer to the window and enable vsync for now
 		glfwSetWindowUserPointer(_window, &_windowAttributes);
 		SetVSync(true);
 

@@ -1,8 +1,7 @@
 #include "dankpch.h"
 #include "Application.h"
 
-// Temp include glfw here to test window and color
-#include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 namespace Dank {
 

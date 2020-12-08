@@ -84,6 +84,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/MDd %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -106,6 +107,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -128,6 +130,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -149,18 +152,22 @@
     <ClInclude Include="src\DankEngine\Events\Event.h" />
     <ClInclude Include="src\DankEngine\Events\KeyEvent.h" />
     <ClInclude Include="src\DankEngine\Events\MouseEvent.h" />
+    <ClInclude Include="src\DankEngine\Layer.h" />
+    <ClInclude Include="src\DankEngine\LayerStack.h" />
     <ClInclude Include="src\DankEngine\Log.h" />
     <ClInclude Include="src\DankEngine\Window.h" />
+    <ClInclude Include="src\Platform\Windows\Win_Window.h" />
     <ClInclude Include="src\dankpch.h" />
-    <ClInclude Include="src\Platform\windows\Win_Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DankEngine\Application.cpp" />
+    <ClCompile Include="src\DankEngine\Layer.cpp" />
+    <ClCompile Include="src\DankEngine\LayerStack.cpp" />
     <ClCompile Include="src\DankEngine\Log.cpp" />
+    <ClCompile Include="src\Platform\Windows\Win_Window.cpp" />
     <ClCompile Include="src\dankpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Platform\Windows\Win_Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">

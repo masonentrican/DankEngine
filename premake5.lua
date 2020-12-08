@@ -63,14 +63,17 @@ project "DankEngine"
 
 	filter "configurations:Debug"
 		defines "DANK_DEBUG"
+		buildoptions "/MDd"
 		symbols "On"		
 
 	filter "configurations:Release"
 		defines "DANK_RELEASE"
+		buildoptions "/MD"
 		symbols "On"		
 
 	filter "configurations:Dist"
 		defines "DANK_DIST"
+		buildoptions "/MD"
 		symbols "On"		
 
 project "Sandbox"
@@ -110,12 +113,15 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines "DANK_DEBUG"
+		buildoptions "/MDd"
 		symbols "On"		
 
 	filter "configurations:Release"
 		defines "DANK_RELEASE"
+		buildoptions "/MD"
 		symbols "On"		
 
 	filter "configurations:Dist"
 		defines "DANK_DIST"
+		buildoptions "/MD"
 		symbols "On"

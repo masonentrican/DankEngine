@@ -1,10 +1,12 @@
 #pragma once
 
 #include "Core.h"
+
+#include "Window.h"
+#include "LayerStack.h"
 #include "Events/Event.h"
 #include "DankEngine/Events/ApplicationEvent.h"
 
-#include "Window.h"
 
 
 // The base dank engine application.
@@ -19,12 +21,16 @@ namespace Dank {
 
 		void OnEvent(Event& e);
 
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* overlay);
 
 	private:
 		std::unique_ptr<Window> _window;
 		bool _running = true;
 
 		bool OnWindowClose(WindowCloseEvent& e);
+
+		LayerStack _layerStack;
 	};
 
 	// Defined in the client

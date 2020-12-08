@@ -1,19 +1,40 @@
 #include <Dank.h>
 
 /*----------------------------------------------------------------------------------
-
-The client side code. This is all thats requried to create a new game instance
-using Dank Engine.
-
+The client side code. This is how you build a client executable using the Dank Engine
 -------------------------------------------------------------------------------------*/
 
+
+// Create a new layer
+class TestLayer : public Dank::Layer
+{
+public:
+	TestLayer() : Layer("Test") {}
+	
+	void OnUpdate() override
+	{
+		DANK_INFO("TestLayer::Update");
+	}
+
+	void OnEvent(Dank::Event& event) override
+	{
+		DANK_TRACE("{0}", event);
+	}
+};
+
+// Declare the Sandbox Class
 class Sandbox : public Dank::Application
 {
 public:
-	Sandbox() {}
+	Sandbox()
+	{
+		PushLayer(new TestLayer());
+	}
+
 	~Sandbox() {}
 };
 
+// Declare and instantiate a Sandbox app from Dank Engine
 Dank::Application* Dank::CreateApplication()
 {
 	return new Sandbox();

@@ -55,7 +55,6 @@ namespace Dank {
 	// Class members are virtual so they MUST be defined by the implementation.
 	class DANK_API Event
 	{
-		friend class EventDispatcher;
 	public:
 		virtual EventType GetEventType()    const = 0;
 		virtual const char* GetName()       const = 0;
@@ -67,8 +66,8 @@ namespace Dank {
 			return GetCategoryFlags() & category;
 		}
 
-	protected:
-		bool _handled = false;
+		bool Handled = false;
+		
 	};
 
 	// Dispatches events based on their type by using an Alias Template. Dispatch can be called to check
@@ -94,7 +93,7 @@ namespace Dank {
 		{
 			if (_event.GetEventType() == T::GetStaticType())
 			{				
-				_event._handled = func(*(T*)&_event);
+				_event.Handled = func(*(T*)&_event);
 				return true;
 			}
 			return false;

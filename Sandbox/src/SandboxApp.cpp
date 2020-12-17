@@ -29,6 +29,7 @@ public:
 	Sandbox()
 	{
 		PushLayer(new TestLayer());
+		PushOverlay(new Dank::ImGuiLayer());
 	}
 
 	~Sandbox() {}

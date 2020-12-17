@@ -21,3 +21,8 @@
 #ifdef DANK_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif
+
+// ImGuiRenderer
+#if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
+#define _CRT_SECURE_NO_WARNINGS
+#endif

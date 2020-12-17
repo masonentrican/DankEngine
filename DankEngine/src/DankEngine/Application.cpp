@@ -5,8 +5,13 @@
 
 namespace Dank {
 
+	Application* Application::s_Instance = nullptr;
+
 	Application::Application()
 	{
+		DANK_CORE_ASSERT(!s_Instance, "Application already exists.");
+		s_Instance = this;
+
 		_window = std::unique_ptr<Window>(Window::Create());
 		_window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 	}
@@ -16,11 +21,13 @@ namespace Dank {
 	void Application::PushLayer(Layer* layer)
 	{
 		_layerStack.PushLayer(layer);
+		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* overlay)
 	{
 		_layerStack.PushOverlay(overlay);
+		overlay->OnAttach();
 	}
 
 	void Application::OnEvent(Event& e)

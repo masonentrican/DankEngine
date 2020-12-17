@@ -24,6 +24,9 @@ namespace Dank {
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
 
+		inline static Application& Get() { return *s_Instance; }
+		inline Window& GetWindow() { return *_window; }
+
 	private:
 		std::unique_ptr<Window> _window;
 		bool _running = true;
@@ -31,6 +34,8 @@ namespace Dank {
 		bool OnWindowClose(WindowCloseEvent& e);
 
 		LayerStack _layerStack;
+	private:
+		static Application* s_Instance;
 	};
 
 	// Defined in the client

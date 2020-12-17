@@ -5,6 +5,7 @@
 #include "DankEngine/Application.h"
 #include "DankEngine/Layer.h"
 #include "DankEngine/Log.h"
+#include "DankEngine/ImGui/ImGuiLayer.h"
 
 /*------------------*/
 /*    ENTRY POINT   */

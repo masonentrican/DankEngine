@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>dankpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>DANK_PLATFORM_WINDOWS;DANK_BUILD_DLL;GLFW_INCLUDE_NONE;DANK_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -103,7 +103,7 @@
       <PrecompiledHeaderFile>dankpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>DANK_PLATFORM_WINDOWS;DANK_BUILD_DLL;GLFW_INCLUDE_NONE;DANK_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -126,7 +126,7 @@
       <PrecompiledHeaderFile>dankpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>DANK_PLATFORM_WINDOWS;DANK_BUILD_DLL;GLFW_INCLUDE_NONE;DANK_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -152,18 +152,22 @@
     <ClInclude Include="src\DankEngine\Events\Event.h" />
     <ClInclude Include="src\DankEngine\Events\KeyEvent.h" />
     <ClInclude Include="src\DankEngine\Events\MouseEvent.h" />
+    <ClInclude Include="src\DankEngine\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\DankEngine\Layer.h" />
     <ClInclude Include="src\DankEngine\LayerStack.h" />
     <ClInclude Include="src\DankEngine\Log.h" />
     <ClInclude Include="src\DankEngine\Window.h" />
+    <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
     <ClInclude Include="src\Platform\Windows\Win_Window.h" />
     <ClInclude Include="src\dankpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DankEngine\Application.cpp" />
+    <ClCompile Include="src\DankEngine\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\DankEngine\Layer.cpp" />
     <ClCompile Include="src\DankEngine\LayerStack.cpp" />
     <ClCompile Include="src\DankEngine\Log.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
     <ClCompile Include="src\Platform\Windows\Win_Window.cpp" />
     <ClCompile Include="src\dankpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -176,8 +180,11 @@
     <ProjectReference Include="vendor\Glad\Glad.vcxproj">
       <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
     </ProjectReference>
+    <ProjectReference Include="vendor\ImGui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-</Project>
+</Project> 

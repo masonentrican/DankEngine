@@ -13,7 +13,7 @@ namespace Dank {
 		s_Instance = this;
 
 		_window = std::unique_ptr<Window>(Window::Create());
-		_window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
+		_window->SetEventCallback(DANK_BIND_EVENT(Application::OnEvent));
 	}
 
 	Application::~Application() {}
@@ -34,7 +34,7 @@ namespace Dank {
 	{
 		// Handle window close event through dispatch
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowCloseEvent>(DANK_BIND_EVENT(Application::OnWindowClose));
 
 		// Iterate backwards through the layerStack to handle events that are at the end in overlays
 		// before we handle events in the layers underneath it.

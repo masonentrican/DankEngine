@@ -13,7 +13,7 @@ public:
 	
 	void OnUpdate() override
 	{
-		DANK_INFO("TestLayer::Update");
+
 	}
 
 	void OnEvent(Dank::Event& event) override

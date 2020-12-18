@@ -46,6 +46,9 @@
     <ClInclude Include="src\DankEngine\ImGui\ImGuiLayer.h">
       <Filter>DankEngine\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\DankEngine\Input.h">
+      <Filter>DankEngine</Filter>
+    </ClInclude>
     <ClInclude Include="src\DankEngine\Layer.h">
       <Filter>DankEngine</Filter>
     </ClInclude>
@@ -60,6 +63,9 @@
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h">
       <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\Win_Input.h">
+      <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\Win_Window.h">
       <Filter>Platform\Windows</Filter>
@@ -84,6 +90,9 @@
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp">
       <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\Win_Input.cpp">
+      <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\Win_Window.cpp">
       <Filter>Platform\Windows</Filter>

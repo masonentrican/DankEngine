@@ -17,7 +17,8 @@ namespace Dank {
 
 	static bool s_GLFWInitialized = false;
 
-	static void GLFWErrorCallback(int error, const char* description) {
+	static void GLFWErrorCallback(int error, const char* description)
+	{
 		DANK_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
 	}
 
@@ -112,6 +113,14 @@ namespace Dank {
 					break;
 				}
 			}
+		});
+
+		glfwSetCharCallback(_window, [](GLFWwindow* window, unsigned int keycode)
+		{
+				WindowAttributes& attributes = *(WindowAttributes*)glfwGetWindowUserPointer(window);
+
+				KeyTypedEvent event(keycode);
+				attributes.EventCallback(event);
 		});
 
 		glfwSetMouseButtonCallback(_window, [](GLFWwindow* window, int button, int action, int mods)

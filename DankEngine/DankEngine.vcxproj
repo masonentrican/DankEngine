@@ -153,11 +153,13 @@
     <ClInclude Include="src\DankEngine\Events\KeyEvent.h" />
     <ClInclude Include="src\DankEngine\Events\MouseEvent.h" />
     <ClInclude Include="src\DankEngine\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\DankEngine\Input.h" />
     <ClInclude Include="src\DankEngine\Layer.h" />
     <ClInclude Include="src\DankEngine\LayerStack.h" />
     <ClInclude Include="src\DankEngine\Log.h" />
     <ClInclude Include="src\DankEngine\Window.h" />
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
+    <ClInclude Include="src\Platform\Windows\Win_Input.h" />
     <ClInclude Include="src\Platform\Windows\Win_Window.h" />
     <ClInclude Include="src\dankpch.h" />
   </ItemGroup>
@@ -168,6 +170,7 @@
     <ClCompile Include="src\DankEngine\LayerStack.cpp" />
     <ClCompile Include="src\DankEngine\Log.cpp" />
     <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
+    <ClCompile Include="src\Platform\Windows\Win_Input.cpp" />
     <ClCompile Include="src\Platform\Windows\Win_Window.cpp" />
     <ClCompile Include="src\dankpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

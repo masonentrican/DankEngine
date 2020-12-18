@@ -1,10 +1,6 @@
 #pragma once
 
 #include "DankEngine/Window.h"
-#include "DankEngine/Events/Event.h"
-#include "DankEngine/Events/ApplicationEvent.h"
-#include "DankEngine/Events/KeyEvent.h"
-#include "DankEngine/Events/MouseEvent.h"
 
 #include "GLFW/glfw3.h"
 
@@ -29,6 +25,7 @@ namespace Dank {
 			_windowAttributes.EventCallback = callback;
 		};
 
+		inline virtual void* GetNativeWindow() const { return _window; }
 
 		void SetVSync(bool enabled) override;
 		bool IsVSync() const override;

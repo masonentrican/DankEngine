@@ -12,7 +12,7 @@
 
 
 // Used to bind event callbacks easily. See Application cpp constructor for example
-#define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
+#define DANK_BIND_EVENT(x) std::bind(&x, this, std::placeholders::_1)
 
 
 // Attempts to assert a given argument. If this fails, it is logged and a WINDOWS SPECIFIC

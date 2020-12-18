@@ -15,6 +15,9 @@ namespace Dank {
 
 		_window = std::unique_ptr<Window>(Window::Create());
 		_window->SetEventCallback(DANK_BIND_EVENT(Application::OnEvent));
+
+		_imGuiLayer = new ImGuiLayer();
+		PushOverlay(_imGuiLayer);
 	}
 
 	Application::~Application() {}
@@ -62,6 +65,12 @@ namespace Dank {
 			// Run the OnUpdate for every layer in the stack
 			for (Layer* layer : _layerStack)
 				layer->OnUpdate();
+
+			// ImGui layer rendering
+			_imGuiLayer->Begin();
+			for (Layer* layer : _layerStack)
+				layer->OnImGuiRender();
+			_imGuiLayer->End();
 
 			// Update the window
 			_window->OnUpdate();

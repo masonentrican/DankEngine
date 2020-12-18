@@ -5,7 +5,6 @@ namespace Dank {
 
 	LayerStack::LayerStack()
 	{
-		_layerInsertIndex = _layers.begin();
 	}
 
 	LayerStack::~LayerStack()
@@ -18,7 +17,8 @@ namespace Dank {
 
 	void LayerStack::PushLayer(Layer* layer)
 	{
-		_layers.emplace(_layerInsertIndex, layer);
+		_layers.emplace(_layers.begin() + _layerInsertIndex, layer);
+		_layerInsertIndex++;
 	}
 	
 	void LayerStack::PopLayer(Layer* layer)

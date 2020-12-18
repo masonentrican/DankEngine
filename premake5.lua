@@ -26,7 +26,7 @@ include "DankEngine/vendor/ImGui"
 
 project "DankEngine"
 	location "DankEngine"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -111,6 +111,7 @@ project "Sandbox"
 	{
 		"DankEngine/vendor/spdlog/include",
 		"DankEngine/src",
+		"DankEngine/vendor",
 		"%{IncludeDir.glm}"
 	}
 

@@ -7,6 +7,8 @@
 #include "Events/Event.h"
 #include "DankEngine/Events/ApplicationEvent.h"
 
+#include "DankEngine/ImGui/ImGuiLayer.h"
+
 
 
 // The base dank engine application.
@@ -29,6 +31,7 @@ namespace Dank {
 
 	private:
 		std::unique_ptr<Window> _window;
+		ImGuiLayer* _imGuiLayer;
 		bool _running = true;
 
 		bool OnWindowClose(WindowCloseEvent& e);

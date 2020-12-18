@@ -21,7 +21,7 @@ namespace Dank {
 	
 	private:
 		std::vector<Layer*> _layers;
-		std::vector<Layer*>::iterator _layerInsertIndex;
+		int _layerInsertIndex = 0;
 
 	};
 

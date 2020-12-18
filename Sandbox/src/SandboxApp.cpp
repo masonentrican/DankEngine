@@ -1,4 +1,5 @@
 #include <Dank.h>
+#include "ImGui/ImGui.h"
 
 /*----------------------------------------------------------------------------------
 The client side code. This is how you build a client executable using the Dank Engine
@@ -23,6 +24,18 @@ public:
 	{
 		DANK_TRACE("{0}", event);
 	}
+
+	virtual void OnImGuiRender() override
+	{
+		ImGui::Begin("Window From Sandbox");
+		ImGui::Text("Text from sandbox");
+		ImGui::End();
+
+		ImGui::Begin("Window From Sandbox 2");
+		ImGui::Text("Text from sandbox 2");
+		ImGui::End();
+	}
+	
 };
 
 // Declare the Sandbox Class
@@ -32,7 +45,6 @@ public:
 	Sandbox()
 	{
 		PushLayer(new TestLayer());
-		PushOverlay(new Dank::ImGuiLayer());
 	}
 
 	~Sandbox() {}

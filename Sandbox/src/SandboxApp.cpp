@@ -4,12 +4,14 @@
 The client side code. This is how you build a client executable using the Dank Engine
 -------------------------------------------------------------------------------------*/
 
-
 // Create a new layer
 class TestLayer : public Dank::Layer
 {
 public:
-	TestLayer() : Layer("Test") {}
+	TestLayer() : Layer("Test")
+	{
+
+	}
 	
 	void OnUpdate() override
 	{

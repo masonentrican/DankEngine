@@ -13,7 +13,8 @@ public:
 	
 	void OnUpdate() override
 	{
-
+		if (Dank::Input::IsKeyPressed(DANK_KEY_TAB))
+			DANK_TRACE("Tab key is pressed");
 	}
 
 	void OnEvent(Dank::Event& event) override

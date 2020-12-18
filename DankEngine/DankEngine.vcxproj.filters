@@ -49,6 +49,9 @@
     <ClInclude Include="src\DankEngine\Input.h">
       <Filter>DankEngine</Filter>
     </ClInclude>
+    <ClInclude Include="src\DankEngine\KeyCodes.h">
+      <Filter>DankEngine</Filter>
+    </ClInclude>
     <ClInclude Include="src\DankEngine\Layer.h">
       <Filter>DankEngine</Filter>
     </ClInclude>
@@ -56,6 +59,9 @@
       <Filter>DankEngine</Filter>
     </ClInclude>
     <ClInclude Include="src\DankEngine\Log.h">
+      <Filter>DankEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DankEngine\MouseButtonCodes.h">
       <Filter>DankEngine</Filter>
     </ClInclude>
     <ClInclude Include="src\DankEngine\Window.h">

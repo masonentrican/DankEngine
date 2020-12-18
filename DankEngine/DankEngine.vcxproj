@@ -154,9 +154,11 @@
     <ClInclude Include="src\DankEngine\Events\MouseEvent.h" />
     <ClInclude Include="src\DankEngine\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\DankEngine\Input.h" />
+    <ClInclude Include="src\DankEngine\KeyCodes.h" />
     <ClInclude Include="src\DankEngine\Layer.h" />
     <ClInclude Include="src\DankEngine\LayerStack.h" />
     <ClInclude Include="src\DankEngine\Log.h" />
+    <ClInclude Include="src\DankEngine\MouseButtonCodes.h" />
     <ClInclude Include="src\DankEngine\Window.h" />
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
     <ClInclude Include="src\Platform\Windows\Win_Input.h" />

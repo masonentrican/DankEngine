@@ -30,13 +30,14 @@ namespace Dank {
 		inline Window& GetWindow() { return *_window; }
 
 	private:
+		bool OnWindowClose(WindowCloseEvent& e);
+	private:
 		std::unique_ptr<Window> _window;
 		ImGuiLayer* _imGuiLayer;
+		LayerStack _layerStack;
 		bool _running = true;
 
-		bool OnWindowClose(WindowCloseEvent& e);
-
-		LayerStack _layerStack;
+		unsigned int _vertexArray, _vertexBuffer, _indexBuffer;
 	private:
 		static Application* s_Instance;
 	};

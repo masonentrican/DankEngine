@@ -1,8 +1,9 @@
 #pragma once
 
 #include "DankEngine/Window.h"
+#include "DankEngine/Renderer/GraphicsContext.h"
 
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 // Windows specific declarations of the Windows object. Declares
 // the various interface functionality of a window on
@@ -29,7 +30,9 @@ namespace Dank {
 
 		void SetVSync(bool enabled) override;
 		bool IsVSync() const override;
-
+	private:
+		virtual void Init(const WindowProperties& windowsProperties);
+		virtual void Shutdown();
 	private:
 		struct WindowAttributes
 		{
@@ -40,11 +43,8 @@ namespace Dank {
 			EventCallbackFn EventCallback;
 		};
 
-
-		virtual void Init(const WindowProperties& windowsProperties);
-		virtual void Shutdown();
-
 		GLFWwindow* _window;
+		GraphicsContext* _gContext;
 		WindowAttributes _windowAttributes;
 
 	};

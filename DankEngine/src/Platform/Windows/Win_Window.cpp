@@ -5,7 +5,7 @@
 #include "DankEngine/Events/MouseEvent.h"
 #include "DankEngine/Events/KeyEvent.h"
 
-#include <glad/glad.h>
+#include "Platform/OpenGL/OpenGLContext.h"
 
 
 
@@ -42,7 +42,7 @@ namespace Dank {
 		// Set window attributes
 		_windowAttributes.Title  = windowProperties.Title;
 		_windowAttributes.Width  = windowProperties.Width;
-		_windowAttributes.Height = windowProperties.Height;
+		_windowAttributes.Height = windowProperties.Height;		
 
 		// Log the attributes
 		DANK_CORE_INFO("Creating window {0} ({1}, {2})", windowProperties.Title, windowProperties.Width, windowProperties.Height);
@@ -59,11 +59,8 @@ namespace Dank {
 
 		// GLFW Init
 		_window = glfwCreateWindow((int)windowProperties.Width, (int)windowProperties.Height, windowProperties.Title.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(_window);
-
-		// Glad Init
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		DANK_CORE_ASSERT(status, "Failed to initialize Glad");
+		_gContext = new OpenGLContext(_window);
+		_gContext->Init();
 
 		// Set a pointer to the window and enable vsync for now
 		glfwSetWindowUserPointer(_window, &_windowAttributes);
@@ -169,7 +166,7 @@ namespace Dank {
 	void Win_Window::OnUpdate()
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(_window);
+		_gContext->SwapBuffers();
 	}
 
 	void Win_Window::SetVSync(bool enabled)

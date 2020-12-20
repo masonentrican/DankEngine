@@ -1,11 +1,15 @@
 #pragma once
 
 #ifdef DANK_PLATFORM_WINDOWS
+#if DANK_DYNAMIC_LINK
 	#ifdef DANK_BUILD_DLL
 		#define DANK_API __declspec(dllexport)
 	#else
 		#define DANK_API __declspec(dllimport)
 	#endif
+#else
+	#define DANK_API
+#endif
 #else
 	#error Dank Engine only supports windows.
 #endif

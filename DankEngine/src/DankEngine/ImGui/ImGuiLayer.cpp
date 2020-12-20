@@ -1,12 +1,15 @@
 #include "dankpch.h"
+#include "ImGuiLayer.h"
 
 #include "imgui.h"
-
-#define IMGUI_IMPL_OPENGL_LOADER_GLAD
 #include "backends/imgui_impl_opengl3.cpp"
 #include "backends/imgui_impl_glfw.cpp"
 
 #include "DankEngine/Application.h"
+
+// TEMPORARY
+#include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 
 namespace Dank {
@@ -71,7 +74,7 @@ namespace Dank {
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::Get();
-		io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
+		io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

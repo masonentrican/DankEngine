@@ -9,6 +9,8 @@
 
 #include "DankEngine/ImGui/ImGuiLayer.h"
 
+#include "DankEngine//Renderer/Shader.h"
+
 
 
 // The base dank engine application.
@@ -35,9 +37,11 @@ namespace Dank {
 		std::unique_ptr<Window> _window;
 		ImGuiLayer* _imGuiLayer;
 		LayerStack _layerStack;
+
 		bool _running = true;
 
 		unsigned int _vertexArray, _vertexBuffer, _indexBuffer;
+		std::unique_ptr<Shader> _shader;
 	private:
 		static Application* s_Instance;
 	};

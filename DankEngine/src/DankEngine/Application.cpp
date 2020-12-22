@@ -30,14 +30,15 @@ namespace Dank {
 		// Index Buffer
 		// ------------------------------------------------------------------------
 
+		// Generate the vertex array and bind it.
+		glGenVertexArrays(1, &_vertexArray);
+		glBindVertexArray(_vertexArray);
+
+
 
 		// ---------------------------------------------------
 		// VERTEX BUFFER
 		// ---------------------------------------------------
-
-		// Generate the vertex array and bind it.
-		glGenVertexArrays(1, &_vertexArray);
-		glBindVertexArray(_vertexArray);
 
 		// Generate the vertex buffer and bind it.
 		glGenBuffers(1, &_vertexBuffer);
@@ -61,6 +62,7 @@ namespace Dank {
 
 
 
+
 		// ---------------------------------------------------
 		// INDEX BUFFER - OpenGL calls these Element Buffers
 		// ---------------------------------------------------
@@ -74,6 +76,8 @@ namespace Dank {
 
 		// Upload the index data to the gpu
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+
 
 
 

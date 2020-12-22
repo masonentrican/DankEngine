@@ -156,8 +156,11 @@
     <ClInclude Include="src\DankEngine\Log.h" />
     <ClInclude Include="src\DankEngine\MouseButtonCodes.h" />
     <ClInclude Include="src\DankEngine\Renderer\GraphicsContext.h" />
+    <ClInclude Include="src\DankEngine\Renderer\Renderer.h" />
     <ClInclude Include="src\DankEngine\Renderer\Shader.h" />
+    <ClInclude Include="src\DankEngine\Renderer\Buffer.h" />
     <ClInclude Include="src\DankEngine\Window.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\Windows\Win_Input.h" />
     <ClInclude Include="src\Platform\Windows\Win_Window.h" />
@@ -583,7 +586,10 @@
     <ClCompile Include="src\DankEngine\Layer.cpp" />
     <ClCompile Include="src\DankEngine\LayerStack.cpp" />
     <ClCompile Include="src\DankEngine\Log.cpp" />
+    <ClCompile Include="src\DankEngine\Renderer\Renderer.cpp" />
     <ClCompile Include="src\DankEngine\Renderer\Shader.cpp" />
+    <ClCompile Include="src\DankEngine\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\Windows\Win_Input.cpp" />
     <ClCompile Include="src\Platform\Windows\Win_Window.cpp" />
@@ -605,4 +611,4 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-</Project> 
+</Project>

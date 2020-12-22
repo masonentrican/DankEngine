@@ -34,16 +34,6 @@ namespace Dank {
 		glGenVertexArrays(1, &_vertexArray);
 		glBindVertexArray(_vertexArray);
 
-
-
-		// ---------------------------------------------------
-		// VERTEX BUFFER
-		// ---------------------------------------------------
-
-		// Generate the vertex buffer and bind it.
-		glGenBuffers(1, &_vertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
-
 		// Define the vertices for a triangle
 		float vertices[3 * 3] = {
 			-0.5f, -0.5f, 0.0f,
@@ -51,33 +41,18 @@ namespace Dank {
 			 0.0f,  0.5f, 0.0f
 		};
 
-		// Upload the vertex data to the gpu
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
+		// Create Vertex Buffer
+		_vertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
 		// Tell OpenGL the layout of the vertex data		
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
-
-
-
-
-		// ---------------------------------------------------
-		// INDEX BUFFER - OpenGL calls these Element Buffers
-		// ---------------------------------------------------
-
-		// Generate and bind the index buffer
-		glGenBuffers(1, &_indexBuffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBuffer);
-
 		// Declare and define the indices
 		unsigned int indices[3] = { 0, 1, 2 };
-
-		// Upload the index data to the gpu
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-
+		
+		// Create Index Buffer
+		_indexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 
 
 
@@ -166,7 +141,7 @@ namespace Dank {
 			// TEMPORARY - direct OpenGL impl
 			_shader->Bind();
 			glBindVertexArray(_vertexArray);
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, _indexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			// Run the OnUpdate for every layer in the stack
 			for (Layer* layer : _layerStack)

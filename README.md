@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/masonentrican/dankengine">
-    <img src="images/logo.png" alt="Logo">
+    <img src="images/logo.png" alt="Logo" height="500">
   </a>
 
   <h3 align="center">Dank Engine</h3>

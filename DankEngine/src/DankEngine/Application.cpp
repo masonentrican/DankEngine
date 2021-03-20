@@ -8,6 +8,28 @@ namespace Dank {
 
 	Application* Application::s_Instance = nullptr;
 
+	// Convert shader data type to the open gl base type during buffer creation
+	static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type)
+	{
+		switch (type)
+		{
+			case Dank::ShaderDataType::Float:    return GL_FLOAT;
+			case Dank::ShaderDataType::Float2:   return GL_FLOAT;
+			case Dank::ShaderDataType::Float3:   return GL_FLOAT;
+			case Dank::ShaderDataType::Float4:   return GL_FLOAT;
+			case Dank::ShaderDataType::Mat3:     return GL_FLOAT;
+			case Dank::ShaderDataType::Mat4:     return GL_FLOAT;
+			case Dank::ShaderDataType::Int:      return GL_INT;
+			case Dank::ShaderDataType::Int2:     return GL_INT;
+			case Dank::ShaderDataType::Int3:     return GL_INT;
+			case Dank::ShaderDataType::Int4:     return GL_INT;
+			case Dank::ShaderDataType::Bool:     return GL_BOOL;
+		}
+
+		DANK_CORE_ASSERT(false, "Unknown ShaderDataType in OpenGL base type conversion");
+		return 0;
+	}
+
 	Application::Application()
 	{
 		DANK_CORE_ASSERT(!s_Instance, "Application already exists.");
@@ -34,19 +56,45 @@ namespace Dank {
 		glGenVertexArrays(1, &_vertexArray);
 		glBindVertexArray(_vertexArray);
 
-		// Define the vertices for a triangle
-		float vertices[3 * 3] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.0f,  0.5f, 0.0f
+		// Define the vertex data for a triangle
+		float vertices[3 * 7] = {
+			-0.5f, -0.5f, 0.0f, 1.0f, 0.2f, 0.8f, 1.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.3f, 0.8f, 1.0f,
+			 0.0f,  0.5f, 0.0f, 0.0f, 0.8f, 0.2f, 1.0f
 		};
 
-		// Create Vertex Buffer
 		_vertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
-		// Tell OpenGL the layout of the vertex data		
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+		{
+			// Create Vertex Buffer Layout
+			BufferLayout layout = {
+				{ ShaderDataType::Float3, "a_Position" },
+				{ ShaderDataType::Float4, "a_Color" }
+			};
+
+			_vertexBuffer->SetLayout(layout);
+		}
+
+
+		// Iterate through the buffer layout elements
+		uint32_t index = 0;
+		const auto& layout = _vertexBuffer->GetLayout();
+
+		for (const auto& element : layout)
+		{
+			// Tell OpenGL the layout of the vertex data
+			glEnableVertexAttribArray(index);
+			glVertexAttribPointer(
+				index,
+				element.GetComponentCount(),
+				ShaderDataTypeToOpenGLBaseType(element.Type),
+				element.Normalized ? GL_TRUE : GL_FALSE,
+				layout.GetStride(),
+				(const void*)element.Offset
+			);
+
+			index++;
+		}
 
 		// Declare and define the indices
 		unsigned int indices[3] = { 0, 1, 2 };
@@ -64,12 +112,15 @@ namespace Dank {
 			#version 330 core
 
 			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec4 a_Color;
 
 			out vec3 v_Position;
+			out vec4 v_Color;
 
 			void main()
 			{
 				v_Position = a_Position;
+				v_Color = a_Color;
 				gl_Position = vec4(a_Position, 1.0);
 			}		
 		)";
@@ -80,18 +131,15 @@ namespace Dank {
 			layout(location = 0) out vec4 color;
 
 			in vec3 v_Position;
+			in vec4 v_Color;
 
 			void main()
 			{
-				color = vec4(0.8, 0.1, 0.4, 1.0);
+				color = v_Color;
 			}		
 		)";
 
 		_shader.reset(new Shader(vertexSrc, fragmentSrc));
-
-
-
-
 
 
 	}

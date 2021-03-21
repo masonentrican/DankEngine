@@ -11,6 +11,7 @@
 
 #include "DankEngine/Renderer/Shader.h"
 #include "DankEngine/Renderer/Buffer.h"
+#include "DankEngine/Renderer/VertexArray.h"
 
 
 
@@ -35,16 +36,18 @@ namespace Dank {
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 	private:
+		bool _running = true;
+
 		std::unique_ptr<Window> _window;
 		ImGuiLayer* _imGuiLayer;
 		LayerStack _layerStack;
+	
+		std::shared_ptr<Shader> _shader;
+		std::shared_ptr<VertexArray> _vertexArray;
 
-		bool _running = true;
+		std::shared_ptr<Shader> _blueShader;
+		std::shared_ptr<VertexArray> _squareVA;
 
-		unsigned int _vertexArray;		
-		std::unique_ptr<Shader> _shader;
-		std::unique_ptr<VertexBuffer> _vertexBuffer;
-		std::unique_ptr<IndexBuffer> _indexBuffer;
 	private:
 		static Application* s_Instance;
 	};

@@ -1,104 +1,75 @@
 #include "dankpch.h"
 #include "Application.h"
 
-#include <glad/glad.h>
+#include "DankEngine/Renderer/Renderer.h"
 #include "Input.h"
 
 namespace Dank {
 
-	Application* Application::s_Instance = nullptr;
+	Application* Application::s_Instance = nullptr;											// Create singleton instance of application
 
-	// Convert shader data type to the open gl base type during buffer creation
-	static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type)
-	{
-		switch (type)
-		{
-			case Dank::ShaderDataType::Float:    return GL_FLOAT;
-			case Dank::ShaderDataType::Float2:   return GL_FLOAT;
-			case Dank::ShaderDataType::Float3:   return GL_FLOAT;
-			case Dank::ShaderDataType::Float4:   return GL_FLOAT;
-			case Dank::ShaderDataType::Mat3:     return GL_FLOAT;
-			case Dank::ShaderDataType::Mat4:     return GL_FLOAT;
-			case Dank::ShaderDataType::Int:      return GL_INT;
-			case Dank::ShaderDataType::Int2:     return GL_INT;
-			case Dank::ShaderDataType::Int3:     return GL_INT;
-			case Dank::ShaderDataType::Int4:     return GL_INT;
-			case Dank::ShaderDataType::Bool:     return GL_BOOL;
-		}
-
-		DANK_CORE_ASSERT(false, "Unknown ShaderDataType in OpenGL base type conversion");
-		return 0;
-	}
-
-	Application::Application()
+	Application::Application()																// Primary Application function
 	{
 		DANK_CORE_ASSERT(!s_Instance, "Application already exists.");
 		s_Instance = this;
 
-		_window = std::unique_ptr<Window>(Window::Create());
+		_window = std::unique_ptr<Window>(Window::Create());								// Instantiate the window object
 		_window->SetEventCallback(DANK_BIND_EVENT(Application::OnEvent));
 
-		_imGuiLayer = new ImGuiLayer();
+		_imGuiLayer = new ImGuiLayer();														// Instantiate the ImGuiLayer and push it to the layer stack as an overlay
 		PushOverlay(_imGuiLayer);
 
+		_vertexArray.reset(VertexArray::Create());											// Instatiate a vertex array
 
-		_vertexArray.reset(VertexArray::Create());
-
-		// Define the vertex and color data for a triangle
-		float vertices[3 * 7] = {
+		float vertices[3 * 7] = {															// Define the vertex and color data for the vertex array
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.6f, 0.1f, 1.0f,
 			 0.5f, -0.5f, 0.0f, 0.0f, 0.4f, 0.1f, 1.0f,
 			 0.0f,  0.5f, 0.0f, 0.0f, 0.2f, 0.1f, 1.0f
 		};
-
-		// Instantiate the vertex buffer passing in the vertex data
-		std::shared_ptr<VertexBuffer> vertexBuffer;
+		
+		std::shared_ptr<VertexBuffer> vertexBuffer;											// Instantiate the vertex buffer and pass in the vertex data
 		vertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
-		// Create Vertex Buffer Layout
-		BufferLayout layout = {
+		BufferLayout layout = {																// Define the Vertex Buffer Layout
 			{ ShaderDataType::Float3, "a_Position" },
 			{ ShaderDataType::Float4, "a_Color" }
 		};
 
-		// Set the vertex buffer layout
-		vertexBuffer->SetLayout(layout);
 
-		// Pass the vertex buffer reference to vertex array
-		_vertexArray->AddVertexBuffer(vertexBuffer);
+		vertexBuffer->SetLayout(layout);													// Set the layout to the vertex buffer instance
+		_vertexArray->AddVertexBuffer(vertexBuffer);										// Pass the vertex buffer reference to vertex array
 
-		// Create the index buffer for the vertex array
-		uint32_t indices[3] = { 0, 1, 2 };
-		std::shared_ptr<IndexBuffer> indexBuffer;
-		indexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-		_vertexArray->SetIndexBuffer(indexBuffer);
+		uint32_t indices[3] = { 0, 1, 2 };													// Define basic indicies for a triangle
 
-		// Create the squareVA vertex array
-		_squareVA.reset(VertexArray::Create());
+		std::shared_ptr<IndexBuffer> indexBuffer;											// Declare the index buffer pointer
+		indexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));// Define the index buffer values from the indices
 
-		// Define the square verticies
-		float squareVertices[3 * 4] = {
+		_vertexArray->SetIndexBuffer(indexBuffer);											// Pass the index array to the vertex array for reference
+
+
+		_squareVA.reset(VertexArray::Create());												// Create the squareVA vertex array
+		float squareVertices[3 * 4] = {														// Define the square verticies
 			-0.75f, -0.75f, 0.0f,
 			 0.75f, -0.75f, 0.0f,
 			 0.75f,  0.75f, 0.0f,
 			-0.75f,  0.75f, 0.0f
 		};
+	
+		std::shared_ptr<VertexBuffer> squareVB;												// Declare the vertex buffer for the square
+		squareVB.reset(VertexBuffer::Create(squareVertices, sizeof(squareVertices)));		// Instantiate the square vertex buffer
 
-		// Create the vertex buffer for the square
-		std::shared_ptr<VertexBuffer> squareVB;
-		squareVB.reset(VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
-
-		// Define the layout of the square vertex buffer
-		squareVB->SetLayout({
+		BufferLayout squareLayout = {														// Define the Square Vertex Buffer Layout
 			{ ShaderDataType::Float3, "a_Position" }
-			});
-		_squareVA->AddVertexBuffer(squareVB);
+		};
+		
+		squareVB->SetLayout(squareLayout);													// Set the layout to the square vertex buffer instance
+		_squareVA->AddVertexBuffer(squareVB);												// Pass the square vertex buffer instance to the square vertex array
+		
+		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };									// Define the square indicies
 
-		// Define the square indicies
-		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		std::shared_ptr<IndexBuffer> squareIB;
-		squareIB.reset(IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
-		_squareVA->SetIndexBuffer(squareIB);
+		std::shared_ptr<IndexBuffer> squareIB;												// Declare the square index buffer pointer
+		squareIB.reset(IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t))); // Define the values
+		_squareVA->SetIndexBuffer(squareIB);												// Pass the square index array to the vertex array for ref
 
 
 		// -----------------------------------------------------------------------------
@@ -162,7 +133,7 @@ namespace Dank {
 			in vec3 v_Position;
 			void main()
 			{
-				color = vec4(0.3, 0.3, 0.3, 1.0);
+				color = vec4(0.3, 0.3, 0.8, 1.0);
 			}
 		)";
 
@@ -209,17 +180,18 @@ namespace Dank {
 
 		while (_running)
 		{
-			// Change window color to ensure glfw is working
-			glClearColor(0.075f, 0.085f, 0.085f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
+			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+			RenderCommand::Clear();
+
+			Renderer::BeginScene();
 
 			_blueShader->Bind();
-			_squareVA->Bind();
-			glDrawElements(GL_TRIANGLES, _squareVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::Submit(_squareVA);
 
 			_shader->Bind();
-			_vertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, _vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::Submit(_vertexArray);
+
+			Renderer::EndScene();
 
 			// Run the OnUpdate for every layer in the stack
 			for (Layer* layer : _layerStack)

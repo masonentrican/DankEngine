@@ -22,7 +22,7 @@ namespace Dank {
 		case Dank::ShaderDataType::Bool:     return GL_BOOL;
 		}
 
-		DANK_CORE_ASSERT(false, "Unknown ShaderDataType in OpenGLVertexArray Base type conversion");
+		DANK_CORE_ASSERT(false, "Unknown ShaderDataType in OpenGL base type conversion");
 		return 0;
 	}
 

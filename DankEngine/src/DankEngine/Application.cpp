@@ -8,7 +8,7 @@ namespace Dank {
 
 	Application* Application::s_Instance = nullptr;											// Create singleton instance of application
 
-	Application::Application()																// Primary Application function
+	Application::Application() : _camera(-1.6f, 1.6f, -0.9f, 0.9f)							// Primary Application function
 	{
 		DANK_CORE_ASSERT(!s_Instance, "Application already exists.");
 		s_Instance = this;
@@ -78,33 +78,31 @@ namespace Dank {
 
 		std::string vertexSrc = R"(
 			#version 330 core
-
+			
 			layout(location = 0) in vec3 a_Position;
 			layout(location = 1) in vec4 a_Color;
-
+			uniform mat4 u_ViewProjection;
 			out vec3 v_Position;
 			out vec4 v_Color;
-
 			void main()
 			{
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = vec4(a_Position, 1.0);
-			}		
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);	
+			}	
 		)";
 
 		std::string fragmentSrc = R"(
 			#version 330 core
-
+			
 			layout(location = 0) out vec4 color;
-
 			in vec3 v_Position;
 			in vec4 v_Color;
-
 			void main()
 			{
+				color = vec4(v_Position * 0.5 + 0.5, 1.0);
 				color = v_Color;
-			}		
+			}	
 		)";
 
 		_shader.reset(new Shader(vertexSrc, fragmentSrc));
@@ -118,11 +116,12 @@ namespace Dank {
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_Position;
+			uniform mat4 u_ViewProjection;
 			out vec3 v_Position;
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = vec4(a_Position, 1.0);	
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);	
 			}
 		)";
 
@@ -133,7 +132,7 @@ namespace Dank {
 			in vec3 v_Position;
 			void main()
 			{
-				color = vec4(0.3, 0.3, 0.8, 1.0);
+				color = vec4(0.2, 0.3, 0.8, 1.0);
 			}
 		)";
 
@@ -183,13 +182,13 @@ namespace Dank {
 			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 			RenderCommand::Clear();
 
-			Renderer::BeginScene();
+			_camera.SetPosition({0.0f, 0.0f, 0.0f});
+			_camera.SetRotation( 0.0f );
 
-			_blueShader->Bind();
-			Renderer::Submit(_squareVA);
+			Renderer::BeginScene(_camera);
 
-			_shader->Bind();
-			Renderer::Submit(_vertexArray);
+			Renderer::Submit(_blueShader, _squareVA);
+			Renderer::Submit(_shader, _vertexArray);
 
 			Renderer::EndScene();
 

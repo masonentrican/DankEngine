@@ -42,14 +42,6 @@ namespace Dank {
 		std::unique_ptr<Window> _window;
 		ImGuiLayer* _imGuiLayer;
 		LayerStack _layerStack;
-	
-		std::shared_ptr<Shader> _shader;
-		std::shared_ptr<VertexArray> _vertexArray;
-
-		std::shared_ptr<Shader> _blueShader;
-		std::shared_ptr<VertexArray> _squareVA;
-
-		OrthographicCamera _camera;
 
 	private:
 		static Application* s_Instance;

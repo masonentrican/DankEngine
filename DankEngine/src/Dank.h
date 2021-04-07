@@ -12,7 +12,15 @@
 
 #include "DankEngine/ImGui/ImGuiLayer.h"
 
-/*------------------*/
-/*    ENTRY POINT   */
-/*------------------*/
+// Renderer
+#include "DankEngine/Renderer/Renderer.h"
+#include "DankEngine/Renderer/RenderCommand.h"
+
+#include "DankEngine/Renderer/Buffer.h"
+#include "DankEngine/Renderer/Shader.h"
+#include "DankEngine/Renderer/VertexArray.h"
+
+#include "DankEngine/Renderer/OrthographicCamera.h"
+
+// Entry Point
 #include "DankEngine/EntryPoint.h"

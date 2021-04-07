@@ -9,7 +9,7 @@ The client side code. This is how you build a client executable using the Dank E
 class TestLayer : public Dank::Layer
 {
 public:
-	TestLayer() : Layer("Test"), _camera(-1.6f, 1.6f, -0.9f, 0.9f)
+	TestLayer() : Layer("Test"), _camera(-1.6f, 1.6f, -0.9f, 0.9f), _cameraPosition(0.0f)
 	{
 		// Instatiate a vertex array
 		_vertexArray.reset(Dank::VertexArray::Create());											
@@ -159,12 +159,26 @@ public:
 	
 	void OnUpdate() override
 	{
+		if (Dank::Input::IsKeyPressed(DANK_KEY_LEFT))
+			_cameraPosition.x -= _cameraMoveSpeed;
+		else if (Dank::Input::IsKeyPressed(DANK_KEY_RIGHT))
+			_cameraPosition.x += _cameraMoveSpeed;
+
+		if (Dank::Input::IsKeyPressed(DANK_KEY_UP))
+			_cameraPosition.y += _cameraMoveSpeed;
+		else if (Dank::Input::IsKeyPressed(DANK_KEY_DOWN))
+			_cameraPosition.y -= _cameraMoveSpeed;
+
+		if (Dank::Input::IsKeyPressed(DANK_KEY_A))
+			_cameraRotation += _cameraRotationSpeed;
+		else if (Dank::Input::IsKeyPressed(DANK_KEY_D))
+			_cameraRotation -= _cameraRotationSpeed;
 
 		Dank::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Dank::RenderCommand::Clear();
 
-		_camera.SetPosition({ 0.0f, 0.0f, 0.0f });
-		_camera.SetRotation(0.0f);
+		_camera.SetPosition(_cameraPosition);
+		_camera.SetRotation(_cameraRotation);
 
 		Dank::Renderer::BeginScene(_camera);
 
@@ -195,6 +209,12 @@ private:
 	std::shared_ptr<Dank::VertexArray> _squareVA;
 
 	Dank::OrthographicCamera _camera;
+
+	glm::vec3 _cameraPosition;
+	float _cameraRotation = 0.0f;
+
+	float _cameraMoveSpeed	   = 0.05f;
+	float _cameraRotationSpeed = 2.0f;
 	
 };
 

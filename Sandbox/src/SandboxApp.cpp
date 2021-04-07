@@ -157,22 +157,26 @@ public:
 		_blueShader.reset(new Dank::Shader(blueShaderVertexSrc, blueShaderFragmentSrc));
 	}
 	
-	void OnUpdate() override
+	void OnUpdate(Dank::Timestep ts) override
 	{
+		float deltaTime = ts;
+
+		//DANK_INFO("Delta time: {0}s ({1}ms)", ts.GetSeconds(), ts.GetMilliseconds());
+
 		if (Dank::Input::IsKeyPressed(DANK_KEY_LEFT))
-			_cameraPosition.x -= _cameraMoveSpeed;
+			_cameraPosition.x -= _cameraMoveSpeed * deltaTime;
 		else if (Dank::Input::IsKeyPressed(DANK_KEY_RIGHT))
-			_cameraPosition.x += _cameraMoveSpeed;
+			_cameraPosition.x += _cameraMoveSpeed * deltaTime;
 
 		if (Dank::Input::IsKeyPressed(DANK_KEY_UP))
-			_cameraPosition.y += _cameraMoveSpeed;
+			_cameraPosition.y += _cameraMoveSpeed * deltaTime;
 		else if (Dank::Input::IsKeyPressed(DANK_KEY_DOWN))
-			_cameraPosition.y -= _cameraMoveSpeed;
+			_cameraPosition.y -= _cameraMoveSpeed * deltaTime;
 
 		if (Dank::Input::IsKeyPressed(DANK_KEY_A))
-			_cameraRotation += _cameraRotationSpeed;
+			_cameraRotation += _cameraRotationSpeed * deltaTime;
 		else if (Dank::Input::IsKeyPressed(DANK_KEY_D))
-			_cameraRotation -= _cameraRotationSpeed;
+			_cameraRotation -= _cameraRotationSpeed * deltaTime;
 
 		Dank::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Dank::RenderCommand::Clear();
@@ -213,8 +217,8 @@ private:
 	glm::vec3 _cameraPosition;
 	float _cameraRotation = 0.0f;
 
-	float _cameraMoveSpeed	   = 0.05f;
-	float _cameraRotationSpeed = 2.0f;
+	float _cameraMoveSpeed	   = 2.0f;
+	float _cameraRotationSpeed = 90.0f;
 	
 };
 

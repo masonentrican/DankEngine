@@ -6,6 +6,8 @@
 #include "DankEngine/Layer.h"
 #include "DankEngine/Log.h"
 
+#include "DankEngine/Core/Timestep.h"
+
 #include "DankEngine/Input.h"
 #include "DankEngine/KeyCodes.h"
 #include "DankEngine/MouseButtonCodes.h"

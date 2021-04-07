@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DankEngine/Core.h"
+#include "DankEngine/Core/Timestep.h"
 #include "DankEngine/Events/Event.h"
 
 // Layers are used to self contain certain functionality. We can have a gui layer,
@@ -17,7 +18,7 @@ namespace Dank {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(Timestep ts) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 

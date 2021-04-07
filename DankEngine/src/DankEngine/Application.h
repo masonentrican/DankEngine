@@ -7,18 +7,13 @@
 #include "Events/Event.h"
 #include "DankEngine/Events/ApplicationEvent.h"
 
+#include "DankEngine/Core/Timestep.h"
+
 #include "DankEngine/ImGui/ImGuiLayer.h"
-
-#include "DankEngine/Renderer/Shader.h"
-#include "DankEngine/Renderer/Buffer.h"
-#include "DankEngine/Renderer/VertexArray.h"
-#include "DankEngine/Renderer/OrthographicCamera.h"
-
-
 
 // The base dank engine application.
 namespace Dank {
-	class DANK_API Application
+	class Application
 	{
 	public:
 		Application();
@@ -42,6 +37,7 @@ namespace Dank {
 		std::unique_ptr<Window> _window;
 		ImGuiLayer* _imGuiLayer;
 		LayerStack _layerStack;
+		float _lastFrameTime = 0.0f;
 
 	private:
 		static Application* s_Instance;

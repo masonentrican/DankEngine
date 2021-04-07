@@ -4,22 +4,32 @@
 #include "DankEngine/Renderer/Renderer.h"
 #include "Input.h"
 
+// TODO: Only needed due to time right now
+#include <GLFW/glfw3.h>
+
 namespace Dank {
 
-	Application* Application::s_Instance = nullptr;											// Create singleton instance of application
+	// Create singleton instance of application
+	Application* Application::s_Instance = nullptr;											
 
-	Application::Application()																// Primary Application function
+	// Primary Application
+	Application::Application()																
 	{
+		// Create the application instance
 		DANK_CORE_ASSERT(!s_Instance, "Application already exists.");
 		s_Instance = this;
 
-		_window = std::unique_ptr<Window>(Window::Create());								// Instantiate the window object
+		// Instantiate the window object
+		_window = std::unique_ptr<Window>(Window::Create());								
 		_window->SetEventCallback(DANK_BIND_EVENT(Application::OnEvent));
+		_window->SetVSync(false);
 
-		_imGuiLayer = new ImGuiLayer();														// Instantiate the ImGuiLayer and push it to the layer stack as an overlay
+		// Instantiate the ImGuiLayer and push it to the layer stack as an overlay
+		_imGuiLayer = new ImGuiLayer();														
 		PushOverlay(_imGuiLayer);
 	}
 
+	// Deconstructor
 	Application::~Application() {}
 
 	void Application::PushLayer(Layer* layer)
@@ -55,13 +65,16 @@ namespace Dank {
 	//------------------------------------------//
 	void Application::Run() {
 
-
 		while (_running)
 		{
+			// TODO: Should be platform specific. ie Platform::GetTime()
+			float time = (float)glfwGetTime(); 
+			Timestep timestep = time - _lastFrameTime;
+			_lastFrameTime = time;
 
 			// Run the OnUpdate for every layer in the stack
 			for (Layer* layer : _layerStack)
-				layer->OnUpdate();
+				layer->OnUpdate(timestep);
 
 			// ImGui layer rendering
 			_imGuiLayer->Begin();

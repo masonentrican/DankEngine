@@ -31,13 +31,8 @@
    ```sh
    git clone --recursive https://github.com/masonentrican/dankengine
    ```
-2. Download the PreMake5 .exe and place it in a new directory called vendor/bin
-   ```sh
-   ProjectRoot/vendor/bin/premake5/
-   ```
-3. Generate the VS2019 project files
+2. Generate the VS2019 project files
    ```sh
    GenerateProjectFiles.bat
    ```
-
-4. Build and Run in Visual Studio 2019
+3. Build and Run in Visual Studio 2019

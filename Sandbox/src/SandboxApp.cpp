@@ -1,5 +1,10 @@
 #include <Dank.h>
+#include "Platform/OpenGL/OpenGLShader.h"
+
 #include "ImGui/ImGui.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 /*----------------------------------------------------------------------------------
 The client side code. This is how you build a client executable using the Dank Engine
@@ -12,10 +17,10 @@ public:
 	TestLayer() : Layer("Test"), _camera(-1.6f, 1.6f, -0.9f, 0.9f), _cameraPosition(0.0f)
 	{
 		// Instatiate a vertex array
-		_vertexArray.reset(Dank::VertexArray::Create());											
+		_vertexArray.reset(Dank::VertexArray::Create());
 
 		// Define the vertex and color data for the vertex array
-		float vertices[3 * 7] = {															
+		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.6f, 0.1f, 1.0f,
 			 0.5f, -0.5f, 0.0f, 0.0f, 0.4f, 0.1f, 1.0f,
 			 0.0f,  0.5f, 0.0f, 0.0f, 0.2f, 0.1f, 1.0f
@@ -26,19 +31,19 @@ public:
 		vertexBuffer.reset(Dank::VertexBuffer::Create(vertices, sizeof(vertices)));
 
 		// Define the Vertex Buffer Layout
-		Dank::BufferLayout layout = {																
+		Dank::BufferLayout layout = {
 			{ Dank::ShaderDataType::Float3, "a_Position" },
 			{ Dank::ShaderDataType::Float4, "a_Color" }
 		};
 
 		// Set the layout to the vertex buffer instance
-		vertexBuffer->SetLayout(layout);	
+		vertexBuffer->SetLayout(layout);
 
 		// Pass the vertex buffer reference to vertex array
-		_vertexArray->AddVertexBuffer(vertexBuffer);										
+		_vertexArray->AddVertexBuffer(vertexBuffer);
 
 		// Define basic indicies for a triangle
-		uint32_t indices[3] = { 0, 1, 2 };													
+		uint32_t indices[3] = { 0, 1, 2 };
 
 		// Declare the index buffer pointer
 		Dank::Ref<Dank::IndexBuffer> indexBuffer;
@@ -47,47 +52,47 @@ public:
 		indexBuffer.reset(Dank::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 
 		// Pass the index array to the vertex array for reference
-		_vertexArray->SetIndexBuffer(indexBuffer);											
+		_vertexArray->SetIndexBuffer(indexBuffer);
 
 		// Create the squareVA vertex array
 		_squareVA.reset(Dank::VertexArray::Create());
 
 		// Define the square verticies
-		float squareVertices[3 * 4] = {														
-			-0.75f, -0.75f, 0.0f,
-			 0.75f, -0.75f, 0.0f,
-			 0.75f,  0.75f, 0.0f,
-			-0.75f,  0.75f, 0.0f
+		float squareVertices[3 * 4] = {
+			-0.5f, -0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+			 0.5f,  0.5f, 0.0f,
+			-0.5f,  0.5f, 0.0f
 		};
 
 		// Declare the vertex buffer for the square
 		Dank::Ref<Dank::VertexBuffer> squareVB;
 
 		// Instantiate the square vertex buffer
-		squareVB.reset(Dank::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));		
+		squareVB.reset(Dank::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
 
 		// Define the Square Vertex Buffer Layout
-		Dank::BufferLayout squareLayout = {														
+		Dank::BufferLayout squareLayout = {
 			{ Dank::ShaderDataType::Float3, "a_Position" }
 		};
 
 		// Set the layout to the square vertex buffer instance
-		squareVB->SetLayout(squareLayout);	
+		squareVB->SetLayout(squareLayout);
 
 		// Pass the square vertex buffer instance to the square vertex array
-		_squareVA->AddVertexBuffer(squareVB);												
+		_squareVA->AddVertexBuffer(squareVB);
 
 		// Define the square indicies
-		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };									
+		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 
 		// Declare the square index buffer pointer
 		Dank::Ref<Dank::IndexBuffer> squareIB;
 
 		// Define the values
-		squareIB.reset(Dank::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t))); 
+		squareIB.reset(Dank::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
 
 		// Pass the square index array to the vertex array for ref
-		_squareVA->SetIndexBuffer(squareIB);												
+		_squareVA->SetIndexBuffer(squareIB);
 
 
 		// -----------------------------------------------------------------------------
@@ -130,20 +135,23 @@ public:
 		// -----------------------------------------------------------------------------
 		// Blue Box Vertex and Frag Shaders
 		// ------------------------------------------------------------------------------
-		std::string blueShaderVertexSrc = R"(
+		std::string flatColorShaderVertexSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_Position;
+
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
+
 			out vec3 v_Position;
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);	
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);	
 			}
 		)";
 
-		std::string blueShaderFragmentSrc = R"(
+		std::string flatColorShaderFragmentSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) out vec4 color;
@@ -154,9 +162,9 @@ public:
 			}
 		)";
 
-		_blueShader.reset(Dank::Shader::Create(blueShaderVertexSrc, blueShaderFragmentSrc));
+		_flatColorShader.reset(Dank::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
 	}
-	
+
 	void OnUpdate(Dank::Timestep ts) override
 	{
 		float deltaTime = ts;
@@ -184,12 +192,25 @@ public:
 		_camera.SetPosition(_cameraPosition);
 		_camera.SetRotation(_cameraRotation);
 
+		// ----------- BEGIN SCENE -------------//
 		Dank::Renderer::BeginScene(_camera);
 
-		Dank::Renderer::Submit(_blueShader, _squareVA);
-		Dank::Renderer::Submit(_shader, _vertexArray);
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+		std::dynamic_pointer_cast<Dank::OpenGLShader>(_flatColorShader)->Bind();
+
+		for (int y = -5; y < 5; y++)
+		{
+			for (int x = -5; x < 5; x++)
+			{
+				glm::vec3 pos(x * 0.15f, y * 0.15f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				Dank::Renderer::Submit(_flatColorShader, _squareVA, transform);
+			}
+		}	
 
 		Dank::Renderer::EndScene();
+		// -----------  END SCENE  -------------//
 	}
 
 	void OnEvent(Dank::Event& event) override
@@ -207,7 +228,7 @@ private:
 	Dank::Ref<Dank::Shader> _shader;
 	Dank::Ref<Dank::VertexArray> _vertexArray;
 
-	Dank::Ref<Dank::Shader> _blueShader;
+	Dank::Ref<Dank::Shader> _flatColorShader;
 	Dank::Ref<Dank::VertexArray> _squareVA;
 
 	Dank::OrthographicCamera _camera;
@@ -215,9 +236,9 @@ private:
 	glm::vec3 _cameraPosition;
 	float _cameraRotation = 0.0f;
 
-	float _cameraMoveSpeed	   = 2.0f;
+	float _cameraMoveSpeed = 2.0f;
 	float _cameraRotationSpeed = 90.0f;
-	
+
 };
 
 // Declare the Sandbox Class

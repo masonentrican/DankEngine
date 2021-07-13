@@ -133,7 +133,7 @@ public:
 
 
 		// -----------------------------------------------------------------------------
-		// Blue Box Vertex and Frag Shaders
+		// Flat Color Vertex and Frag Shaders
 		// ------------------------------------------------------------------------------
 		std::string flatColorShaderVertexSrc = R"(
 			#version 330 core

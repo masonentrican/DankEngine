@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #ifdef DANK_PLATFORM_WINDOWS
 #if DANK_DYNAMIC_LINK
 	#ifdef DANK_BUILD_DLL
@@ -45,3 +47,16 @@
 // A result of 0000000000010011 means that events 1,2, and 5 are present. This reduces memory cost
 // compared to using int's and allocating a unique value for each category.
 #define BIT(x) (1 << x)
+
+
+// Better handle smart pointers so that it's cleaner and can be expanded into an asset manager
+// for handling reference counting and creation / deletion easily.
+namespace Dank {
+
+	template<typename T>
+	using Ref	= std::shared_ptr<T>;
+
+	template<typename T>
+	using Scope = std::unique_ptr<T>;
+
+}

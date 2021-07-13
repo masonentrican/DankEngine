@@ -22,7 +22,7 @@ public:
 		};
 
 		// Instantiate the vertex buffer and pass in the vertex data
-		std::shared_ptr<Dank::VertexBuffer> vertexBuffer;											
+		Dank::Ref<Dank::VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(Dank::VertexBuffer::Create(vertices, sizeof(vertices)));
 
 		// Define the Vertex Buffer Layout
@@ -41,7 +41,7 @@ public:
 		uint32_t indices[3] = { 0, 1, 2 };													
 
 		// Declare the index buffer pointer
-		std::shared_ptr<Dank::IndexBuffer> indexBuffer;	
+		Dank::Ref<Dank::IndexBuffer> indexBuffer;
 
 		// Define the index buffer values from the indices
 		indexBuffer.reset(Dank::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
@@ -61,7 +61,7 @@ public:
 		};
 
 		// Declare the vertex buffer for the square
-		std::shared_ptr<Dank::VertexBuffer> squareVB;												
+		Dank::Ref<Dank::VertexBuffer> squareVB;
 
 		// Instantiate the square vertex buffer
 		squareVB.reset(Dank::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));		
@@ -81,7 +81,7 @@ public:
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };									
 
 		// Declare the square index buffer pointer
-		std::shared_ptr<Dank::IndexBuffer> squareIB;
+		Dank::Ref<Dank::IndexBuffer> squareIB;
 
 		// Define the values
 		squareIB.reset(Dank::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t))); 
@@ -204,11 +204,11 @@ public:
 	}
 
 private:
-	std::shared_ptr<Dank::Shader> _shader;
-	std::shared_ptr<Dank::VertexArray> _vertexArray;
+	Dank::Ref<Dank::Shader> _shader;
+	Dank::Ref<Dank::VertexArray> _vertexArray;
 
-	std::shared_ptr<Dank::Shader> _blueShader;
-	std::shared_ptr<Dank::VertexArray> _squareVA;
+	Dank::Ref<Dank::Shader> _blueShader;
+	Dank::Ref<Dank::VertexArray> _squareVA;
 
 	Dank::OrthographicCamera _camera;
 

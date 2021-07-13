@@ -155,10 +155,13 @@ public:
 			#version 330 core
 			
 			layout(location = 0) out vec4 color;
+
+			uniform vec3 u_Color;
+
 			in vec3 v_Position;
 			void main()
 			{
-				color = vec4(0.2, 0.3, 0.8, 1.0);
+				color = vec4(u_Color, 1.0);
 			}
 		)";
 
@@ -198,6 +201,7 @@ public:
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
 		std::dynamic_pointer_cast<Dank::OpenGLShader>(_flatColorShader)->Bind();
+		std::dynamic_pointer_cast<Dank::OpenGLShader>(_flatColorShader)->UploadUniformFloat3("u_Color", _flatShaderColor);
 
 		for (int y = -5; y < 5; y++)
 		{
@@ -211,6 +215,7 @@ public:
 
 		Dank::Renderer::EndScene();
 		// -----------  END SCENE  -------------//
+
 	}
 
 	void OnEvent(Dank::Event& event) override
@@ -221,6 +226,12 @@ public:
 
 	virtual void OnImGuiRender() override
 	{
+		if (_isShaderSettingsOpen)
+		{
+			ImGui::Begin("Shader settings", &_isShaderSettingsOpen);
+			ImGui::ColorEdit3("Shader Color", glm::value_ptr(_flatShaderColor));
+			ImGui::End();
+		}
 
 	}
 
@@ -238,6 +249,10 @@ private:
 
 	float _cameraMoveSpeed = 2.0f;
 	float _cameraRotationSpeed = 90.0f;
+
+	glm::vec3 _flatShaderColor = { 0.5, 0.4, 0.4 };
+
+	bool _isShaderSettingsOpen = true;
 
 };
 

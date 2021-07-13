@@ -123,7 +123,7 @@ public:
 			}	
 		)";
 
-		_shader.reset(new Dank::Shader(vertexSrc, fragmentSrc));
+		_shader.reset(Dank::Shader::Create(vertexSrc, fragmentSrc));
 
 
 
@@ -154,7 +154,7 @@ public:
 			}
 		)";
 
-		_blueShader.reset(new Dank::Shader(blueShaderVertexSrc, blueShaderFragmentSrc));
+		_blueShader.reset(Dank::Shader::Create(blueShaderVertexSrc, blueShaderFragmentSrc));
 	}
 	
 	void OnUpdate(Dank::Timestep ts) override
@@ -200,9 +200,7 @@ public:
 
 	virtual void OnImGuiRender() override
 	{
-		ImGui::Begin("Window generated from Sandbox proj");
-		ImGui::Text("This window was created from the sandbox project by using the ImGui obj.\n----------------------------------------\n\nImGui::Begin('Window title')\nImGui::Text('Window text')\nImGui::End()");
-		ImGui::End();
+
 	}
 
 private:

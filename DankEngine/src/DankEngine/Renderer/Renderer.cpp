@@ -1,6 +1,8 @@
 #include "dankpch.h"
 #include "Renderer.h"
 
+#include "Platform/OpenGL/OpenGLShader.h"
+
 namespace Dank {
 
 	Renderer::SceneData* Renderer::_sceneData = new Renderer::SceneData;
@@ -15,7 +17,7 @@ namespace Dank {
 	void Renderer::Submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray)
 	{
 		shader->Bind();
-		shader->UploadUniformMat4("u_ViewProjection", _sceneData->ViewProjectionMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ViewProjection", _sceneData->ViewProjectionMatrix);
 
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);

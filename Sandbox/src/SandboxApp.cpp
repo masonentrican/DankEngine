@@ -20,11 +20,11 @@ public:
 		_vertexArray.reset(Dank::VertexArray::Create());
 
 		// Define the vertex and color data for the vertex array
-		float vertices[3 * 9] = {
-			//positions           //colors                  //texture coords
-			-0.5f, -0.5f, 0.0f,   0.0f, 0.6f, 0.1f, 1.0f,   0.0f, 0.0f,
-			 0.5f, -0.5f, 0.0f,   0.0f, 0.4f, 0.1f, 1.0f,   1.0f, 0.0f,
-			 0.0f,  0.5f, 0.0f,   0.0f, 0.2f, 0.1f, 1.0f,   0.5f, 1.0f 
+		float vertices[3 * 5] = {
+			//positions         //texture coords
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.0f,  0.5f, 0.0f, 0.5f, 1.0f 
 		};
 
 		// Instantiate the vertex buffer and pass in the vertex data
@@ -34,7 +34,6 @@ public:
 		// Define the Vertex Buffer Layout
 		Dank::BufferLayout layout = {
 			{ Dank::ShaderDataType::Float3, "a_Position" },
-			{ Dank::ShaderDataType::Float4, "a_Color" },
 			{ Dank::ShaderDataType::Float2, "a_TextureCoords" }
 		};
 
@@ -98,90 +97,55 @@ public:
 
 
 		// -----------------------------------------------------------------------------
-		// VERTEX & FRAG SHADERS - Inline declaration and definition of shader source
+		// Texture shader
 		// ------------------------------------------------------------------------------
 
-		std::string vertexSrc = R"(
+		std::string textureVertexSrc = R"(
 			#version 330 core
-			
 			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec4 a_Color;
-			layout(location = 2) in vec2 a_TexCoord;
-
-			uniform mat4 u_ViewProjection;
-			out vec3 v_Position;
-			out vec4 v_Color;
-			out vec2 TexCoord;
-			void main()
-			{
-				v_Position = a_Position;
-				v_Color = a_Color;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
-				TexCoord = a_TexCoord;	
-			}	
-		)";
-
-		std::string fragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-			in vec3 v_Position;
-			in vec4 v_Color;
-			in vec2 TexCoord;
-
-			uniform sampler2D texture1;
-			
-
-			void main()
-			{
-				color = vec4(v_Position * 0.5 + 0.5, 1.0);
-				color = texture(texture1, TexCoord);
-			}	
-		)";
-
-		_shader.reset(Dank::Shader::Create(vertexSrc, fragmentSrc));
-
-
-
-		// -----------------------------------------------------------------------------
-		// Blue Box Vertex and Frag Shaders
-		// ------------------------------------------------------------------------------
-		std::string flatColorShaderVertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec2 a_TexCoord;			
 
 			uniform mat4 u_ViewProjection;
 			uniform mat4 u_Transform;
-
-			out vec3 v_Position;
+			
+			out vec2 v_TexCoord;
+			
 			void main()
-			{
-				v_Position = a_Position;
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);	
-			}
+			{	
+				v_TexCoord = a_TexCoord;				
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);				
+			}	
 		)";
 
-		std::string flatColorShaderFragmentSrc = R"(
+		std::string textureFragmentSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) out vec4 color;
 
+			uniform sampler2D u_Texture;						
 			uniform vec3 u_Color;
 
-			in vec3 v_Position;
+			in vec2 v_TexCoord;
+
 			void main()
 			{
-				color = vec4(u_Color, 1.0);
-			}
+				
+				color = texture(u_Texture, v_TexCoord) * vec4(u_Color, 1.0);			
+			}	
 		)";
 
-		_flatColorShader.reset(Dank::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
+		_shader.reset(Dank::Shader::Create(textureVertexSrc, textureFragmentSrc));
+
+		_tWall = Dank::Texture::Create("assets/textures/wall.jpg");
+		_tSmile = Dank::Texture::Create("assets/textures/awesomeface.png");
+		_tWeed = Dank::Texture::Create("assets/textures/weedleaf.png");
+
 	}
 
 	void OnUpdate(Dank::Timestep ts) override
 	{
 		float deltaTime = ts;
+		_runTime += ts.GetSeconds();
 
 		//DANK_INFO("Delta time: {0}s ({1}ms)", ts.GetSeconds(), ts.GetMilliseconds());
 
@@ -211,22 +175,18 @@ public:
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(_flatColorShader)->Bind();
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(_flatColorShader)->UploadUniformFloat3("u_Color", _flatShaderColor);
+		std::dynamic_pointer_cast<Dank::OpenGLShader>(_shader)->Bind();
+		std::dynamic_pointer_cast<Dank::OpenGLShader>(_shader)->UploadUniformFloat3("u_Color", _shaderDefaultColor);
+		std::dynamic_pointer_cast<Dank::OpenGLShader>(_shader)->UploadUniformInt("u_Texture", 0);
 
-		for (int y = -5; y < 5; y++)
-		{
-			for (int x = -5; x < 5; x++)
-			{
-				glm::vec3 pos(x * 0.15f, y * 0.15f, 0.0f);
-				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-				Dank::Renderer::Submit(_flatColorShader, _squareVA, transform);
-			}
-		}	
-		
-		_myTexture = Dank::Texture::Create("assets/textures/wall.jpg");
-		_myTexture->Bind();
+		_tWeed->Bind();
 		Dank::Renderer::Submit(_shader, _vertexArray);
+		_tWall->Bind();
+		Dank::Renderer::Submit(_shader, _vertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(glm::cos(_runTime))));
+		_tSmile->Bind();
+		Dank::Renderer::Submit(_shader, _vertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(glm::sin(_runTime))));
+		
+		Dank::Renderer::Draw(_vertexArray);
 
 		Dank::Renderer::EndScene();
 		// -----------  END SCENE  -------------//
@@ -244,7 +204,7 @@ public:
 		if (_isShaderSettingsOpen)
 		{
 			ImGui::Begin("Shader settings", &_isShaderSettingsOpen);
-			ImGui::ColorEdit3("Shader Color", glm::value_ptr(_flatShaderColor));
+			ImGui::ColorEdit3("Shader Color", glm::value_ptr(_shaderDefaultColor));
 			ImGui::End();
 		}
 
@@ -263,15 +223,21 @@ private:
 	//Dank::Ref<Dank::Texture> _myTexture;
 	Dank::Texture* _myTexture;
 
+	Dank::Texture* _tSmile;
+	Dank::Texture* _tWall;
+	Dank::Texture* _tWeed;
+
 	glm::vec3 _cameraPosition;
 	float _cameraRotation = 0.0f;
 
 	float _cameraMoveSpeed = 2.0f;
 	float _cameraRotationSpeed = 90.0f;
 
-	glm::vec3 _flatShaderColor = { 0.5, 0.4, 0.4 };
+	glm::vec3 _shaderDefaultColor = { 1.0f, 1.0f, 1.0f };
 
 	bool _isShaderSettingsOpen = true;
+
+	float _runTime = 0;
 
 };
 

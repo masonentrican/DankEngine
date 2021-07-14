@@ -24,4 +24,9 @@ namespace Dank {
 		RenderCommand::DrawIndexed(vertexArray);
 	}
 
+	void Renderer::Draw(const Ref<VertexArray>& vertexArray)
+	{
+		RenderCommand::DrawIndexed(vertexArray);
+	}
+
 }

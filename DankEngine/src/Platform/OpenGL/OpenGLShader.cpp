@@ -1,86 +1,161 @@
 #include "dankpch.h"
 #include "OpenGLShader.h"
 
+#include <fstream>
+
 #include <glad/glad.h>
 
 #include <glm/gtc/type_ptr.hpp>
 
-namespace Dank {
+namespace Dank {	
 
+	static GLenum ShaderTypeFromString(const std::string& type)
+	{
+		if (type == "vertex")
+			return GL_VERTEX_SHADER;
+
+		if (type == "fragment")
+			return GL_FRAGMENT_SHADER;
+
+		DANK_CORE_ASSERT(false, "Unknown shader type in OpenGLShader type string parsing");
+		return 0;
+	}
+
+	// Used for supplying a filepath
+	OpenGLShader::OpenGLShader(const std::string& filepath)
+	{	
+		std::string source = ReadFile(filepath);
+		auto shaderSources = PreProcess(source);
+		
+		Compile(shaderSources);
+	}
+
+	// Use for supplying src references
 	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc)
 	{
-		// Create an empty vertex shader handle
-		GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+		std::unordered_map<GLenum, std::string> sources;
+		sources[GL_VERTEX_SHADER] = vertexSrc;
+		sources[GL_FRAGMENT_SHADER] = fragmentSrc;
 
-		// Send the vertex shader source code to GL
-		// Note that std::string's .c_str is NULL character terminated.
-		const GLchar* source = vertexSrc.c_str();
-		glShaderSource(vertexShader, 1, &source, 0);
+		Compile(sources);
+	}
 
-		// Compile the vertex shader
-		glCompileShader(vertexShader);
+	OpenGLShader::~OpenGLShader()
+	{
+		glDeleteProgram(_rendererID);
+	}
 
-		GLint isCompiled = 0;
-		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE)
+	std::string OpenGLShader::ReadFile(const std::string& filepath)
+	{
+		std::string result;
+		std::ifstream inputFile(filepath, std::ios::in, std::ios::binary);
+
+		if (inputFile)
 		{
-			GLint maxLength = 0;
-			glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
+			// Goto end of file
+			inputFile.seekg(0, std::ios::end);
 
-			// The maxLength includes the NULL character
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
+			// Find the position at the end so we can determine size
+			result.resize(inputFile.tellg());
 
-			// We don't need the shader anymore.
-			glDeleteShader(vertexShader);
+			// Go back to beginning
+			inputFile.seekg(0, std::ios::beg);
 
-			DANK_CORE_ERROR("{0}", infoLog.data());
-			DANK_CORE_ASSERT(false, "Vertex shader compilation failure");
-			return;
+			// Read the file from beginning with size of result
+			inputFile.read(&result[0], result.size());
+
+			inputFile.close();
+
+			return result;
+		}
+		else
+		{
+			DANK_CORE_ERROR("OpenGLShader could not open file '{0}'", filepath);
+		}
+	}
+
+	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& source)
+	{
+		std::unordered_map<GLenum, std::string> shaderSources;
+
+		// The token to define the type of shader
+		const char* typeToken = "#type";				
+
+		size_t typeTokenLength = strlen(typeToken);			
+		size_t pos = source.find(typeToken, 0);
+		
+		// While a token exists
+		while (pos != std::string::npos)
+		{
+			// Find the first instance of a new line or return so we have the position. If a token doesn't exist here
+			// that signifies a problem we need to assert
+			size_t eol = source.find_first_of("\r\n", pos);
+			DANK_CORE_ASSERT(eol != std::string::npos, "Syntax error in OpenGLShader - are there extra whitespaces at the token?");
+
+			// Advance passed the beginning position + the size of the token + 1 for a whitespace
+			// so we can grab what type this is
+			size_t begin = pos + typeTokenLength + 1;
+			std::string type = source.substr(begin, eol - begin);
+			DANK_CORE_ASSERT(ShaderTypeFromString(type), "Invalid shader type specified in OpenGLShader");
+
+			// Find the next line and look for another type token
+			size_t nextLinePos = source.find_first_not_of("\r\n", eol);
+			pos = source.find(typeToken, nextLinePos);
+
+			// Search from the next line to the end of the file or next token
+			shaderSources[ShaderTypeFromString(type)] = source.substr(nextLinePos, pos - (nextLinePos == std::string::npos ? source.size() - 1 : nextLinePos));
+
 		}
 
-		// Create an empty fragment shader handle
-		GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+		return shaderSources;
+	}
 
-		// Send the fragment shader source code to GL
-		// Note that std::string's .c_str is NULL character terminated.
-		source = fragmentSrc.c_str();
-		glShaderSource(fragmentShader, 1, &source, 0);
+	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources)
+	{
+		GLuint program = glCreateProgram();
+		std::vector<GLenum> glShaderIDs;
 
-		// Compile the fragment shader
-		glCompileShader(fragmentShader);
-
-		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE)
+		for (auto&& [key,value] : shaderSources)
 		{
-			GLint maxLength = 0;
-			glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength);
+			GLenum type = key;
+			const std::string& source = value;
 
-			// The maxLength includes the NULL character
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(fragmentShader, maxLength, &maxLength, &infoLog[0]);
+			GLuint shader = glCreateShader(type);
 
-			// We don't need the shader anymore.
-			glDeleteShader(fragmentShader);
-			// Either of them. Don't leak shaders.
-			glDeleteShader(vertexShader);
+			// Send the vertex shader source code to GL
+			// Note that std::string's .c_str is NULL character terminated.
+			const GLchar* sourceCStr = source.c_str();
+			glShaderSource(shader, 1, &sourceCStr, 0);
 
-			DANK_CORE_ERROR("{0}", infoLog.data());
-			DANK_CORE_ASSERT(false, "Fragment shader compilation failure");
-			return;
+			// Compile the vertex shader
+			glCompileShader(shader);
+
+			GLint isCompiled = 0;
+			glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
+			if (isCompiled == GL_FALSE)
+			{
+				GLint maxLength = 0;
+				glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+				// The maxLength includes the NULL character
+				std::vector<GLchar> infoLog(maxLength);
+				glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
+
+				// We don't need the shader anymore.
+				glDeleteShader(shader);
+
+				DANK_CORE_ERROR("{0}", infoLog.data());
+				DANK_CORE_ASSERT(false, "Shader compilation failure");
+				break;
+			} 
+
+			// Attach and track shader id on successful compile
+			glAttachShader(program, shader);
+			glShaderIDs.push_back(shader);
 		}
 
-		// Vertex and fragment shaders are successfully compiled.
+		// Shaders are successfully compiled.
 		// Now time to link them together into a program.
-		// Get a program object.
-		_rendererID = glCreateProgram();
-		GLuint program = _rendererID;
-
-		// Attach our shaders to our program
-		glAttachShader(program, vertexShader);
-		glAttachShader(program, fragmentShader);
-
-		// Link our program
 		glLinkProgram(program);
 
 		// Note the different functions here: glGetProgram* instead of glGetShader*.
@@ -93,13 +168,14 @@ namespace Dank {
 
 			// The maxLength includes the NULL character
 			std::vector<GLchar> infoLog(maxLength);
-			glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
+			//glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
 
 			// We don't need the program anymore.
 			glDeleteProgram(program);
+
 			// Don't leak shaders either.
-			glDeleteShader(vertexShader);
-			glDeleteShader(fragmentShader);
+			for (auto id : glShaderIDs)			
+				glDeleteShader(id);		
 
 			DANK_CORE_ERROR("{0}", infoLog.data());
 			DANK_CORE_ASSERT(false, "Shader link failure!");
@@ -107,13 +183,10 @@ namespace Dank {
 		}
 
 		// Always detach shaders after a successful link.
-		glDetachShader(program, vertexShader);
-		glDetachShader(program, fragmentShader);
-	}
+		for (auto id : glShaderIDs)
+			glDetachShader(program, id);
 
-	OpenGLShader::~OpenGLShader()
-	{
-		glDeleteProgram(_rendererID);
+		_rendererID = program;
 	}
 
 	void OpenGLShader::Bind() const

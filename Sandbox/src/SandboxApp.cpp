@@ -1,6 +1,6 @@
 #include <Dank.h>
 #include "Platform/OpenGL/OpenGLShader.h"
-
+#include "DankEngine/Renderer/TextureOpenGl.h"
 #include "ImGui/ImGui.h"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -20,10 +20,11 @@ public:
 		_vertexArray.reset(Dank::VertexArray::Create());
 
 		// Define the vertex and color data for the vertex array
-		float vertices[3 * 7] = {
-			-0.5f, -0.5f, 0.0f, 0.0f, 0.6f, 0.1f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 0.0f, 0.4f, 0.1f, 1.0f,
-			 0.0f,  0.5f, 0.0f, 0.0f, 0.2f, 0.1f, 1.0f
+		float vertices[3 * 9] = {
+			//positions           //colors                  //texture coords
+			-0.5f, -0.5f, 0.0f,   0.0f, 0.6f, 0.1f, 1.0f,   0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f,   0.0f, 0.4f, 0.1f, 1.0f,   1.0f, 0.0f,
+			 0.0f,  0.5f, 0.0f,   0.0f, 0.2f, 0.1f, 1.0f,   0.5f, 1.0f 
 		};
 
 		// Instantiate the vertex buffer and pass in the vertex data
@@ -33,7 +34,8 @@ public:
 		// Define the Vertex Buffer Layout
 		Dank::BufferLayout layout = {
 			{ Dank::ShaderDataType::Float3, "a_Position" },
-			{ Dank::ShaderDataType::Float4, "a_Color" }
+			{ Dank::ShaderDataType::Float4, "a_Color" },
+			{ Dank::ShaderDataType::Float2, "a_TextureCoords" }
 		};
 
 		// Set the layout to the vertex buffer instance
@@ -104,14 +106,18 @@ public:
 			
 			layout(location = 0) in vec3 a_Position;
 			layout(location = 1) in vec4 a_Color;
+			layout(location = 2) in vec2 a_TexCoord;
+
 			uniform mat4 u_ViewProjection;
 			out vec3 v_Position;
 			out vec4 v_Color;
+			out vec2 TexCoord;
 			void main()
 			{
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);	
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+				TexCoord = a_TexCoord;	
 			}	
 		)";
 
@@ -121,10 +127,15 @@ public:
 			layout(location = 0) out vec4 color;
 			in vec3 v_Position;
 			in vec4 v_Color;
+			in vec2 TexCoord;
+
+			uniform sampler2D texture1;
+			
+
 			void main()
 			{
 				color = vec4(v_Position * 0.5 + 0.5, 1.0);
-				color = v_Color;
+				color = texture(texture1, TexCoord);
 			}	
 		)";
 
@@ -212,6 +223,10 @@ public:
 				Dank::Renderer::Submit(_flatColorShader, _squareVA, transform);
 			}
 		}	
+		
+		_myTexture = Dank::Texture::Create("assets/textures/wall.jpg");
+		_myTexture->Bind();
+		Dank::Renderer::Submit(_shader, _vertexArray);
 
 		Dank::Renderer::EndScene();
 		// -----------  END SCENE  -------------//
@@ -243,6 +258,10 @@ private:
 	Dank::Ref<Dank::VertexArray> _squareVA;
 
 	Dank::OrthographicCamera _camera;
+
+	//TODO: make shared pointer
+	//Dank::Ref<Dank::Texture> _myTexture;
+	Dank::Texture* _myTexture;
 
 	glm::vec3 _cameraPosition;
 	float _cameraRotation = 0.0f;

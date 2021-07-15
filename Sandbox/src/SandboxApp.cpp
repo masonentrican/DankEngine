@@ -1,6 +1,5 @@
 #include <Dank.h>
 #include "Platform/OpenGL/OpenGLShader.h"
-#include "DankEngine/Renderer/TextureOpenGl.h"
 #include "ImGui/ImGui.h"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -68,7 +67,7 @@ public:
 		float deltaTime = ts;
 		_runTime += ts.GetSeconds();
 
-		//DANK_INFO("Delta time: {0}s ({1}ms)", ts.GetSeconds(), ts.GetMilliseconds());
+		DANK_INFO("FPS - {0}", 1000/ ts.GetMilliseconds());
 
 		if (Dank::Input::IsKeyPressed(DANK_KEY_LEFT))
 			_cameraPosition.x -= _cameraMoveSpeed * deltaTime;

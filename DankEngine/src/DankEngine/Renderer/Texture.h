@@ -1,6 +1,5 @@
 #pragma once
-#include "dankpch.h"
-#include "DankEngine/Renderer/Renderer.h"
+#include "DankEngine/Core.h"
 
 namespace Dank {
 	class Texture

@@ -1,12 +1,12 @@
 #include "dankpch.h"
-#include "TextureOpenGl.h"
+#include "OpenGLTexture.h"
+
 #include "stb_image.h"
+
 #include <glad/glad.h>
-#include "Shader.h"
-#include "DankEngine/Renderer/Renderer.h"
 
 namespace Dank {
-	TextureOpenGl::TextureOpenGl(const std::string& filepath)
+	OpenGLTexture::OpenGLTexture(const std::string& filepath)
 	{		
 
 		unsigned int texture;
@@ -64,9 +64,9 @@ namespace Dank {
 
 	}
 	
-	TextureOpenGl::~TextureOpenGl()
+	OpenGLTexture::~OpenGLTexture()
 	{}
-	void TextureOpenGl::Bind() const
+	void OpenGLTexture::Bind() const
 	{
 		glBindTexture(GL_TEXTURE_2D, _iD);
 	}

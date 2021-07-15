@@ -24,7 +24,6 @@
 
 #include "DankEngine/Renderer/OrthographicCamera.h"
 #include "DankEngine/Renderer/Texture.h"
-#include "DankEngine/Renderer/TextureOpenGl.h"
 
 // Entry Point
 #include "DankEngine/EntryPoint.h"

@@ -132,7 +132,7 @@ public:
 			}	
 		)";
 
-		_shader.reset(Dank::Shader::Create(textureVertexSrc, textureFragmentSrc));
+		_textureShader = Dank::Shader::Create("Texture Shader", textureVertexSrc, textureFragmentSrc);
 
 		_tWall = Dank::Texture::Create("assets/textures/wall.jpg");
 		_tSmile = Dank::Texture::Create("assets/textures/awesomeface.png");
@@ -173,16 +173,16 @@ public:
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(_shader)->Bind();
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(_shader)->UploadUniformFloat3("u_Color", _shaderDefaultColor);
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(_shader)->UploadUniformInt("u_Texture", 0);
+		std::dynamic_pointer_cast<Dank::OpenGLShader>(_textureShader)->Bind();
+		std::dynamic_pointer_cast<Dank::OpenGLShader>(_textureShader)->UploadUniformFloat3("u_Color", _shaderDefaultColor);
+		std::dynamic_pointer_cast<Dank::OpenGLShader>(_textureShader)->UploadUniformInt("u_Texture", 0);
 
 		_tWeed->Bind();
-		Dank::Renderer::Submit(_shader, _vertexArray);
+		Dank::Renderer::Submit(_textureShader, _vertexArray);
 		_tWall->Bind();
-		Dank::Renderer::Submit(_shader, _vertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(glm::cos(_runTime))));
+		Dank::Renderer::Submit(_textureShader, _vertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(glm::cos(_runTime))));
 		_tSmile->Bind();
-		Dank::Renderer::Submit(_shader, _vertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(glm::sin(_runTime))));
+		Dank::Renderer::Submit(_textureShader, _vertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(glm::sin(_runTime))));
 		
 		Dank::Renderer::Draw(_vertexArray);
 
@@ -210,6 +210,8 @@ public:
 
 private:
 	Dank::ShaderLibrary _shaderLibrary;
+
+	Dank::Ref<Dank::Shader> _textureShader;
 
 	Dank::Ref<Dank::Shader> _defaultShader;
 	Dank::Ref<Dank::VertexArray> _vertexArray;

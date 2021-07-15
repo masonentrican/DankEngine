@@ -6,10 +6,8 @@ namespace Dank {
 	class Texture
 	{
 	public:
-		~Texture() = default;
-		static Texture* Create(const std::string& filepath);
+		virtual ~Texture() = default;
+		static Ref<Texture> Create(const std::string& filepath);
 		virtual void Bind() const = 0;
-
-	
 	};
 }

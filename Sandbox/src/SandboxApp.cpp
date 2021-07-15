@@ -53,90 +53,13 @@ public:
 		// Pass the index array to the vertex array for reference
 		_vertexArray->SetIndexBuffer(indexBuffer);
 
-		// Create the squareVA vertex array
-		_squareVA.reset(Dank::VertexArray::Create());
+		// Create the shaders
+		_defaultShader = Dank::Shader::Create("assets/shaders/Default.glsl");
 
-		// Define the square verticies
-		float squareVertices[3 * 4] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f
-		};
-
-		// Declare the vertex buffer for the square
-		Dank::Ref<Dank::VertexBuffer> squareVB;
-
-		// Instantiate the square vertex buffer
-		squareVB.reset(Dank::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
-
-		// Define the Square Vertex Buffer Layout
-		Dank::BufferLayout squareLayout = {
-			{ Dank::ShaderDataType::Float3, "a_Position" }
-		};
-
-		// Set the layout to the square vertex buffer instance
-		squareVB->SetLayout(squareLayout);
-
-		// Pass the square vertex buffer instance to the square vertex array
-		_squareVA->AddVertexBuffer(squareVB);
-
-		// Define the square indicies
-		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-
-		// Declare the square index buffer pointer
-		Dank::Ref<Dank::IndexBuffer> squareIB;
-
-		// Define the values
-		squareIB.reset(Dank::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
-
-		// Pass the square index array to the vertex array for ref
-		_squareVA->SetIndexBuffer(squareIB);
-
-
-		// -----------------------------------------------------------------------------
-		// Texture shader
-		// ------------------------------------------------------------------------------
-
-		std::string textureVertexSrc = R"(
-			#version 330 core
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec2 a_TexCoord;			
-
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_Transform;
-			
-			out vec2 v_TexCoord;
-			
-			void main()
-			{	
-				v_TexCoord = a_TexCoord;				
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);				
-			}	
-		)";
-
-		std::string textureFragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-
-			uniform sampler2D u_Texture;						
-			uniform vec3 u_Color;
-
-			in vec2 v_TexCoord;
-
-			void main()
-			{
-				
-				color = texture(u_Texture, v_TexCoord) * vec4(u_Color, 1.0);			
-			}	
-		)";
-
-		_textureShader = Dank::Shader::Create("Texture Shader", textureVertexSrc, textureFragmentSrc);
-
-		_tWall = Dank::Texture::Create("assets/textures/wall.jpg");
+		// Create the textures
+		_tWall  = Dank::Texture::Create("assets/textures/wall.jpg");
 		_tSmile = Dank::Texture::Create("assets/textures/awesomeface.png");
-		_tWeed = Dank::Texture::Create("assets/textures/weedleaf.png");
+		_tWeed  = Dank::Texture::Create("assets/textures/weedleaf.png");		
 
 	}
 
@@ -173,19 +96,21 @@ public:
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(_textureShader)->Bind();
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(_textureShader)->UploadUniformFloat3("u_Color", _shaderDefaultColor);
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(_textureShader)->UploadUniformInt("u_Texture", 0);
+		// Bind the shader for the traingles and upload uniforms
+		std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->Bind();
+		std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformFloat3("u_Color", _shaderDefaultColor);
+		std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformInt("u_Texture", 0);
 
-		_tWeed->Bind();
-		Dank::Renderer::Submit(_textureShader, _vertexArray);
+		// Bind each texture the shader for the triangles
 		_tWall->Bind();
-		Dank::Renderer::Submit(_textureShader, _vertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(glm::cos(_runTime))));
+		Dank::Renderer::Submit(_defaultShader, _vertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(glm::cos(_runTime))));
 		_tSmile->Bind();
-		Dank::Renderer::Submit(_textureShader, _vertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(glm::sin(_runTime))));
-		
-		Dank::Renderer::Draw(_vertexArray);
+		Dank::Renderer::Submit(_defaultShader, _vertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(glm::sin(_runTime))));
 
+
+		
+
+		Dank::Renderer::Draw(_vertexArray);
 		Dank::Renderer::EndScene();
 		// -----------  END SCENE  -------------//
 
@@ -211,23 +136,14 @@ public:
 private:
 	Dank::ShaderLibrary _shaderLibrary;
 
-	Dank::Ref<Dank::Shader> _textureShader;
-
 	Dank::Ref<Dank::Shader> _defaultShader;
 	Dank::Ref<Dank::VertexArray> _vertexArray;
 
-	Dank::Ref<Dank::Shader> _flatColorShader;
-	Dank::Ref<Dank::VertexArray> _squareVA;
-
 	Dank::OrthographicCamera _camera;
 
-	//TODO: make shared pointer
-	//Dank::Ref<Dank::Texture> _myTexture;
-	Dank::Texture* _myTexture;
-
-	Dank::Texture* _tSmile;
-	Dank::Texture* _tWall;
-	Dank::Texture* _tWeed;
+	Dank::Ref<Dank::Texture> _tSmile;
+	Dank::Ref<Dank::Texture> _tWall;
+	Dank::Ref<Dank::Texture> _tWeed;
 
 	glm::vec3 _cameraPosition;
 	float _cameraRotation = 0.0f;

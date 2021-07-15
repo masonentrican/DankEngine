@@ -18,10 +18,12 @@ IncludeDir["GLFW"] = "DankEngine/vendor/GLFW/include"
 IncludeDir["Glad"] = "DankEngine/vendor/Glad/include"
 IncludeDir["ImGui"] = "DankEngine/vendor/ImGui"
 IncludeDir["glm"] = "DankEngine/vendor/glm"
+IncludeDir["stb_image"] = "DankEngine/vendor/stb_image"
 
 include "DankEngine/vendor/GLFW"
 include "DankEngine/vendor/Glad"
 include "DankEngine/vendor/ImGui"
+
 
 
 project "DankEngine"
@@ -42,7 +44,9 @@ project "DankEngine"
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
-		"%{prj.name}/vendor/glm/glm/**.inl"
+		"%{prj.name}/vendor/glm/glm/**.inl",
+		"%{prj.name}/vendor/stb_image/**.h",
+		"%{prj.name}/vendor/stb_image/**.cpp"
 	}
 
 	defines
@@ -57,7 +61,9 @@ project "DankEngine"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}"
+
 	}
 
 	links

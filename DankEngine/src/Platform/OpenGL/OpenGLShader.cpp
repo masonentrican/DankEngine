@@ -28,10 +28,17 @@ namespace Dank {
 		auto shaderSources = PreProcess(source);
 		
 		Compile(shaderSources);
+
+		// Retrieve name of shader
+		auto lastSlash = filepath.find_last_of("/\\");
+		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+		auto lastDot = filepath.rfind('.');
+		auto count = lastDot == std::string::npos ? filepath.size() - lastSlash : lastDot - lastSlash;
+		_name = filepath.substr(lastSlash, count);
 	}
 
 	// Use for supplying src references
-	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc)
+	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) : _name(name)
 	{
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
@@ -48,7 +55,7 @@ namespace Dank {
 	std::string OpenGLShader::ReadFile(const std::string& filepath)
 	{
 		std::string result;
-		std::ifstream inputFile(filepath, std::ios::in, std::ios::binary);
+		std::ifstream inputFile(filepath, std::ios::in | std::ios::binary);
 
 		if (inputFile)
 		{
@@ -113,8 +120,10 @@ namespace Dank {
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources)
 	{
 		GLuint program = glCreateProgram();
-		std::vector<GLenum> glShaderIDs;
+		std::array<GLenum, 2> glShaderIDs;
+		DANK_CORE_ASSERT(shaderSources.size() <= 2, "Only 2 shaders per file supported for now");
 
+		int glShaderIDIndex = 0;
 		for (auto&& [key,value] : shaderSources)
 		{
 			GLenum type = key;
@@ -149,9 +158,9 @@ namespace Dank {
 				break;
 			} 
 
-			// Attach and track shader id on successful compile
+			// Attach shader on successful compile
 			glAttachShader(program, shader);
-			glShaderIDs.push_back(shader);
+			glShaderIDs[glShaderIDIndex++] = shader;
 		}
 
 		// Shaders are successfully compiled.

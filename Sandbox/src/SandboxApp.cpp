@@ -52,13 +52,18 @@ public:
 		// Pass the index array to the vertex array for reference
 		_vertexArray->SetIndexBuffer(indexBuffer);
 
-		// Create the shaders
-		_defaultShader = Dank::Shader::Create("assets/shaders/Default.glsl");
-
 		// Create the textures
-		_tWall  = Dank::Texture::Create("assets/textures/wall.jpg");
+		_tWall = Dank::Texture::Create("assets/textures/wall.jpg");
 		_tSmile = Dank::Texture::Create("assets/textures/awesomeface.png");
-		_tWeed  = Dank::Texture::Create("assets/textures/weedleaf.png");		
+		_tWeed = Dank::Texture::Create("assets/textures/weedleaf.png");
+
+		// Create the shaders
+		auto defaultShader = _shaderLibrary.Load("assets/shaders/Default.glsl");		
+
+		// Bind the shader for the traingles and upload uniforms
+		std::dynamic_pointer_cast<Dank::OpenGLShader>(defaultShader)->Bind();
+		std::dynamic_pointer_cast<Dank::OpenGLShader>(defaultShader)->UploadUniformFloat3("u_Color", _shaderDefaultColor);
+		std::dynamic_pointer_cast<Dank::OpenGLShader>(defaultShader)->UploadUniformInt("u_Texture", 0);
 
 	}
 
@@ -93,23 +98,20 @@ public:
 		// ----------- BEGIN SCENE -------------//
 		Dank::Renderer::BeginScene(_camera);
 
-		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
-
-		// Bind the shader for the traingles and upload uniforms
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->Bind();
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformFloat3("u_Color", _shaderDefaultColor);
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformInt("u_Texture", 0);
-
-		// Bind each texture the shader for the triangles
+		// Get the shader from the library
+		_defaultShader = _shaderLibrary.Get("Default");
+		
+		// Bind the wall texture and submit	
 		_tWall->Bind();
 		Dank::Renderer::Submit(_defaultShader, _vertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(glm::cos(_runTime))));
+
+		// Bind the smile texture and submit
 		_tSmile->Bind();
 		Dank::Renderer::Submit(_defaultShader, _vertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(glm::sin(_runTime))));
 
-
-		
-
+		// Draw
 		Dank::Renderer::Draw(_vertexArray);
+
 		Dank::Renderer::EndScene();
 		// -----------  END SCENE  -------------//
 

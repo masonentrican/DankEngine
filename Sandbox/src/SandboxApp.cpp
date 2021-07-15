@@ -13,7 +13,7 @@ The client side code. This is how you build a client executable using the Dank E
 class TestLayer : public Dank::Layer
 {
 public:
-	TestLayer() : Layer("Test"), _camera(-1.6f, 1.6f, -0.9f, 0.9f), _cameraPosition(0.0f)
+	TestLayer() : Layer("Test"), _cameraController(1280.0f / 720.0f)
 	{
 		// Instatiate a vertex array
 		_vertexArray.reset(Dank::VertexArray::Create());
@@ -72,31 +72,16 @@ public:
 		float deltaTime = ts;
 		_runTime += ts.GetSeconds();
 
+		_cameraController.OnUpdate(ts);
+
 		DANK_INFO("FPS - {0}", 1000/ ts.GetMilliseconds());
 
-		if (Dank::Input::IsKeyPressed(DANK_KEY_LEFT))
-			_cameraPosition.x -= _cameraMoveSpeed * deltaTime;
-		else if (Dank::Input::IsKeyPressed(DANK_KEY_RIGHT))
-			_cameraPosition.x += _cameraMoveSpeed * deltaTime;
-
-		if (Dank::Input::IsKeyPressed(DANK_KEY_UP))
-			_cameraPosition.y += _cameraMoveSpeed * deltaTime;
-		else if (Dank::Input::IsKeyPressed(DANK_KEY_DOWN))
-			_cameraPosition.y -= _cameraMoveSpeed * deltaTime;
-
-		if (Dank::Input::IsKeyPressed(DANK_KEY_A))
-			_cameraRotation += _cameraRotationSpeed * deltaTime;
-		else if (Dank::Input::IsKeyPressed(DANK_KEY_D))
-			_cameraRotation -= _cameraRotationSpeed * deltaTime;
 
 		Dank::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Dank::RenderCommand::Clear();
 
-		_camera.SetPosition(_cameraPosition);
-		_camera.SetRotation(_cameraRotation);
-
 		// ----------- BEGIN SCENE -------------//
-		Dank::Renderer::BeginScene(_camera);
+		Dank::Renderer::BeginScene(_cameraController.GetCamera());
 
 		// Get the shader from the library
 		_defaultShader = _shaderLibrary.Get("Default");
@@ -117,10 +102,12 @@ public:
 
 	}
 
-	void OnEvent(Dank::Event& event) override
+	void OnEvent(Dank::Event& e) override
 	{
 		// Overall event logging
-		// DANK_TRACE("{0}", event);
+		// DANK_TRACE("{0}", e);
+
+		_cameraController.OnEvent(e);
 	}
 
 	virtual void OnImGuiRender() override
@@ -140,17 +127,11 @@ private:
 	Dank::Ref<Dank::Shader> _defaultShader;
 	Dank::Ref<Dank::VertexArray> _vertexArray;
 
-	Dank::OrthographicCamera _camera;
+	Dank::OrthographicCameraController _cameraController;
 
 	Dank::Ref<Dank::Texture> _tSmile;
 	Dank::Ref<Dank::Texture> _tWall;
 	Dank::Ref<Dank::Texture> _tWeed;
-
-	glm::vec3 _cameraPosition;
-	float _cameraRotation = 0.0f;
-
-	float _cameraMoveSpeed = 2.0f;
-	float _cameraRotationSpeed = 90.0f;
 
 	glm::vec3 _shaderDefaultColor = { 1.0f, 1.0f, 1.0f };
 

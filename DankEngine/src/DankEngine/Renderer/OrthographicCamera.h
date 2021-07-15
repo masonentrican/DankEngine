@@ -14,9 +14,12 @@ namespace Dank {
 		void SetPosition(const glm::vec3& position) { _position = position; RecalculateViewMatrix(); }
 		void SetRotation(const float rotation) { _rotation = rotation; RecalculateViewMatrix(); }
 
+		void SetProjection(float left, float right, float bottom, float top);
+
 		const glm::mat4& GetProjectionMatrix() const { return _projectionMatrix; }
 		const glm::mat4& GetViewMatrix() const { return _viewMatrix; }
 		const glm::mat4& GetViewProjectionMatrix() const { return _viewProjectionMatrix; }
+
 	private:
 		void RecalculateViewMatrix();
 	private:

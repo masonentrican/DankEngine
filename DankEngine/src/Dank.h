@@ -14,6 +14,8 @@
 
 #include "DankEngine/ImGui/ImGuiLayer.h"
 
+
+
 // Renderer
 #include "DankEngine/Renderer/Renderer.h"
 #include "DankEngine/Renderer/RenderCommand.h"
@@ -23,6 +25,8 @@
 #include "DankEngine/Renderer/VertexArray.h"
 
 #include "DankEngine/Renderer/OrthographicCamera.h"
+#include "DankEngine/Renderer/OrthographicCameraController.h"
+
 #include "DankEngine/Renderer/Texture.h"
 
 // Entry Point

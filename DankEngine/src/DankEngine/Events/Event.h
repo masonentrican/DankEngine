@@ -79,21 +79,18 @@ namespace Dank {
 	// dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
 	class EventDispatcher
 	{
-		// Template to pass in multiple data types where T is used - see Alias Template
-		// EventFn can now be used to return if the reference is of type T.
-		template<typename T> using EventFn = std::function<bool(T&)>;    
 
 	public:
 		// On construct, create an instance of this class with the reference of the event recieved so that we can
 		// call the EventDispatcher with a different EventFn.
 		EventDispatcher(Event& event) : _event(event) {}
 
-		template<typename T>
-		bool Dispatch(EventFn<T> func)
+		template<typename T, typename F>
+		bool Dispatch(const F& func)
 		{
 			if (_event.GetEventType() == T::GetStaticType())
 			{				
-				_event.Handled = func(*(T*)&_event);
+				_event.Handled = func(static_cast<T&>(_event));
 				return true;
 			}
 			return false;

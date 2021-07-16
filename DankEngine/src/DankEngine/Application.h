@@ -31,8 +31,10 @@ namespace Dank {
 
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 	private:
 		bool _running = true;
+		bool _minimized = false;
 
 		std::unique_ptr<Window> _window;
 		ImGuiLayer* _imGuiLayer;

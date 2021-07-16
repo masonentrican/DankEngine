@@ -62,19 +62,22 @@ public:
 
 		// Bind the shader for the traingles and upload uniforms
 		std::dynamic_pointer_cast<Dank::OpenGLShader>(defaultShader)->Bind();
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(defaultShader)->UploadUniformFloat3("u_Color", _shaderDefaultColor);
 		std::dynamic_pointer_cast<Dank::OpenGLShader>(defaultShader)->UploadUniformInt("u_Texture", 0);
+
 
 	}
 
 	void OnUpdate(Dank::Timestep ts) override
 	{
+		// FPS DEBUG
+		// DANK_INFO("FPS - {0}", 1000/ ts.GetMilliseconds());
+		
 		float deltaTime = ts;
 		_runTime += ts.GetSeconds();
 
 		_cameraController.OnUpdate(ts);
 
-		DANK_INFO("FPS - {0}", 1000/ ts.GetMilliseconds());
+		
 
 
 		Dank::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
@@ -86,6 +89,9 @@ public:
 		// Get the shader from the library
 		_defaultShader = _shaderLibrary.Get("Default");
 		
+
+		std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformFloat3("u_Color", _shaderDefaultColor);
+
 		// Bind the wall texture and submit	
 		_tWall->Bind();
 		Dank::Renderer::Submit(_defaultShader, _vertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(glm::cos(_runTime))));
@@ -108,6 +114,7 @@ public:
 		// DANK_TRACE("{0}", e);
 
 		_cameraController.OnEvent(e);
+
 	}
 
 	virtual void OnImGuiRender() override

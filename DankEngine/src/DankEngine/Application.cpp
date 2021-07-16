@@ -1,7 +1,10 @@
 #include "dankpch.h"
 #include "Application.h"
 
+#include "DankEngine/Log.h"
+
 #include "DankEngine/Renderer/Renderer.h"
+
 #include "Input.h"
 
 // TODO: Only needed due to time right now
@@ -49,9 +52,10 @@ namespace Dank {
 		// Handle window close event through dispatch
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(DANK_BIND_EVENT(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(DANK_BIND_EVENT(Application::OnWindowResize));
 
 		// Iterate backwards through the layerStack to handle events that are at the end in overlays
-		// before we handle events in the layers underneath it.
+		// before we handle events in the layers underneath it.				
 		for (auto it = _layerStack.end(); it != _layerStack.begin(); )
 		{
 			(*--it)->OnEvent(e);
@@ -73,8 +77,13 @@ namespace Dank {
 			_lastFrameTime = time;
 
 			// Run the OnUpdate for every layer in the stack
-			for (Layer* layer : _layerStack)
-				layer->OnUpdate(timestep);
+			// Dont run if we're minimized thats scuffed.
+			if (!_minimized)
+			{
+				for (Layer* layer : _layerStack)
+					layer->OnUpdate(timestep);
+			}
+			
 
 			// ImGui layer rendering
 			_imGuiLayer->Begin();
@@ -93,6 +102,20 @@ namespace Dank {
 	{
 		_running = false;
 		return true;
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+		{
+			_minimized = true;
+			return false;
+		}
+
+		_minimized = false;
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+
+		return false;
 	}
 }
 

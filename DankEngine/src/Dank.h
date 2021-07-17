@@ -28,6 +28,3 @@
 #include "DankEngine/Renderer/OrthographicCameraController.h"
 
 #include "DankEngine/Renderer/Texture.h"
-
-// Entry Point
-#include "DankEngine/Core/EntryPoint.h"

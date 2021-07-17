@@ -6,9 +6,6 @@
 
 #include "RenderCommand.h"
 
-// TODO: Remove
-#include "Platform/OpenGL/OpenGLShader.h"
-
 namespace Dank
 {
 	struct Renderer2DStorage
@@ -59,9 +56,9 @@ namespace Dank
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
 		// TODO: make a Shader::SetMat4 and Shader::SetFloat 4 so we dont have to do this wierd pointer shit
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(s_Data->Shader)->Bind();
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(s_Data->Shader)->UploadUniformMat4("u_ViewProjection", camera.GetViewProjectionMatrix());	
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(s_Data->Shader)->UploadUniformMat4("u_Transform", glm::mat4(1.0f));
+		s_Data->Shader->Bind();
+		s_Data->Shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());	
+		s_Data->Shader->SetMat4("u_Transform", glm::mat4(1.0f));
 	}
 
 	void Renderer2D::EndScene()
@@ -75,8 +72,8 @@ namespace Dank
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(s_Data->Shader)->Bind();
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(s_Data->Shader)->UploadUniformFloat4("u_Color", color);
+		s_Data->Shader->Bind();
+		s_Data->Shader->SetFloat4("u_Color", color);
 
 		s_Data->VertexArray->Bind();
 		RenderCommand::DrawIndexed(s_Data->VertexArray);

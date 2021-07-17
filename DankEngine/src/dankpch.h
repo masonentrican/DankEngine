@@ -17,7 +17,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "DankEngine/Log.h"
+#include "DankEngine/Core/Log.h"
 
 #ifdef DANK_PLATFORM_WINDOWS
 	#include <Windows.h>

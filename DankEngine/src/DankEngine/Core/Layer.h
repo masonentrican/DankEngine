@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DankEngine/Core.h"
+#include "DankEngine/Core/Core.h"
 #include "DankEngine/Core/Timestep.h"
 #include "DankEngine/Events/Event.h"
 

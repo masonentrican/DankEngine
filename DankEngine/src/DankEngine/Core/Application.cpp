@@ -1,7 +1,7 @@
 #include "dankpch.h"
 #include "Application.h"
 
-#include "DankEngine/Log.h"
+#include "DankEngine/Core/Log.h"
 
 #include "DankEngine/Renderer/Renderer.h"
 

@@ -1,5 +1,6 @@
 workspace "DankEngine"
 	architecture "x64"
+	startproject "Sandbox"
 
 	configurations
 	{
@@ -8,10 +9,13 @@ workspace "DankEngine"
 		"Dist"
 	}
 
-	
-	startproject "Sandbox"
+	flags
+	{
+		"MultiProcessorCompile"
+	}
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "DankEngine/vendor/GLFW/include"
@@ -20,10 +24,12 @@ IncludeDir["ImGui"] = "DankEngine/vendor/ImGui"
 IncludeDir["glm"] = "DankEngine/vendor/glm"
 IncludeDir["stb_image"] = "DankEngine/vendor/stb_image"
 
-include "DankEngine/vendor/GLFW"
-include "DankEngine/vendor/Glad"
-include "DankEngine/vendor/ImGui"
+group "Dependencies"
+	include "DankEngine/vendor/GLFW"
+	include "DankEngine/vendor/Glad"
+	include "DankEngine/vendor/ImGui"
 
+group ""
 
 
 project "DankEngine"

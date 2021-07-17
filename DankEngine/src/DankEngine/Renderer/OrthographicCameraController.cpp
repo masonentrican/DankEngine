@@ -1,8 +1,8 @@
 #include "dankpch.h"
 #include "OrthographicCameraController.h"
 
-#include "DankEngine/Input.h"
-#include "DankEngine/KeyCodes.h"
+#include "DankEngine/Core/Input.h"
+#include "DankEngine/Core/KeyCodes.h"
 
 namespace Dank
 {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "DankEngine/Core.h"
-#include "DankEngine/Layer.h"
+#include "DankEngine/Core/Core.h"
+#include "DankEngine/Core/Layer.h"
 
 namespace Dank {
 

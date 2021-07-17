@@ -27,6 +27,8 @@ namespace Dank {
 		_window->SetEventCallback(DANK_BIND_EVENT(Application::OnEvent));
 		_window->SetVSync(false);
 
+		Renderer::Init();
+
 		// Instantiate the ImGuiLayer and push it to the layer stack as an overlay
 		_imGuiLayer = new ImGuiLayer();														
 		PushOverlay(_imGuiLayer);

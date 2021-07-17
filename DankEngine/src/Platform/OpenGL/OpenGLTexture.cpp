@@ -16,7 +16,7 @@ namespace Dank {
 		data = stbi_load(filepath.c_str(), &_width, &_height, &_numColorChannels, 0);
 		DANK_CORE_ASSERT(data, "Failed to load image");
 
-		// Dynamic Color depending on num of color channels
+		// Dynamic color and data format depending on num of color channels
 		GLenum colorFormat = 0, dataFormat = 0;
 		if (_numColorChannels == 3)
 		{
@@ -28,15 +28,7 @@ namespace Dank {
 			colorFormat = GL_RGBA8;
 			dataFormat = GL_RGBA;
 		}
-			
-
-		// Todo: move to renderer maybe an init?
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		//glGenTextures(1, &texture);
-		//glBindTexture(GL_TEXTURE_2D, texture);
-
+		
 		glCreateTextures(GL_TEXTURE_2D, 1, &_iD);
 		glTextureStorage2D(_iD, 1, colorFormat, _width, _height);
 
@@ -46,21 +38,9 @@ namespace Dank {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		// gen
-		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, _width, _height, 0, colorFormat, GL_UNSIGNED_BYTE, data);
 		glTextureSubImage2D(_iD, 0, 0, 0, _width, _height, dataFormat, GL_UNSIGNED_BYTE, data);		
 
-
-
-		
-		
-
-		
-		//glGenerateMipmap(GL_TEXTURE_2D);
-
 		stbi_image_free(data);
-		
-		//_iD = texture;
 
 	}
 	

@@ -3,6 +3,7 @@
 
 #include "Platform/OpenGL/OpenGLRendererAPI.h"
 
-namespace Dank {
+namespace Dank
+{
 	RendererAPI* RenderCommand::s_RendererAPI = new OpenGLRendererAPI;
 }

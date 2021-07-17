@@ -18,6 +18,7 @@
 
 // Renderer
 #include "DankEngine/Renderer/Renderer.h"
+#include "DankEngine/Renderer/Renderer2D.h"
 #include "DankEngine/Renderer/RenderCommand.h"
 
 #include "DankEngine/Renderer/Buffer.h"

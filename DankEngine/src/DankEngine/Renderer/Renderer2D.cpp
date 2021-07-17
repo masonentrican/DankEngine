@@ -1,10 +1,12 @@
 #include "dankpch.h"
+
 #include "Renderer2D.h"
+#include "RenderCommand.h"
 
 #include "VertexArray.h"
 #include "Shader.h"
 
-#include "RenderCommand.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Dank
 {
@@ -55,10 +57,8 @@ namespace Dank
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
-		// TODO: make a Shader::SetMat4 and Shader::SetFloat 4 so we dont have to do this wierd pointer shit
 		s_Data->Shader->Bind();
 		s_Data->Shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());	
-		s_Data->Shader->SetMat4("u_Transform", glm::mat4(1.0f));
 	}
 
 	void Renderer2D::EndScene()
@@ -74,6 +74,9 @@ namespace Dank
 	{
 		s_Data->Shader->Bind();
 		s_Data->Shader->SetFloat4("u_Color", color);
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
+		s_Data->Shader->SetMat4("u_Transform", transform);
 
 		s_Data->VertexArray->Bind();
 		RenderCommand::DrawIndexed(s_Data->VertexArray);

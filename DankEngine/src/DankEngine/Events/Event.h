@@ -1,7 +1,7 @@
 #pragma once
 
 #include "dankpch.h"
-#include "DankEngine/Core.h"
+#include "DankEngine/Core/Core.h"
 
 
 // ------------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 #include "dankpch.h"
 
-#include "DankEngine/Core.h"
+#include "DankEngine/Core/Core.h"
 #include "DankEngine/Events/Event.h"
 
 // Abstract representation of a window for cross platform support

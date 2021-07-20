@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DankEngine/Input.h"
+#include "DankEngine/Core/Input.h"
 
 namespace Dank {
 

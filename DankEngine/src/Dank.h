@@ -2,15 +2,15 @@
 
 // For use by Dank Engine applications
 
-#include "DankEngine/Application.h"
-#include "DankEngine/Layer.h"
-#include "DankEngine/Log.h"
+#include "DankEngine/Core/Application.h"
+#include "DankEngine/Core/Layer.h"
+#include "DankEngine/Core/Log.h"
 
 #include "DankEngine/Core/Timestep.h"
 
-#include "DankEngine/Input.h"
-#include "DankEngine/KeyCodes.h"
-#include "DankEngine/MouseButtonCodes.h"
+#include "DankEngine/Core/Input.h"
+#include "DankEngine/Core/KeyCodes.h"
+#include "DankEngine/Core/MouseButtonCodes.h"
 
 #include "DankEngine/ImGui/ImGuiLayer.h"
 
@@ -33,4 +33,4 @@
 #include "DankEngine/Renderer/Texture.h"
 
 // Entry Point
-#include "DankEngine/EntryPoint.h"
+#include "DankEngine/Core/EntryPoint.h"

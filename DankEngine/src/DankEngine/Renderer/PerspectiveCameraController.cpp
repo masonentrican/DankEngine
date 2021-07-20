@@ -1,8 +1,8 @@
 #include "dankpch.h"
 #include "PerspectiveCameraController.h"
 
-#include "DankEngine/Input.h"
-#include "DankEngine/KeyCodes.h"
+#include "DankEngine/Core/Input.h"
+#include "DankEngine/Core/KeyCodes.h"
 
 namespace Dank {
 	PerspectiveCameraController::PerspectiveCameraController(float FOV, float aspectRatio) : _camera(FOV, aspectRatio)

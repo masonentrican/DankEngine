@@ -249,4 +249,6 @@ namespace Dank {
 		GLint location = glGetUniformLocation(_rendererID, name.c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
+	
+	
 }

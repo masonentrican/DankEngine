@@ -13,17 +13,54 @@ The client side code. This is how you build a client executable using the Dank E
 class TestLayer : public Dank::Layer
 {
 public:
-	TestLayer() : Layer("Test"), _cameraController(1280.0f / 720.0f)
+	TestLayer() : Layer("Test"), _cameraController(45.0f, 1280.0f/720.0f)
 	{
 		// Instatiate a vertex array
 		_vertexArray.reset(Dank::VertexArray::Create());
-
+		
 		// Define the vertex and color data for the vertex array
-		float vertices[3 * 5] = {
-			//positions         //texture coords
-			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-			 0.0f,  0.5f, 0.0f, 0.5f, 1.0f 
+		float vertices[] = {
+			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+			 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+			-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+			-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+			 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+			 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+			 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 		};
 
 		// Instantiate the vertex buffer and pass in the vertex data
@@ -41,7 +78,11 @@ public:
 		_vertexArray->AddVertexBuffer(vertexBuffer);
 
 		// Define basic indicies for a triangle
-		uint32_t indices[3] = { 0, 1, 2 };
+		uint32_t indices[] = {
+			0, 1, 3,
+			1, 2, 3
+
+		};
 
 		// Declare the index buffer pointer
 		Dank::Ref<Dank::IndexBuffer> indexBuffer;
@@ -75,7 +116,7 @@ public:
 		float deltaTime = ts;
 		_runTime += ts.GetSeconds();
 
-		_cameraController.OnUpdate(ts);
+		_cameraController.OnUpdate(ts.GetSeconds());
 
 		
 
@@ -91,17 +132,66 @@ public:
 		
 
 		std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformFloat3("u_Color", _shaderDefaultColor);
-
-		// Bind the wall texture and submit	
-		_tWall->Bind();
-		Dank::Renderer::Submit(_defaultShader, _vertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(glm::cos(_runTime))));
-
+		std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformMat4("u_Model", _model.UpdateModel(deltaTime));
+		
 		// Bind the smile texture and submit
-		_tSmile->Bind();
-		Dank::Renderer::Submit(_defaultShader, _vertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(glm::sin(_runTime))));
+
+
+
+		glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
+		};
+
+
+		
+		/*for (int i = 0; i < 10; i++)
+		{
+			_tWeed->Bind();
+			glm::mat4 cube = glm::mat4(1.0f);
+			cube = glm::translate(cube, cubePositions[i]);
+			float angle = 20.0f * i;
+			cube = glm::rotate(cube, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			if(i == 3)
+			{
+				cube = glm::rotate(cube, deltaTime * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+			}
+			std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformMat4("u_Model", cube);
+			Dank::Renderer::Submit(_defaultShader, _vertexArray);
+			Dank::Renderer::DrawArraysTriangles();
+		}*/
+
+		//_tWall->Bind();
+		//Dank::Renderer::Submit(_defaultShader, _vertexArray);
+		//Dank::Renderer::DrawArraysTriangles();
+		
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.15f));
+		for (int y = -5; y < 5; y++)
+		{
+			for (int x = -5; x < 5; x++)
+			{
+				_tSmile->Bind();
+				glm::vec3 pos(x * 0.4f, y * 0.4f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * glm::scale(glm::mat4(1.0f), glm::vec3(std::clamp(glm::sin(_runTime/2.0f), -0.3f, 0.3f)));
+				Dank::Renderer::Submit(_defaultShader, _vertexArray, transform);
+				Dank::Renderer::DrawArraysTriangles();
+			}
+		}
+		
+		
+		//Dank::Renderer::Submit(_defaultShader, _vertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(glm::sin(_runTime))));
 
 		// Draw
-		Dank::Renderer::Draw(_vertexArray);
+		//Dank::Renderer::Draw(_vertexArray);
+		
 
 		Dank::Renderer::EndScene();
 		// -----------  END SCENE  -------------//
@@ -134,8 +224,8 @@ private:
 	Dank::Ref<Dank::Shader> _defaultShader;
 	Dank::Ref<Dank::VertexArray> _vertexArray;
 
-	Dank::OrthographicCameraController _cameraController;
-
+	Dank::PerspectiveCameraController _cameraController;
+	Dank::Model _model;
 	Dank::Ref<Dank::Texture> _tSmile;
 	Dank::Ref<Dank::Texture> _tWall;
 	Dank::Ref<Dank::Texture> _tWeed;

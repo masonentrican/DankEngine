@@ -27,5 +27,5 @@ in vec2 v_TexCoord;
 void main()
 {
 				
-	color = texture(u_Texture, v_TexCoord) * vec4(u_Color, 1.0);			
+	color = texture(u_Texture, v_TexCoord * 10.0) * vec4(u_Color, 1.0);			
 }

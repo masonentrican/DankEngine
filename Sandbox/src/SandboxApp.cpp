@@ -57,9 +57,9 @@ public:
 		_vertexArray->SetIndexBuffer(indexBuffer);
 
 		// Create the textures
-		_tWall = Dank::Texture::Create("assets/textures/wall.jpg");
-		_tSmile = Dank::Texture::Create("assets/textures/awesomeface.png");
-		_tWeed = Dank::Texture::Create("assets/textures/weedleaf.png");
+		//_tWall = Dank::Texture::Create("assets/textures/wall.jpg");
+		//_tSmile = Dank::Texture::Create("assets/textures/awesomeface.png");
+		//_tWeed = Dank::Texture::Create("assets/textures/weedleaf.png");
 
 		// Create the shaders
 		auto defaultShader = _shaderLibrary.Load("assets/shaders/Default.glsl");		

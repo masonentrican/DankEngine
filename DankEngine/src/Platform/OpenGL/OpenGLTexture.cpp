@@ -6,7 +6,7 @@
 #include <glad/glad.h>
 
 namespace Dank {
-	OpenGLTexture::OpenGLTexture(const std::string& filepath)
+	OpenGLTexture2D::OpenGLTexture2D(const std::string& filepath)
 	{		
 
 		unsigned int texture;
@@ -33,10 +33,10 @@ namespace Dank {
 		glTextureStorage2D(_iD, 1, colorFormat, _width, _height);
 
 		// set the texture wrapping/filtering options (on the currently bound texture object)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(_iD, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(_iD, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(_iD, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(_iD, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 		glTextureSubImage2D(_iD, 0, 0, 0, _width, _height, dataFormat, GL_UNSIGNED_BYTE, data);		
 
@@ -44,9 +44,12 @@ namespace Dank {
 
 	}
 	
-	OpenGLTexture::~OpenGLTexture()
-	{}
-	void OpenGLTexture::Bind() const
+	OpenGLTexture2D::~OpenGLTexture2D()
+	{
+		glDeleteTextures(1, &_iD);
+	}
+
+	void OpenGLTexture2D::Bind() const
 	{
 		glBindTexture(GL_TEXTURE_2D, _iD);
 	}

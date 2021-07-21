@@ -31,7 +31,7 @@ namespace Dank {
 
 		// Instantiate the ImGuiLayer and push it to the layer stack as an overlay
 		_imGuiLayer = new ImGuiLayer();														
-		PushOverlay(_imGuiLayer);
+		PushOverlay(_imGuiLayer);		
 	}
 
 	// Deconstructor
@@ -74,9 +74,12 @@ namespace Dank {
 		while (_running)
 		{
 			// TODO: Should be platform specific. ie Platform::GetTime()
-			float time = (float)glfwGetTime(); 
+			float time = (float)glfwGetTime();
+			_runTime = time;
+
 			Timestep timestep = time - _lastFrameTime;
 			_lastFrameTime = time;
+			
 
 			// Run the OnUpdate for every layer in the stack
 			// Dont run if we're minimized thats scuffed.

@@ -6,7 +6,6 @@ namespace Dank {
 	public:
 		Timestep(float time = 0.0f) : _time(time)
 		{
-
 		}
 
 		// Allows implicit float usecase

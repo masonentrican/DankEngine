@@ -26,7 +26,7 @@ namespace Dank
 
 		s_Data->VertexArray = VertexArray::Create();
 
-		float vertices[5 * 4] = {
+		float quadVertices[5 * 4] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
 			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
 			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
@@ -34,7 +34,7 @@ namespace Dank
 		};
 
 		Ref<VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
+		vertexBuffer.reset(VertexBuffer::Create(quadVertices, sizeof(quadVertices)));
 
 		BufferLayout layout = {
 			{ ShaderDataType::Float3, "a_Position" },

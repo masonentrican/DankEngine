@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Dank.h"
+#include "DankEngine/Core/Core.h"
 
 class Sandbox2D : public Dank::Layer{
 public:
@@ -27,4 +28,6 @@ private:
 	glm::vec3 _shaderDefaultColor = { 1.0f, 1.0f, 1.0f };
 
 	bool _isShaderSettingsOpen = true;
+	
+	Dank::Application& app = Dank::Application::Get();
 };

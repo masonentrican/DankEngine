@@ -13,8 +13,8 @@ namespace Dank
 	struct Renderer2DStorage
 	{
 		Ref<VertexArray> VertexArray;
-		Ref<Shader> FlatShader;
-		Ref<Shader> TextureShader;
+		Ref<Shader> DefaultShader;
+		Ref<Texture2D> WhiteTexture;
 	};
 
 	static Renderer2DStorage* s_Data;
@@ -49,11 +49,14 @@ namespace Dank
 		indexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		s_Data->VertexArray->SetIndexBuffer(indexBuffer);
 
-		s_Data->FlatShader = Shader::Create("assets/shaders/FlatColor.glsl");
+		// Create a purely data driven white texture for a base color
+		s_Data->WhiteTexture = Texture2D::Create(1, 1);
+		uint32_t whiteTextureData = 0xffffffff;
+		s_Data->WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
-		s_Data->TextureShader = Shader::Create("assets/shaders/Texture.glsl");
-		s_Data->TextureShader->Bind();
-		s_Data->TextureShader->SetInt("u_Texture", 0);
+		s_Data->DefaultShader = Shader::Create("assets/shaders/Default.glsl");
+		s_Data->DefaultShader->Bind();
+		s_Data->DefaultShader->SetInt("u_Texture", 0);
 
 	}
 
@@ -63,11 +66,8 @@ namespace Dank
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
-		s_Data->FlatShader->Bind();
-		s_Data->FlatShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-
-		s_Data->TextureShader->Bind();
-		s_Data->TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		s_Data->DefaultShader->Bind();
+		s_Data->DefaultShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 	}
 
 	void Renderer2D::EndScene()
@@ -77,11 +77,11 @@ namespace Dank
 	// Quad Color Implementation
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
-		s_Data->FlatShader->Bind();
-		s_Data->FlatShader->SetFloat4("u_Color", color);
+		s_Data->DefaultShader->SetFloat4("u_Color", color);
+		s_Data->WhiteTexture->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
-		s_Data->FlatShader->SetMat4("u_Transform", transform);
+		s_Data->DefaultShader->SetMat4("u_Transform", transform);
 
 		s_Data->VertexArray->Bind();
 		RenderCommand::DrawIndexed(s_Data->VertexArray);
@@ -96,14 +96,11 @@ namespace Dank
 	// Quad Texture Implementation
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture)
 	{
-		s_Data->TextureShader->Bind();
-
+		s_Data->DefaultShader->SetFloat4("u_Color", glm::vec4(1.0f));
 		texture->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		s_Data->TextureShader->SetMat4("u_Transform", transform);
-
-
+		s_Data->DefaultShader->SetMat4("u_Transform", transform);
 
 		s_Data->VertexArray->Bind();
 		RenderCommand::DrawIndexed(s_Data->VertexArray);

@@ -26,9 +26,13 @@ void Sandbox2D::OnUpdate(Dank::Timestep ts)
 
 	// ----------- BEGIN SCENE -------------//
 	Dank::Renderer2D::BeginScene(_cameraController.GetCamera());
+	
+	Dank::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, { 5.0f, 5.0f }, _texture);
+	_texture->Unbind();
 
-	Dank::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 5.0f, 5.0f }, _texture);
-	Dank::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, _texture);
+	Dank::Renderer2D::DrawQuad({ 1.0f, 0.2f, 0.1f }, { 0.75f, 0.5f }, { 0.2f, 0.7f, 0.3f, 1.0f });
+	Dank::Renderer2D::DrawQuad({ 0.2f, -0.4f, 0.2f }, { 0.45f, 0.45f }, { 0.7f, 0.2f, 0.3f, 1.0f });
+	Dank::Renderer2D::DrawQuad({ -0.75f, -0.1f, 0.3f }, { 0.4f, 0.75f }, { 0.2f, 0.3f, 0.7f, 1.0f });
 
 	Dank::Renderer2D::EndScene();
 	// -----------  END SCENE  -------------//

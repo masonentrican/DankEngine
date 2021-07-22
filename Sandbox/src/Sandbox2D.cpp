@@ -20,23 +20,38 @@ void Sandbox2D::OnDetach()
 
 void Sandbox2D::OnUpdate(Dank::Timestep ts)
 {
-	_cameraController.OnUpdate(ts);
+	DANK_PROFILE_FUNCTION();
 
-	Dank::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-	Dank::RenderCommand::Clear();
-
-	// ----------- BEGIN SCENE -------------//
-	Dank::Renderer2D::BeginScene(_cameraController.GetCamera());
+	// Camera Controller On Update
+	{
+		DANK_PROFILE_SCOPE("CameraController::OnUpdate");
+		_cameraController.OnUpdate(ts);
+	}
 	
-	Dank::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, glm::vec2(glm::sin(app.GetRunTime()) + 2.0f, 5.0f), _texture);	
-	_texture->Unbind();
+	// Renderer Clear
+	{
+		DANK_PROFILE_SCOPE("Renderer Clear");
+		Dank::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+		Dank::RenderCommand::Clear();
+	}
+	
+	// Renderer Scene Draw
+	{
+		// ----------- BEGIN SCENE -------------//
+		DANK_PROFILE_SCOPE("Renderer Scene Draw");
+		Dank::Renderer2D::BeginScene(_cameraController.GetCamera());
 
-	Dank::Renderer2D::DrawQuad({ 1.0f, 0.2f, 0.1f }, { 0.75f, 0.5f }, { 0.2f, 0.7f, 0.3f, 1.0f });
-	Dank::Renderer2D::DrawQuad({ 0.2f, -0.4f, 0.2f }, { 0.45f, 0.45f }, { 0.7f, 0.2f, 0.3f, 1.0f });
-	Dank::Renderer2D::DrawQuad({ -0.75f, -0.1f, 0.3f }, { 0.4f, 0.75f }, { 0.2f, 0.3f, 0.7f, 1.0f });
+		Dank::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, glm::vec2(glm::sin(app.GetRunTime()) + 2.0f, 5.0f), _texture);
+		_texture->Unbind();
 
-	Dank::Renderer2D::EndScene();
-	// -----------  END SCENE  -------------//
+		Dank::Renderer2D::DrawQuad({ 1.0f, 0.2f, 0.1f }, { 0.75f, 0.5f }, { 0.2f, 0.7f, 0.3f, 1.0f });
+		Dank::Renderer2D::DrawQuad({ 0.2f, -0.4f, 0.2f }, { 0.45f, 0.45f }, { 0.7f, 0.2f, 0.3f, 1.0f });
+		Dank::Renderer2D::DrawQuad({ -0.75f, -0.1f, 0.3f }, { 0.4f, 0.75f }, { 0.2f, 0.3f, 0.7f, 1.0f });
+
+		Dank::Renderer2D::EndScene();
+		// -----------  END SCENE  -------------//
+	}
+
 }
 
 void Sandbox2D::OnEvent(Dank::Event& e)

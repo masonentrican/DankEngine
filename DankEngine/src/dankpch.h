@@ -19,6 +19,8 @@
 
 #include "DankEngine/Core/Log.h"
 
+#include "DankEngine/Debug/Instrumentor.h"
+
 #ifdef DANK_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif

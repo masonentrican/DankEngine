@@ -22,8 +22,9 @@ namespace Dank
 
 	void Renderer2D::Init()
 	{
-		s_Data = new Renderer2DStorage;
+		DANK_PROFILE_FUNCTION();
 
+		s_Data = new Renderer2DStorage;
 		s_Data->VertexArray = VertexArray::Create();
 
 		float quadVertices[5 * 4] = {
@@ -62,29 +63,45 @@ namespace Dank
 
 	void Renderer2D::ShutDown()
 	{
+		DANK_PROFILE_FUNCTION();
 	}
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		s_Data->DefaultShader->Bind();
 		s_Data->DefaultShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 	}
 
 	void Renderer2D::EndScene()
 	{
+		DANK_PROFILE_FUNCTION();
 	}
 
 	// Quad Color Implementation
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		s_Data->DefaultShader->SetFloat4("u_Color", color);
-		s_Data->WhiteTexture->Bind();
+		
+		{
+			DANK_PROFILE_SCOPE("Bind white texture");
+			s_Data->WhiteTexture->Bind();
+		}
+		
+		{
+			DANK_PROFILE_SCOPE("Calculate and set transform");
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+			s_Data->DefaultShader->SetMat4("u_Transform", transform);
+		}
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
-		s_Data->DefaultShader->SetMat4("u_Transform", transform);
-
-		s_Data->VertexArray->Bind();
-		RenderCommand::DrawIndexed(s_Data->VertexArray);
+		{
+			DANK_PROFILE_SCOPE("Bind and draw vertex array");
+			s_Data->VertexArray->Bind();
+			RenderCommand::DrawIndexed(s_Data->VertexArray);
+		}
 	}
 
 	// Quad with color api
@@ -96,14 +113,26 @@ namespace Dank
 	// Quad Texture Implementation
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		s_Data->DefaultShader->SetFloat4("u_Color", glm::vec4(1.0f));
-		texture->Bind();
+		{
+			DANK_PROFILE_SCOPE("Bind referenced texture");
+			texture->Bind();
+		}
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		s_Data->DefaultShader->SetMat4("u_Transform", transform);
-
-		s_Data->VertexArray->Bind();
-		RenderCommand::DrawIndexed(s_Data->VertexArray);
+		{
+			DANK_PROFILE_SCOPE("Calculate and set transform");
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+			s_Data->DefaultShader->SetMat4("u_Transform", transform);
+		}
+		
+		{
+			DANK_PROFILE_SCOPE("Bind and draw vertex array");
+			s_Data->VertexArray->Bind();
+			RenderCommand::DrawIndexed(s_Data->VertexArray);
+		}
+		
 	}
 
 	// Quad with texture api

@@ -6,6 +6,8 @@
 namespace Dank {
 	void OpenGLRendererAPI::Init()
 	{
+		DANK_PROFILE_FUNCTION();
+
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -26,6 +28,7 @@ namespace Dank {
 	// OpenGL sepcific draw call using passed vertex array reference
 	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray)
 	{
+		DANK_PROFILE_FUNCTION();
 		glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 

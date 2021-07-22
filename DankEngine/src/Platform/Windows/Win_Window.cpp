@@ -28,12 +28,16 @@ namespace Dank {
 	}
 
 	Win_Window::Win_Window(const WindowProperties& windowProperties)
-	{	
+	{
+		DANK_PROFILE_FUNCTION();
+
 		Init(windowProperties);
 	}
 
 	Win_Window::~Win_Window()
 	{
+		DANK_PROFILE_FUNCTION();
+
 		Shutdown();
 	}
 
@@ -50,6 +54,7 @@ namespace Dank {
 		// Init GLFW if it isn't already and handle errors
 		if (!s_GLFWInitialized)
 		{
+			DANK_PROFILE_SCOPE("glfwInit");
 			// TODO: glfwTerminate on system shutdown
 			int success = glfwInit();
 			DANK_CORE_ASSERT(success, "Could not intialize GLFW!");
@@ -57,8 +62,12 @@ namespace Dank {
 			s_GLFWInitialized = true;
 		}
 
-		// GLFW Init
-		_window = glfwCreateWindow((int)windowProperties.Width, (int)windowProperties.Height, windowProperties.Title.c_str(), nullptr, nullptr);
+		{
+			// GLFW Init
+			DANK_PROFILE_SCOPE("glfwCreateWindow");
+			_window = glfwCreateWindow((int)windowProperties.Width, (int)windowProperties.Height, windowProperties.Title.c_str(), nullptr, nullptr);
+		}
+		
 		_gContext = new OpenGLContext(_window);
 		_gContext->Init();
 
@@ -160,17 +169,22 @@ namespace Dank {
 
 	void Win_Window::Shutdown()
 	{
-		glfwDestroyWindow(_window);
+		DANK_PROFILE_FUNCTION();		
+		glfwDestroyWindow(_window);		
 	}
 
 	void Win_Window::OnUpdate()
 	{
+		DANK_PROFILE_FUNCTION();
+
 		glfwPollEvents();
 		_gContext->SwapBuffers();
 	}
 
 	void Win_Window::SetVSync(bool enabled)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		if (enabled)
 			glfwSwapInterval(1);
 		else

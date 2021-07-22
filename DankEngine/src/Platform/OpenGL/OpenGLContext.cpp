@@ -15,6 +15,8 @@ namespace Dank {
 
 	void OpenGLContext::Init()
 	{
+		DANK_PROFILE_FUNCTION();
+
 		glfwMakeContextCurrent(_windowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		DANK_CORE_ASSERT(status, "Failed to initialize Glad");
@@ -27,6 +29,8 @@ namespace Dank {
 
 	void OpenGLContext::SwapBuffers()
 	{
+		DANK_PROFILE_FUNCTION();
+
 		glfwSwapBuffers(_windowHandle);
 	}
 

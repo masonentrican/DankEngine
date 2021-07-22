@@ -10,6 +10,8 @@ namespace Dank {
 
 	void Renderer::Init()
 	{
+		DANK_PROFILE_FUNCTION();
+
 		RenderCommand::Init();
 		Renderer2D::Init();
 	}

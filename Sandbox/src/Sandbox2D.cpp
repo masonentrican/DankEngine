@@ -11,10 +11,13 @@ Sandbox2D::Sandbox2D() : Layer("Sandbox2D"), _cameraController(1280.0f / 720.0f)
 
 void Sandbox2D::OnAttach()
 {
+	DANK_PROFILE_FUNCTION();
+
 	_texture = Dank::Texture2D::Create("assets/textures/weedleaf.png");
 }
 void Sandbox2D::OnDetach()
 {
+	DANK_PROFILE_FUNCTION();
 
 }
 
@@ -22,12 +25,8 @@ void Sandbox2D::OnUpdate(Dank::Timestep ts)
 {
 	DANK_PROFILE_FUNCTION();
 
-	// Camera Controller On Update
-	{
-		DANK_PROFILE_SCOPE("CameraController::OnUpdate");
-		_cameraController.OnUpdate(ts);
-	}
-	
+	_cameraController.OnUpdate(ts);
+
 	// Renderer Clear
 	{
 		DANK_PROFILE_SCOPE("Renderer Clear");

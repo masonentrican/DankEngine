@@ -7,6 +7,8 @@ namespace Dank {
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
 		: _width(width), _height(height)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		_internalFormat = GL_RGBA8;
 		_dataFormat = GL_RGBA;		
 
@@ -23,12 +25,19 @@ namespace Dank {
 
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& filepath)
 	{		
+		DANK_PROFILE_FUNCTION();
 
 		unsigned int texture;
 		unsigned char* data;
 
 		stbi_set_flip_vertically_on_load(true); 
-		data = stbi_load(filepath.c_str(), &_width, &_height, &_numColorChannels, 0);
+
+		{
+			DANK_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(const std::string&)");
+
+			data = stbi_load(filepath.c_str(), &_width, &_height, &_numColorChannels, 0);
+		}
+		
 		DANK_CORE_ASSERT(data, "Failed to load image");
 
 		// Dynamic color and data format depending on num of color channels
@@ -65,11 +74,15 @@ namespace Dank {
 	
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
+		DANK_PROFILE_FUNCTION();
+
 		glDeleteTextures(1, &_rendererId);
 	}
 
 	void OpenGLTexture2D::SetData(void* data, uint32_t size)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		// Check that the size of our texture data in bytes is the size of the actual texture.
 		// Only support RGBA and RGB currently.
 		uint32_t bytesPerPixel = _dataFormat == GL_RGBA ? 4 : 3;
@@ -80,11 +93,15 @@ namespace Dank {
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const
 	{
+		DANK_PROFILE_FUNCTION();
+
 		glBindTexture(GL_TEXTURE_2D, _rendererId);
 	}
 
 	void OpenGLTexture2D::Unbind(uint32_t slot) const
 	{
+		DANK_PROFILE_FUNCTION();
+
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }

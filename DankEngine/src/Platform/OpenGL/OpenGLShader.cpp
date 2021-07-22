@@ -24,6 +24,8 @@ namespace Dank {
 	// Used for supplying a filepath
 	OpenGLShader::OpenGLShader(const std::string& filepath)
 	{	
+		DANK_PROFILE_FUNCTION();
+
 		std::string source = ReadFile(filepath);
 		auto shaderSources = PreProcess(source);
 		
@@ -40,6 +42,8 @@ namespace Dank {
 	// Use for supplying src references
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) : _name(name)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
 		sources[GL_FRAGMENT_SHADER] = fragmentSrc;
@@ -49,11 +53,15 @@ namespace Dank {
 
 	OpenGLShader::~OpenGLShader()
 	{
+		DANK_PROFILE_FUNCTION();
+
 		glDeleteProgram(_rendererID);
 	}
 
 	std::string OpenGLShader::ReadFile(const std::string& filepath)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		std::string result;
 		std::ifstream inputFile(filepath, std::ios::in | std::ios::binary);
 
@@ -83,6 +91,8 @@ namespace Dank {
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& source)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSources;
 
 		// The token to define the type of shader
@@ -119,6 +129,8 @@ namespace Dank {
 
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		GLuint program = glCreateProgram();
 		std::array<GLenum, 2> glShaderIDs;
 		DANK_CORE_ASSERT(shaderSources.size() <= 2, "Only 2 shaders per file supported for now");
@@ -200,31 +212,43 @@ namespace Dank {
 
 	void OpenGLShader::Bind() const
 	{
+		DANK_PROFILE_FUNCTION();
+
 		glUseProgram(_rendererID);
 	}
 
 	void OpenGLShader::Unbind() const
 	{
+		DANK_PROFILE_FUNCTION();
+
 		glUseProgram(0);
 	}
 
 	void OpenGLShader::SetInt(const std::string& name, int value)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		UploadUniformInt(name, value);
 	}
 
 	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& value)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		UploadUniformMat4(name, value);
 	}
 
 	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec4& value)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		UploadUniformFloat3(name, value);
 	}
 
 	void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4& value)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		UploadUniformFloat4(name, value);
 	}
 

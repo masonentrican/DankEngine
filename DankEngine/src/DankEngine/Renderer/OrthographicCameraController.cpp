@@ -14,6 +14,8 @@ namespace Dank
 
 	void OrthographicCameraController::OnUpdate(Timestep ts)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		if (Input::IsKeyPressed(DANK_KEY_A))
 			_cameraPosition.x -= _cameraTranslationSpeed * ts;
 		else if (Input::IsKeyPressed(DANK_KEY_D))
@@ -44,6 +46,8 @@ namespace Dank
 
 	void OrthographicCameraController::OnEvent(Event& e)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<MouseScrolledEvent>(DANK_BIND_EVENT(OrthographicCameraController::OnMouseScrolled));
 		dispatcher.Dispatch<WindowResizeEvent>(DANK_BIND_EVENT(OrthographicCameraController::OnWindowResized));
@@ -52,6 +56,8 @@ namespace Dank
 	// Changes zoom level
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		_zoomLevel -= e.GetYOffset() * 0.1f;
 		_zoomLevel = std::max(_zoomLevel, 0.25f);
 		_camera.SetProjection(-_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
@@ -62,6 +68,8 @@ namespace Dank
 	// Changes aspect ratio
 	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		_aspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
 		_camera.SetProjection(-_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
 		

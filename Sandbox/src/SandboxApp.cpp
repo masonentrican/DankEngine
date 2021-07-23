@@ -1,9 +1,12 @@
 #include <Dank.h>
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "ImGui/ImGui.h"
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 /*----------------------------------------------------------------------------------
 The client side code. This is how you build a client executable using the Dank Engine
@@ -15,6 +18,19 @@ class TestLayer : public Dank::Layer
 public:
 	TestLayer() : Layer("Test"), _cameraController(1280.0f / 720.0f)
 	{
+		std::string path = "assets/models/base_benis.fbx";
+		Assimp::Importer import;
+		const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+
+		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+		{
+			std::cout << "Error::ASSIMP::" << import.GetErrorString() << std::endl;
+			return;
+		}
+
+		std::string directory = path.substr(0, path.find_last_of("/"));
+		
+
 		// Instatiate a vertex array
 		_vertexArray.reset(Dank::VertexArray::Create());
 

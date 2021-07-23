@@ -23,11 +23,15 @@ IncludeDir["Glad"] = "DankEngine/vendor/Glad/include"
 IncludeDir["ImGui"] = "DankEngine/vendor/ImGui"
 IncludeDir["glm"] = "DankEngine/vendor/glm"
 IncludeDir["stb_image"] = "DankEngine/vendor/stb_image"
+--IncludeDir["assimp"] = "DankEngine/vendor/assimp"
+
 
 group "Dependencies"
 	include "DankEngine/vendor/GLFW"
 	include "DankEngine/vendor/Glad"
 	include "DankEngine/vendor/ImGui"
+	--include "DankEngine/vendor/assimp"
+	
 
 group ""
 
@@ -53,22 +57,33 @@ project "DankEngine"
 		"%{prj.name}/vendor/glm/glm/**.inl",
 		"%{prj.name}/vendor/stb_image/**.h",
 		"%{prj.name}/vendor/stb_image/**.cpp"
+
+
 	}
 
 	defines
 	{
 		"_CRT_SECURE_NO_WARNINGS"
 	}
-
+	
+	libdirs
+	{
+		"DankEngine/vendor/assimp/lib"
+	}
+	
 	includedirs
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
+		"%{prj.name}/vendor/assimp/build/include/assimp",
 		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.assimp}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}"
+		
+
 
 	}
 
@@ -77,8 +92,13 @@ project "DankEngine"
 		"GLFW",
 		"Glad",
 		"ImGui",
-		"opengl32.lib"
+		"opengl32.lib",
+		"assimp-vc142-mtd.lib",
+		"assimp-vc142-mtd.dll"
+		
 	}
+
+	
 
 	filter "system:windows"
 		systemversion "latest"

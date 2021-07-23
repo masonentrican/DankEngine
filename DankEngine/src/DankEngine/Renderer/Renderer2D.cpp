@@ -73,6 +73,10 @@ namespace Dank
 	void Renderer2D::EndScene()
 	{
 	}
+	
+	/*********************************/
+	/*	      2D Primitives
+	/*********************************/
 
 	// Quad Color Implementation
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
@@ -112,5 +116,48 @@ namespace Dank
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor)
 	{
 		DrawQuad({ position.x, position.y, 0.0f }, size, texture, tilingFactor);
+	}
+
+
+	/*********************************/
+	/*	   Rotated 2D Primitives
+	/*********************************/
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)
+	{
+		DrawRotatedQuad({ position.x, position.y, 0.0f }, size, rotation, color);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor)
+	{
+		DrawRotatedQuad({ position.x, position.y, 0.0f }, size, rotation, texture, tilingFactor);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color)
+	{
+		s_Data->DefaultShader->SetFloat4("u_Color", color);
+		s_Data->WhiteTexture->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		s_Data->DefaultShader->SetMat4("u_Transform", transform);
+
+		s_Data->VertexArray->Bind();
+		RenderCommand::DrawIndexed(s_Data->VertexArray);
+	}
+
+
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor)
+	{
+		s_Data->DefaultShader->SetFloat4("u_Color", glm::vec4(1.0f));
+		texture->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		s_Data->DefaultShader->SetMat4("u_Transform", transform);
+
+		s_Data->DefaultShader->SetFloat("u_TilingFactor", tilingFactor);
+
+		s_Data->VertexArray->Bind();
+		RenderCommand::DrawIndexed(s_Data->VertexArray);
 	}
 }

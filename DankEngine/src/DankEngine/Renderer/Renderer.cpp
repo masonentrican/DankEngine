@@ -7,8 +7,9 @@ namespace Dank {
 
 	Renderer::SceneData* Renderer::_sceneData = new Renderer::SceneData;
 
-	void Renderer::BeginScene(OrthographicCamera& camera)
+	void Renderer::BeginScene(PerspectiveCamera& camera)
 	{
+		
 		_sceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
 	}
 
@@ -27,6 +28,11 @@ namespace Dank {
 	void Renderer::Draw(const Ref<VertexArray>& vertexArray)
 	{
 		RenderCommand::DrawIndexed(vertexArray);
+	}
+
+	void Renderer::DrawArraysTriangles()
+	{
+		RenderCommand::DrawArraysTriangles();
 	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)

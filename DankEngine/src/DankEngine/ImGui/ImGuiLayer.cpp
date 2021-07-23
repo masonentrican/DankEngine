@@ -70,9 +70,9 @@ namespace Dank {
 	void ImGuiLayer::Begin()
 	{
 		DANK_PROFILE_FUNCTION();
-
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
+		
+		ImGui_ImplOpenGL3_NewFrame();		
+		ImGui_ImplGlfw_NewFrame();		
 		ImGui::NewFrame();
 	}
 

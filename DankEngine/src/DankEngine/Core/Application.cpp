@@ -91,8 +91,7 @@ namespace Dank {
 			_runTime = time;
 
 			Timestep timestep = time - _lastFrameTime;
-			_lastFrameTime = time;
-			
+			_lastFrameTime = time;						
 
 			// Run the OnUpdate for every layer in the stack
 			// Dont run if we're minimized thats scuffed.

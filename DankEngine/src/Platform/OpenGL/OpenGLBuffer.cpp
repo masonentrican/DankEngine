@@ -8,6 +8,13 @@ namespace Dank {
 	//-------------------------------------------------
 	//					Vertex Buffer
 	//-------------------------------------------------
+	OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
+	{
+		glCreateBuffers(1, &_rendererId);
+		glBindBuffer(GL_ARRAY_BUFFER, _rendererId);
+		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_STATIC_DRAW);
+	}
+	
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size)
 	{
 		glCreateBuffers(1, &_rendererId);
@@ -28,6 +35,12 @@ namespace Dank {
 	void OpenGLVertexBuffer::Unbind() const
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	void OpenGLVertexBuffer::SetData(const void* data, uint32_t size)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, _rendererId);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}
 
 	//-------------------------------------------------

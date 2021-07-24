@@ -32,7 +32,7 @@ public:
 
 		// Instantiate the vertex buffer and pass in the vertex data
 		Dank::Ref<Dank::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(Dank::VertexBuffer::Create(vertices, sizeof(vertices)));
+		vertexBuffer = Dank::VertexBuffer::Create(vertices, sizeof(vertices));
 
 		// Define the Vertex Buffer Layout
 		Dank::BufferLayout layout = {
@@ -51,7 +51,7 @@ public:
 		Dank::Ref<Dank::IndexBuffer> indexBuffer;
 
 		// Define the index buffer values from the indices
-		indexBuffer.reset(Dank::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		indexBuffer = Dank::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 
 		// Pass the index array to the vertex array for reference
 		_vertexArray->SetIndexBuffer(indexBuffer);

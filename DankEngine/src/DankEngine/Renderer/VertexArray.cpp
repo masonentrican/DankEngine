@@ -8,6 +8,8 @@ namespace Dank {
 
 	Ref<VertexArray> VertexArray::Create()
 	{
+		DANK_PROFILE_FUNCTION();
+
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:    DANK_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;

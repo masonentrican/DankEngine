@@ -7,6 +7,8 @@
 namespace Dank {
 	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:    DANK_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
@@ -19,6 +21,8 @@ namespace Dank {
 
 	Ref<Texture2D> Texture2D::Create(const std::string& filepath)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:    DANK_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;

@@ -54,20 +54,19 @@ void Sandbox2D::OnUpdate(Dank::Timestep ts)
 
 	//Dank::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, }, { 1.0f, 1.0f }, rotation, tex_weed, 1.0f);
 
-	for (int y = 0; y < 80; y++)
+	for (int y = 0; y < 40; y++)
 	{
-		for (int x = 0; x < 80; x++)
+		for (int x = 0; x < 40; x++)
 		{
 			if ((x ^ y) % 5 < 1)
-				Dank::Renderer2D::DrawRotatedQuad({ (x * 0.125f) - (40.0f * 0.125f), (y * 0.125f - yValue / 400) - (40.0f * 0.125f) }, { 0.1f, 0.1f }, rotation, tex_smile, 1.0f);
+				Dank::Renderer2D::DrawRotatedQuad({ (x * 0.125f) - (20.0f * 0.125f), (y * 0.125f - yValue / 400) - (20.0f * 0.125f) }, { 0.1f, 0.1f }, rotation, tex_smile, 1.0f);
 			else
-				Dank::Renderer2D::DrawRotatedQuad({ (x * 0.125f) - (40.0f * 0.125f), (y * 0.125f - yValue / 400) - (40.0f * 0.125f) }, { 0.1f, 0.1f }, rotation, tex_weed, 1.0f);
+				Dank::Renderer2D::DrawRotatedQuad({ (x * 0.125f) - (20.0f * 0.125f), (y * 0.125f - yValue / 400) - (20.0f * 0.125f) }, { 0.1f, 0.1f }, rotation, tex_weed, 1.0f);
 		}
 	}
 
-		Dank::Renderer2D::EndScene();
-		// -----------  END SCENE  -------------//
-	}
+	Dank::Renderer2D::EndScene();
+	// -----------  END SCENE  -------------//
 
 }
 

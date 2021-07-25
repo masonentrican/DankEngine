@@ -49,6 +49,8 @@ namespace Dank
 
 	void Renderer2D::Init()
 	{
+		DANK_PROFILE_FUNCTION();
+
 		s_Data.QuadVertexArray = VertexArray::Create();
 		s_Data.QuadVertexBuffer = VertexBuffer::Create(s_Data.MaxVertices * sizeof(QuadVertex));
 		s_Data.QuadVertexBuffer->SetLayout({
@@ -114,6 +116,8 @@ namespace Dank
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		s_Data.DefaultShader->Bind();
 		s_Data.DefaultShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 
@@ -126,6 +130,7 @@ namespace Dank
 	void Renderer2D::EndScene()
 	{
 		DANK_PROFILE_FUNCTION();
+
 		uint32_t dataSize = (uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase;
 		s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
 		Flush();
@@ -133,6 +138,8 @@ namespace Dank
 
 	void Renderer2D::Flush()
 	{
+		DANK_PROFILE_FUNCTION();
+
 		// Bind textures
 		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
 			s_Data.TextureSlots[i]->Bind(i);
@@ -154,6 +161,8 @@ namespace Dank
 	// Quad Color Implementation
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		const float texIndex = 0.0f; // White Texture
 		const float tilingFactor = 1.0f;
 
@@ -200,6 +209,8 @@ namespace Dank
 	// Quad Texture Implementation
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		float textureIndex = 0.0f;
@@ -271,6 +282,8 @@ namespace Dank
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		const float textureIndex = 0.0f; // White Texture
 		const float tilingFactor = 1.0f;
 
@@ -313,6 +326,8 @@ namespace Dank
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor)
 	{
+		DANK_PROFILE_FUNCTION();
+
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		float textureIndex = 0.0f;

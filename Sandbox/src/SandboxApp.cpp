@@ -1,9 +1,13 @@
 #include <Dank.h>
+#include "DankEngine/Core/EntryPoint.h"
+
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "ImGui/ImGui.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "Sandbox2D.h"
 
 /*----------------------------------------------------------------------------------
 The client side code. This is how you build a client executable using the Dank Engine
@@ -16,7 +20,7 @@ public:
 	TestLayer() : Layer("Test"), _cameraController(1280.0f / 720.0f)
 	{
 		// Instatiate a vertex array
-		_vertexArray.reset(Dank::VertexArray::Create());
+		_vertexArray = Dank::VertexArray::Create();
 
 		// Define the vertex and color data for the vertex array
 		float vertices[3 * 5] = {
@@ -53,9 +57,9 @@ public:
 		_vertexArray->SetIndexBuffer(indexBuffer);
 
 		// Create the textures
-		_tWall = Dank::Texture::Create("assets/textures/wall.jpg");
-		_tSmile = Dank::Texture::Create("assets/textures/awesomeface.png");
-		_tWeed = Dank::Texture::Create("assets/textures/weedleaf.png");
+		//_tWall = Dank::Texture::Create("assets/textures/wall.jpg");
+		//_tSmile = Dank::Texture::Create("assets/textures/awesomeface.png");
+		//_tWeed = Dank::Texture::Create("assets/textures/weedleaf.png");
 
 		// Create the shaders
 		auto defaultShader = _shaderLibrary.Load("assets/shaders/Default.glsl");		
@@ -154,7 +158,8 @@ class Sandbox : public Dank::Application
 public:
 	Sandbox()
 	{
-		PushLayer(new TestLayer());
+		// PushLayer(new TestLayer());
+		PushLayer(new Sandbox2D());
 	}
 
 	~Sandbox() {}

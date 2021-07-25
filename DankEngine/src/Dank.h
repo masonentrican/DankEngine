@@ -18,6 +18,7 @@
 
 // Renderer
 #include "DankEngine/Renderer/Renderer.h"
+#include "DankEngine/Renderer/Renderer2D.h"
 #include "DankEngine/Renderer/RenderCommand.h"
 
 #include "DankEngine/Renderer/Buffer.h"
@@ -28,6 +29,3 @@
 #include "DankEngine/Renderer/OrthographicCameraController.h"
 
 #include "DankEngine/Renderer/Texture.h"
-
-// Entry Point
-#include "DankEngine/Core/EntryPoint.h"

@@ -26,6 +26,8 @@ namespace Dank {
 
 	void ImGuiLayer::OnAttach()
 	{
+		DANK_PROFILE_FUNCTION();
+
 		// Setup ImGui context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -58,6 +60,8 @@ namespace Dank {
 
 	void ImGuiLayer::OnDetach()
 	{
+		DANK_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -65,13 +69,17 @@ namespace Dank {
 
 	void ImGuiLayer::Begin()
 	{
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
+		DANK_PROFILE_FUNCTION();
+		
+		ImGui_ImplOpenGL3_NewFrame();		
+		ImGui_ImplGlfw_NewFrame();		
 		ImGui::NewFrame();
 	}
 
 	void ImGuiLayer::End()
 	{
+		DANK_PROFILE_FUNCTION();
+
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::Get();
 		io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());

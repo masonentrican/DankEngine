@@ -2,10 +2,19 @@
 #include "Renderer.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
+#include "Renderer2D.h"
 
 namespace Dank {
 
 	Renderer::SceneData* Renderer::_sceneData = new Renderer::SceneData;
+
+	void Renderer::Init()
+	{
+		DANK_PROFILE_FUNCTION();
+
+		RenderCommand::Init();
+		Renderer2D::Init();
+	}
 
 	void Renderer::BeginScene(OrthographicCamera& camera)
 	{

@@ -4,7 +4,16 @@
 #include <glad/glad.h>
 
 namespace Dank {
-	// OpenGL specific set clear color function
+	void OpenGLRendererAPI::Init()
+	{
+		DANK_PROFILE_FUNCTION();
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glEnable(GL_DEPTH_TEST);
+	}
+
 	void OpenGLRendererAPI::SetClearColor(const glm::vec4& color)
 	{
 		glClearColor(color.r, color.g, color.b, color.a);
@@ -19,6 +28,7 @@ namespace Dank {
 	// OpenGL sepcific draw call using passed vertex array reference
 	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray)
 	{
+		DANK_PROFILE_FUNCTION();
 		glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 

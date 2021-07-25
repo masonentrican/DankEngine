@@ -8,7 +8,6 @@
 #include "DankEngine/Events/ApplicationEvent.h"
 
 #include "DankEngine/Core/Timestep.h"
-
 #include "DankEngine/ImGui/ImGuiLayer.h"
 
 // The base dank engine application.
@@ -28,6 +27,7 @@ namespace Dank {
 
 		inline static Application& Get() { return *s_Instance; }
 		inline Window& GetWindow() { return *_window; }
+		inline float GetRunTime() { return _runTime; }
 
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
@@ -40,9 +40,10 @@ namespace Dank {
 		ImGuiLayer* _imGuiLayer;
 		LayerStack _layerStack;
 		float _lastFrameTime = 0.0f;
+		float _runTime = 0.0f;
 
 	private:
-		static Application* s_Instance;
+		static Application* s_Instance;		
 	};
 
 	// Defined in the client

@@ -11,7 +11,8 @@ Sandbox2D::Sandbox2D() : Layer("Sandbox2D"), _cameraController(1280.0f / 720.0f)
 
 void Sandbox2D::OnAttach()
 {
-	_texture = Dank::Texture2D::Create("assets/textures/weedleaf.png");
+	tex_weed = Dank::Texture2D::Create("assets/textures/weedleaf.png");
+	tex_smile = Dank::Texture2D::Create("assets/textures/awesomeface.png");
 }
 void Sandbox2D::OnDetach()
 {
@@ -22,7 +23,7 @@ void Sandbox2D::OnUpdate(Dank::Timestep ts)
 {
 	_cameraController.OnUpdate(ts);
 
-	DANK_TRACE("FPS: {0}", 1000 / ts.GetMilliseconds());
+	//DANK_TRACE("FPS: {0}", 1000 / ts.GetMilliseconds());
 
 	Dank::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 	Dank::RenderCommand::Clear();
@@ -30,18 +31,15 @@ void Sandbox2D::OnUpdate(Dank::Timestep ts)
 	// ----------- BEGIN SCENE -------------//
 	Dank::Renderer2D::BeginScene(_cameraController.GetCamera());
 	
-	
+	Dank::Renderer2D::DrawQuad({ 0.2f, -0.4f }, { 0.45f, 0.45f }, { 0.7f, 0.2f, 0.3f, 1.0f });
+	Dank::Renderer2D::DrawQuad({ 1.2f, -0.4f }, { 0.45f, 0.45f }, { 0.7f, 0.2f, 0.3f, 1.0f });
 
-	for (int y = 1; y < 100; y++)
-	{
-		for (int x = 1; x < 100; x++)
-		{
-			Dank::Renderer2D::DrawQuad({ x * 0.1f, y * 0.1f, 0.1f }, { 0.05f, 0.05f }, { x * 0.01f, x * 0.01f, x * 0.01f, 1.0f });
-		}
-	}
-	
-	//Dank::Renderer2D::DrawQuad({ 0.2f, -0.4f, 0.2f }, { 0.45f, 0.45f }, { 0.7f, 0.2f, 0.3f, 1.0f });
-	//Dank::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, glm::vec2(glm::sin(app.GetRunTime()) + 2.0f, 5.0f), _texture, 5.0f);		
+	Dank::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, tex_weed, 5.0f);
+	Dank::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, tex_smile, 5.0f);
+
+	Dank::Renderer2D::DrawQuad({ 0.5f, 0.5f, }, { 1.0f, 1.0f }, tex_weed, 5.0f);
+	Dank::Renderer2D::DrawQuad({ -0.5f, -0.5f, }, { 1.0f, 1.0f }, tex_smile, 5.0f);
+
 	//Dank::Renderer2D::DrawRotatedQuad({ -0.75f, -0.1f, 0.3f }, { 0.4f, 0.75f }, glm::radians(10.0f), {0.2f, 0.3f, 0.7f, 1.0f});
 	//Dank::Renderer2D::DrawRotatedQuad({ -0.75f, -0.5f, 0.3f }, { 0.4f, 0.75f }, 10.0f, { 0.8f, 0.8f, 0.8f, 1.0f });
 

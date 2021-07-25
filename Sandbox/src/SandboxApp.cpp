@@ -13,6 +13,7 @@
 The client side code. This is how you build a client executable using the Dank Engine
 -------------------------------------------------------------------------------------*/
 
+/*
 // Create a new layer
 class TestLayer : public Dank::Layer
 {
@@ -151,7 +152,7 @@ private:
 	float _runTime = 0;
 
 };
-
+*/
 // Declare the Sandbox Class
 class Sandbox : public Dank::Application
 {

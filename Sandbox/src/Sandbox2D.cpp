@@ -15,6 +15,7 @@ void Sandbox2D::OnAttach()
 {
 	tex_weed = Dank::Texture2D::Create("assets/textures/weedleaf.png");
 	tex_smile = Dank::Texture2D::Create("assets/textures/awesomeface.png");
+
 }
 void Sandbox2D::OnDetach()
 {
@@ -29,6 +30,8 @@ void Sandbox2D::OnUpdate(Dank::Timestep ts)
 	_cameraController.OnUpdate(ts);
 
 	//DANK_TRACE("FPS: {0}", 1000 / ts.GetMilliseconds());
+
+	Dank::Renderer2D::ResetStats();
 
 	Dank::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 	Dank::RenderCommand::Clear();
@@ -54,14 +57,20 @@ void Sandbox2D::OnUpdate(Dank::Timestep ts)
 
 	//Dank::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, }, { 1.0f, 1.0f }, rotation, tex_weed, 1.0f);
 
-	for (int y = 0; y < 40; y++)
+	float scale = 0.01f;
+	int res = 317;
+
+	for (int y = 0; y < res; y++)
 	{
-		for (int x = 0; x < 40; x++)
+		for (int x = 0; x < res; x++)
 		{
-			if ((x ^ y) % 5 < 1)
-				Dank::Renderer2D::DrawRotatedQuad({ (x * 0.125f) - (20.0f * 0.125f), (y * 0.125f - yValue / 400) - (20.0f * 0.125f) }, { 0.1f, 0.1f }, rotation, tex_smile, 1.0f);
+			
+
+			
+			if ((x ^ y) % ((int)s_App.GetRunTime() + 1) < 1)
+				Dank::Renderer2D::DrawRotatedQuad({ (x * scale) - (res / 2 * scale), (y * scale - yValue / 1000) - (res / 2 * scale) }, { scale * 0.9f, scale * 0.9f }, rotation, tex_smile, 1.0f);
 			else
-				Dank::Renderer2D::DrawRotatedQuad({ (x * 0.125f) - (20.0f * 0.125f), (y * 0.125f - yValue / 400) - (20.0f * 0.125f) }, { 0.1f, 0.1f }, rotation, tex_weed, 1.0f);
+				Dank::Renderer2D::DrawRotatedQuad({ (x * scale) - (res / 2 * scale), (y * scale - yValue / 1000) - (res / 2 * scale) }, { scale * 0.9f, scale * 0.9f }, rotation, tex_weed, 1.0f);
 		}
 	}
 
@@ -77,4 +86,20 @@ void Sandbox2D::OnEvent(Dank::Event& e)
 
 void Sandbox2D::OnImGuiRender()
 {
+	DANK_PROFILE_FUNCTION();
+	ImGui::Begin("Settings");
+
+	auto stats = Dank::Renderer2D::GetStats();
+	ImGui::Text("Renderer2D Stats:");
+	ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+	ImGui::Text("Quads: %d", stats.QuadCount);
+	ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
+	ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
+	ImGui::NewLine();
+	
+	ImGui::Text("Application Stats:");
+	ImGui::Text("FPS: %f", s_App.GetFps());
+	ImGui::Text("Frame Count: %d", s_App.GetFrameCount());
+	ImGui::Text("Runtime: %f", s_App.GetRunTime());
+	ImGui::End();
 }

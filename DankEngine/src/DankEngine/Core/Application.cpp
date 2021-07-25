@@ -91,7 +91,8 @@ namespace Dank {
 			_runTime = time;
 
 			Timestep timestep = time - _lastFrameTime;
-			_lastFrameTime = time;						
+			_lastFrameTime = time;	
+			_fps = 1 / timestep;
 
 			// Run the OnUpdate for every layer in the stack
 			// Dont run if we're minimized thats scuffed.
@@ -102,26 +103,24 @@ namespace Dank {
 
 					for (Layer* layer : _layerStack)
 						layer->OnUpdate(timestep);
-				}
-
-				// ImGui layer rendering
-				_imGuiLayer->Begin();
-
-				{
-					DANK_PROFILE_SCOPE("LayerStack Collection OnImGuiRender");
-
-					for (Layer* layer : _layerStack)
-						layer->OnImGuiRender();
-					_imGuiLayer->End();
-				}
-				
+				}				
 			}
-			
 
+			// ImGui layer rendering
+			_imGuiLayer->Begin();
 
+			{
+				DANK_PROFILE_SCOPE("LayerStack Collection OnImGuiRender");
+
+				for (Layer* layer : _layerStack)
+					layer->OnImGuiRender();
+				_imGuiLayer->End();
+			}			
 
 			// Update the window
 			_window->OnUpdate();
+
+			_frameCount++;
 
 		}
 

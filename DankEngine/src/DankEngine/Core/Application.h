@@ -28,6 +28,8 @@ namespace Dank {
 		inline static Application& Get() { return *s_Instance; }
 		inline Window& GetWindow() { return *_window; }
 		inline float GetRunTime() { return _runTime; }
+		inline float GetFps() { return _fps; }
+		inline uint32_t GetFrameCount() { return _frameCount; }
 
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
@@ -41,6 +43,8 @@ namespace Dank {
 		LayerStack _layerStack;
 		float _lastFrameTime = 0.0f;
 		float _runTime = 0.0f;
+		float _fps = 0.0f;
+		uint32_t _frameCount = 0;
 
 	private:
 		static Application* s_Instance;		

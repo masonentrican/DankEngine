@@ -29,5 +29,5 @@ private:
 
 	bool _isShaderSettingsOpen = true;
 	
-	Dank::Application& app = Dank::Application::Get();
+	Dank::Application& s_App = Dank::Application::Get();
 };

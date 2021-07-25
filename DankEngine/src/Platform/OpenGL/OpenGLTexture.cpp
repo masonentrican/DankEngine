@@ -16,11 +16,13 @@ namespace Dank {
 		glTextureStorage2D(_rendererId, 1, _internalFormat, _width, _height);
 
 		// set the texture wrapping/filtering options (on the currently bound texture object)
-		glTexParameteri(_rendererId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(_rendererId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		// 
+		// TODO: Why is this throwing errors? -  GL_INVALID_ENUM error generated. Invalid target.
+		glTextureParameteri(_rendererId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(_rendererId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		glTexParameteri(_rendererId, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(_rendererId, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTextureParameteri(_rendererId, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(_rendererId, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
 
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& filepath)
@@ -60,11 +62,11 @@ namespace Dank {
 		glTextureStorage2D(_rendererId, 1, internalFormat, _width, _height);
 
 		// set the texture wrapping/filtering options (on the currently bound texture object)
-		glTexParameteri(_rendererId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(_rendererId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTextureParameteri(_rendererId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(_rendererId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		glTexParameteri(_rendererId, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(_rendererId, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTextureParameteri(_rendererId, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(_rendererId, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 		glTextureSubImage2D(_rendererId, 0, 0, 0, _width, _height, dataFormat, GL_UNSIGNED_BYTE, data);		
 
@@ -86,22 +88,13 @@ namespace Dank {
 		// Check that the size of our texture data in bytes is the size of the actual texture.
 		// Only support RGBA and RGB currently.
 		uint32_t bytesPerPixel = _dataFormat == GL_RGBA ? 4 : 3;
-		DANK_CORE_ASSERT(size == _width * _height * bytesPerPixel, "OpenGLTexture2D data must be ");
+		DANK_CORE_ASSERT(size == _width * _height * bytesPerPixel, "OpenGLTexture2D data must be for the entire texture");
 
 		glTextureSubImage2D(_rendererId, 0, 0, 0, _width, _height, _dataFormat, GL_UNSIGNED_BYTE, data);
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const
 	{
-		DANK_PROFILE_FUNCTION();
-
-		glBindTexture(GL_TEXTURE_2D, _rendererId);
-	}
-
-	void OpenGLTexture2D::Unbind(uint32_t slot) const
-	{
-		DANK_PROFILE_FUNCTION();
-
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTextureUnit(slot, _rendererId);
 	}
 }

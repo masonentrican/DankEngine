@@ -13,6 +13,7 @@
 The client side code. This is how you build a client executable using the Dank Engine
 -------------------------------------------------------------------------------------*/
 
+/*
 // Create a new layer
 class TestLayer : public Dank::Layer
 {
@@ -32,7 +33,7 @@ public:
 
 		// Instantiate the vertex buffer and pass in the vertex data
 		Dank::Ref<Dank::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(Dank::VertexBuffer::Create(vertices, sizeof(vertices)));
+		vertexBuffer = Dank::VertexBuffer::Create(vertices, sizeof(vertices));
 
 		// Define the Vertex Buffer Layout
 		Dank::BufferLayout layout = {
@@ -51,7 +52,7 @@ public:
 		Dank::Ref<Dank::IndexBuffer> indexBuffer;
 
 		// Define the index buffer values from the indices
-		indexBuffer.reset(Dank::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		indexBuffer = Dank::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 
 		// Pass the index array to the vertex array for reference
 		_vertexArray->SetIndexBuffer(indexBuffer);
@@ -151,7 +152,7 @@ private:
 	float _runTime = 0;
 
 };
-
+*/
 // Declare the Sandbox Class
 class Sandbox : public Dank::Application
 {

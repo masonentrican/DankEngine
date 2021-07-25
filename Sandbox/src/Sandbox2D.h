@@ -20,7 +20,7 @@ private:
 	Dank::OrthographicCameraController _cameraController;
 	
 	Dank::Ref<Dank::VertexArray> _vertexArray;
-	Dank::Ref<Dank::Texture2D> _texture;
+	Dank::Ref<Dank::Texture2D> tex_weed, tex_smile;
 
 	Dank::ShaderLibrary _shaderLibrary;
 	Dank::Ref<Dank::Shader> _defaultShader;

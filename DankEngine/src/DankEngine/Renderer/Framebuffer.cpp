@@ -6,11 +6,7 @@
 #include "Platform/OpenGL/OpenGLFramebuffer.h"
 
 namespace Dank {
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="spec"></param>
-	/// <returns></returns>
+
 	Ref<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec)
 	{
 		switch (Renderer::GetAPI())

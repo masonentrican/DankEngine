@@ -16,7 +16,7 @@ namespace Dank {
 	Application* Application::s_Instance = nullptr;											
 
 	// Primary Application
-	Application::Application()																
+	Application::Application(const std::string& name)																
 	{
 		DANK_PROFILE_FUNCTION();
 
@@ -25,7 +25,7 @@ namespace Dank {
 		s_Instance = this;
 
 		// Instantiate the window object
-		_window = std::unique_ptr<Window>(Window::Create());								
+		_window = std::unique_ptr<Window>(Window::Create(WindowProperties(name)));								
 		_window->SetEventCallback(DANK_BIND_EVENT(Application::OnEvent));
 		_window->SetVSync(false);
 
@@ -146,6 +146,11 @@ namespace Dank {
 		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
 
 		return false;
+	}
+
+	void Application::Close()
+	{
+		_running = false;
 	}
 }
 

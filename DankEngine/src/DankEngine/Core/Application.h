@@ -15,10 +15,11 @@ namespace Dank {
 	class Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "Dank App");
 		virtual~Application();
 
 		void Run();
+		void Close();
 
 		void OnEvent(Event& e);
 

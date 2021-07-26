@@ -16,6 +16,12 @@ void Sandbox2D::OnAttach()
 	tex_weed = Dank::Texture2D::Create("assets/textures/weedleaf.png");
 	tex_smile = Dank::Texture2D::Create("assets/textures/awesomeface.png");
 
+	Dank::FramebufferSpecification frameBufferSpec;
+	frameBufferSpec.Width = 1280;
+	frameBufferSpec.Height = 720;
+	
+	_framebuffer = Dank::Framebuffer::Create(frameBufferSpec);
+
 }
 void Sandbox2D::OnDetach()
 {
@@ -32,6 +38,8 @@ void Sandbox2D::OnUpdate(Dank::Timestep ts)
 	//DANK_TRACE("FPS: {0}", 1000 / ts.GetMilliseconds());
 
 	Dank::Renderer2D::ResetStats();
+
+	_framebuffer->Bind();
 
 	Dank::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 	Dank::RenderCommand::Clear();
@@ -57,8 +65,8 @@ void Sandbox2D::OnUpdate(Dank::Timestep ts)
 
 	//Dank::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, }, { 1.0f, 1.0f }, rotation, tex_weed, 1.0f);
 
-	float scale = 0.01f;
-	int res = 317;
+	float scale = 0.5f;
+	int res = 20;
 
 	for (int y = 0; y < res; y++)
 	{
@@ -67,7 +75,7 @@ void Sandbox2D::OnUpdate(Dank::Timestep ts)
 			
 
 			
-			if ((x ^ y) % ((int)s_App.GetRunTime() + 1) < 1)
+			if ((x ^ y) % ((int)Dank::Application::Get().GetRunTime() + 1) < 1)
 				Dank::Renderer2D::DrawRotatedQuad({ (x * scale) - (res / 2 * scale), (y * scale - yValue / 1000) - (res / 2 * scale) }, { scale * 0.9f, scale * 0.9f }, rotation, tex_smile, 1.0f);
 			else
 				Dank::Renderer2D::DrawRotatedQuad({ (x * scale) - (res / 2 * scale), (y * scale - yValue / 1000) - (res / 2 * scale) }, { scale * 0.9f, scale * 0.9f }, rotation, tex_weed, 1.0f);
@@ -76,6 +84,8 @@ void Sandbox2D::OnUpdate(Dank::Timestep ts)
 
 	Dank::Renderer2D::EndScene();
 	// -----------  END SCENE  -------------//
+
+	_framebuffer->Unbind();
 
 }
 
@@ -98,8 +108,13 @@ void Sandbox2D::OnImGuiRender()
 	ImGui::NewLine();
 	
 	ImGui::Text("Application Stats:");
-	ImGui::Text("FPS: %f", s_App.GetFps());
-	ImGui::Text("Frame Count: %d", s_App.GetFrameCount());
-	ImGui::Text("Runtime: %f", s_App.GetRunTime());
+	ImGui::Text("FPS: %f", Dank::Application::Get().GetFps());
+	ImGui::Text("Frame Count: %d", Dank::Application::Get().GetFrameCount());
+	ImGui::Text("Runtime: %f", Dank::Application::Get().GetRunTime());
+	ImGui::NewLine();
+
+	uint32_t frameBufferTextureId = _framebuffer->GetColorAttachmentRendererID();
+	ImGui::Image((void*)frameBufferTextureId, ImVec2{ 1280, 720 }, ImVec2{ 0,1 }, ImVec2{ 1,0 });
+
 	ImGui::End();
 }

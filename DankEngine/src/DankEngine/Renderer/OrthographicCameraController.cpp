@@ -53,6 +53,14 @@ namespace Dank
 		dispatcher.Dispatch<WindowResizeEvent>(DANK_BIND_EVENT(OrthographicCameraController::OnWindowResized));
 	}
 
+	void OrthographicCameraController::OnResize(float width, float height)
+	{
+		DANK_PROFILE_FUNCTION();
+
+		_aspectRatio = width / height;
+		_camera.SetProjection(-_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
+	}
+
 	// Changes zoom level
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
@@ -70,9 +78,7 @@ namespace Dank
 	{
 		DANK_PROFILE_FUNCTION();
 
-		_aspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
-		_camera.SetProjection(-_aspectRatio * _zoomLevel, _aspectRatio * _zoomLevel, -_zoomLevel, _zoomLevel);
-		
+		OnResize((float)e.GetWidth(), (float)e.GetHeight());
 		return false;
 	}
 }

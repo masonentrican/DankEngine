@@ -23,6 +23,7 @@
 
 #include "DankEngine/Renderer/Buffer.h"
 #include "DankEngine/Renderer/Shader.h"
+#include "DankEngine/Renderer/Framebuffer.h"
 #include "DankEngine/Renderer/VertexArray.h"
 
 #include "DankEngine/Renderer/OrthographicCamera.h"

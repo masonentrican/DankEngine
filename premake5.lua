@@ -1,6 +1,6 @@
 workspace "DankEngine"
 	architecture "x64"
-	startproject "Sandbox"
+	startproject "DankEditor"
 
 	configurations
 	{
@@ -105,8 +105,63 @@ project "DankEngine"
 		runtime "Release"
 		optimize "on"		
 
+
 project "Sandbox"
 	location "Sandbox"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp",
+	}
+
+	includedirs
+	{
+		"DankEngine/vendor/spdlog/include",
+		"DankEngine/src",
+		"DankEngine/vendor",
+		"%{IncludeDir.glm}"
+	}
+
+	links
+	{
+		"DankEngine"
+	}
+
+	filter "system:windows"
+
+		systemversion "latest"
+
+		defines
+		{
+			"DANK_PLATFORM_WINDOWS",			
+		}
+
+	filter "configurations:Debug"
+		defines "DANK_DEBUG"
+		runtime "Debug"
+		symbols "on"		
+
+	filter "configurations:Release"
+		defines "DANK_RELEASE"
+		runtime "Release"
+		optimize "on"		
+
+	filter "configurations:Dist"
+		defines "DANK_DIST"
+		runtime "Release"
+		optimize "on"
+
+
+project "DankEditor"
+	location "DankEditor"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"

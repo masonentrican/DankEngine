@@ -12,12 +12,13 @@ namespace Dank {
 	struct WindowProperties
 	{
 		std::string Title;
-		unsigned int Width;
-		unsigned int Height;
+		uint32_t Width;
+		uint32_t Height;
 
 		WindowProperties(const std::string& title = "Dank Engine",
-						 unsigned int width = 1280,
-						 unsigned int height = 720) : Title(title), Width(width), Height(height)
+						 uint32_t width = 1280,
+						 uint32_t height = 720)
+			: Title(title), Width(width), Height(height)
 		{
 		}
 

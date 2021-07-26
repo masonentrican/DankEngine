@@ -21,6 +21,7 @@ private:
 	
 	Dank::Ref<Dank::VertexArray> _vertexArray;
 	Dank::Ref<Dank::Texture2D> tex_weed, tex_smile;
+	Dank::Ref<Dank::Framebuffer> _framebuffer;
 
 	Dank::ShaderLibrary _shaderLibrary;
 	Dank::Ref<Dank::Shader> _defaultShader;
@@ -28,6 +29,4 @@ private:
 	glm::vec3 _shaderDefaultColor = { 1.0f, 1.0f, 1.0f };
 
 	bool _isShaderSettingsOpen = true;
-	
-	Dank::Application& s_App = Dank::Application::Get();
 };

@@ -49,10 +49,11 @@
 #define BIT(x) (1 << x)
 
 
-// Better handle smart pointers so that it's cleaner and can be expanded into an asset manager
-// for handling reference counting and creation / deletion easily.
+
 namespace Dank {
 
+	// Better handle smart pointers so that it's cleaner and can be expanded into an asset manager
+	// for handling reference counting and creation / deletion easily.
 	template<typename T>
 	using Scope = std::unique_ptr<T>;
 	template<typename T, typename ... Args>

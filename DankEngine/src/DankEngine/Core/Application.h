@@ -32,6 +32,8 @@ namespace Dank {
 		inline float GetFps() { return _fps; }
 		inline uint32_t GetFrameCount() { return _frameCount; }
 
+		ImGuiLayer* GetImGuiLayer() { return _imGuiLayer; }
+
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);

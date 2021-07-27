@@ -32,5 +32,8 @@ namespace Dank
 		glm::vec3 _shaderDefaultColor = { 1.0f, 1.0f, 1.0f };
 
 		glm::vec2 _viewportSize = { 0, 0 };
+
+		bool _viewportFocused = false;
+		bool _viewportHovered = false;
 	};
 }

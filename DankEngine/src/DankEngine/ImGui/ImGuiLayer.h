@@ -15,11 +15,14 @@ namespace Dank {
 		~ImGuiLayer();
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
-		virtual void OnImGuiRender() override;
+		virtual void OnEvent(Event& e) override;
 
 		void Begin();
 		void End();
+
+		void AllowEvents(bool allow) { _allowEvents = allow; }		
 	private:
+		bool _allowEvents = false;
 		float _time = 0.0f;
 	};
 

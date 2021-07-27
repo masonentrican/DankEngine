@@ -68,11 +68,11 @@ namespace Dank {
 
 		// Iterate backwards through the layerStack to handle events that are at the end in overlays
 		// before we handle events in the layers underneath it.				
-		for (auto it = _layerStack.end(); it != _layerStack.begin(); )
+		for (auto it = _layerStack.rbegin(); it != _layerStack.rend(); ++it)
 		{
-			(*--it)->OnEvent(e);
 			if (e.Handled)
 				break;
+			(*it)->OnEvent(e);
 		}
 	}
 

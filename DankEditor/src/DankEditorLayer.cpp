@@ -43,9 +43,10 @@ namespace Dank
             _cameraController.OnResize(_viewportSize.x, _viewportSize.y);
         }
 
-		_cameraController.OnUpdate(ts);
+        Dank::Renderer2D::ResetStats();
 
-		Dank::Renderer2D::ResetStats();
+        if(_viewportFocused)
+		    _cameraController.OnUpdate(ts);
 
 		_framebuffer->Bind();
 
@@ -53,14 +54,7 @@ namespace Dank
 		Dank::RenderCommand::Clear();
 
 		static float rotation = 0.0f;
-		static float yValue = 0.0f;
-
 		rotation += ts * 50.0f;
-
-		if (yValue < 1000.0f)
-			yValue += ts * 50.0f;
-		else
-			yValue = 0.0f;
 
 		// ----------- BEGIN SCENE -------------//
 		Dank::Renderer2D::BeginScene(_cameraController.GetCamera());
@@ -162,14 +156,21 @@ namespace Dank
             ImGui::Text("FPS: %f", Dank::Application::Get().GetFps());
             ImGui::Text("Frame Count: %d", Dank::Application::Get().GetFrameCount());
             ImGui::Text("Runtime: %f", Dank::Application::Get().GetRunTime());
-            ImGui::NewLine();
+            ImGui::NewLine();            
             ImGui::End();
         }
 
         // Viewport
         {
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
-            ImGui::Begin("Viewport");
+            ImGui::Begin("Viewport");            
+            
+            // Check if the viewport is focused and hovered so we can
+            // tell the ImGui layer whether or not events should be
+            // marked as handled once recieved.
+            _viewportFocused = ImGui::IsWindowFocused(); 
+            _viewportHovered = ImGui::IsWindowHovered();
+            Application::Get().GetImGuiLayer()->AllowEvents(_viewportFocused && _viewportHovered);            
 
             ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();            
             _viewportSize = { viewportPanelSize.x, viewportPanelSize.y };         

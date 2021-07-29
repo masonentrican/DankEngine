@@ -3,6 +3,8 @@
 #include "ImGui/ImGui.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "ModelTest.h"
+#include "DankEngine/Core/EntryPoint.h"
 
 
 
@@ -136,7 +138,7 @@ public:
 		
 
 		std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformFloat3("u_Color", _shaderDefaultColor);
-		std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformMat4("u_Model", _model.UpdateModel(deltaTime));
+		//std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformMat4("u_Model", _model.UpdateModel(deltaTime));
 		
 		// Bind the smile texture and submit
 
@@ -229,7 +231,7 @@ private:
 	Dank::Ref<Dank::VertexArray> _vertexArray;
 
 	Dank::PerspectiveCameraController _cameraController;
-	Dank::Model _model;
+	//Dank::Model _model;
 	Dank::Ref<Dank::Texture> _tSmile;
 	Dank::Ref<Dank::Texture> _tWall;
 	Dank::Ref<Dank::Texture> _tWeed;
@@ -248,7 +250,7 @@ class Sandbox : public Dank::Application
 public:
 	Sandbox()
 	{
-		PushLayer(new TestLayer());
+		PushLayer(new ModelLayer());
 	}
 
 	~Sandbox() {}

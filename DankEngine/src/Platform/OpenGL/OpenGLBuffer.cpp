@@ -20,6 +20,12 @@ namespace Dank {
 		glDeleteBuffers(1, &_rendererId);
 	}
 
+	void OpenGLVertexBuffer::SetVertexAttribute(int index, int size, int type, unsigned char normalized, unsigned long long stride, const void* offset)
+	{
+		glEnableVertexAttribArray(index);
+		glVertexAttribPointer(index, size, type, normalized, (GLsizei)stride, offset);
+	}
+
 	void OpenGLVertexBuffer::Bind() const
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, _rendererId);

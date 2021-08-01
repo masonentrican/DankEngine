@@ -17,8 +17,8 @@ namespace Dank {
 		static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform = glm::mat4(1.0f));
 		static void Draw(const Ref<VertexArray>& vertexArray);
 		static void DrawArraysTriangles();
-		static void DrawModel(Model model);
-		static void DrawMesh(Mesh mesh, Ref<Shader>& shader, VertexArray* vertexArray);
+		static void DrawModel(Ref<Model>& model);
+		static void DrawMesh(Ref<Mesh>& mesh, Ref<Shader>& shader, Ref<VertexArray>& vertexArray);
 		static void SubmitMesh(Mesh mesh, VertexArray* vertexArray);
 		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 

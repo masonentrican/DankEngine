@@ -35,12 +35,12 @@ namespace Dank {
 		RenderCommand::DrawArraysTriangles();
 	}
 
-	void Renderer::DrawModel(Model model)
+	void Renderer::DrawModel(Ref<Model>& model)
 	{
 		RenderCommand::DrawModel(model);
 	}
 
-	void Renderer::DrawMesh(Mesh mesh, Ref<Shader>& shader, VertexArray* vertexArray)
+	void Renderer::DrawMesh(Ref<Mesh>& mesh, Ref<Shader>& shader, Ref<VertexArray>& vertexArray)
 	{
 		RenderCommand::DrawMesh(mesh, shader, vertexArray);
 	}

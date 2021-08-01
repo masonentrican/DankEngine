@@ -16,8 +16,8 @@
 		//Dank::Model testModel(ModelPath);
 		auto defaultShader = _shaderLibrary.Load("assets/shaders/test.glsl");
 		_defaultShader = _shaderLibrary.Get("test");
-		_vertexArray.reset(Dank::VertexArray::Create());
-		ourModel = new Dank::Model(ModelPath, _defaultShader);
+		
+		ourModel  =  std::make_shared<Dank::Model>(Dank::Model(ModelPath, _defaultShader));
 		
 		
 	}
@@ -40,7 +40,7 @@
 		std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformMat4("model", model);
 		std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformMat4("u_ViewProjection", _cameraController.GetCamera().GetViewProjectionMatrix());
 
-		Dank::Renderer::DrawModel(*ourModel);
+		Dank::Renderer::DrawModel(ourModel);
 
 		//ourModel->Draw(_defaultShader);
 

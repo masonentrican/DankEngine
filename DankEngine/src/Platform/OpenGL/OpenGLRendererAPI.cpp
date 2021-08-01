@@ -28,12 +28,12 @@ namespace Dank {
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
 
-	void OpenGLRendererAPI::DrawModel(Model model)
+	void OpenGLRendererAPI::DrawModel(Ref<Model>& model)
 	{
-		Ref<Shader>& shader = model.GetShader();
-		for (Mesh mesh : model.GetMeshes())
+		Ref<Shader>& shader = model->GetShader();
+		for (Mesh mesh : model->GetMeshes())
 		{
-			VertexArray *vertexArray = VertexArray::Create();
+			Ref<VertexArray>& vertexArray = VertexArray::Create();
 			vertexArray->Bind();
 			Ref<VertexBuffer>& vertexBuffer = VertexBuffer::Create((float*)&mesh._vertices[0], mesh._vertices.size() * sizeof(Vertex));
 			Ref<IndexBuffer>& indexBuffer = IndexBuffer::Create(&mesh._indices[0], mesh._indices.size());
@@ -42,7 +42,7 @@ namespace Dank {
 			vertexBuffer->SetVertexAttribute(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
 			vertexArray->Unbind();
 			//SubmitMesh(mesh, vertexArray);
-			DrawMesh(mesh, shader, vertexArray);
+			DrawMesh(std::make_shared<Mesh>(mesh), shader, vertexArray);
 		}
 	}
 
@@ -63,19 +63,19 @@ namespace Dank {
 		//vertexArray->Unbind();
 	}
 
-	void OpenGLRendererAPI::DrawMesh(Mesh mesh, Ref<Shader> &shader, VertexArray* vertexArray)
+	void OpenGLRendererAPI::DrawMesh(Ref<Mesh>& mesh, Ref<Shader> &shader, Ref<VertexArray>& vertexArray)
 	{
 		unsigned int diffuseNr = 1;
 		unsigned int specularNr = 1;
 		unsigned int normalNr = 1;
 
 		//std::cout << "textures: " << _textures.size() << std::endl;
-		for (unsigned int i = 0; i < mesh._textures.size(); i++)
+		for (unsigned int i = 0; i < mesh->_textures.size(); i++)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 
 			std::string number;
-			std::string name = mesh._textures[i].type;
+			std::string name = mesh->_textures[i].type;
 			if (name == "texture_diffuse")
 				number = std::to_string(diffuseNr++);
 			else if (name == "texture_specular")
@@ -84,7 +84,7 @@ namespace Dank {
 				number = std::to_string(normalNr++); // transfer unsigned int to stream
 
 			std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformInt((name + number).c_str(), i);
-			glBindTexture(GL_TEXTURE_2D, mesh._textures[i].iD);
+			glBindTexture(GL_TEXTURE_2D, mesh->_textures[i].iD);
 
 
 		}
@@ -92,7 +92,7 @@ namespace Dank {
 		vertexArray->Bind();
 		//glBindVertexArray(VAO);
 		//std::cout << "indices size: " << _indices.size() << " drawing" << "vertex array: " << VAO << std::endl;
-		glDrawElements(GL_TRIANGLES, mesh._indices.size(), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, mesh->_indices.size(), GL_UNSIGNED_INT, nullptr);
 		vertexArray->Unbind();
 
 		glActiveTexture(GL_TEXTURE0);

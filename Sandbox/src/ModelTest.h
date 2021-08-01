@@ -16,6 +16,6 @@
 		Dank::ShaderLibrary _shaderLibrary;
 		Dank::Ref<Dank::Shader> _defaultShader;
 		Dank::Ref<Dank::VertexArray> _vertexArray;
-		Dank::Model* ourModel;
+		Dank::Ref<Dank::Model> ourModel;
 	};
 

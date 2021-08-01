@@ -26,12 +26,12 @@ namespace Dank {
 			s_RendererAPI->DrawArraysTriangles();
 		}
 
-		inline static void DrawModel(Model model)
+		inline static void DrawModel(Ref<Model>& model)
 		{
 			s_RendererAPI->DrawModel(model);
 		}
 
-		inline static void DrawMesh(Mesh mesh, Ref<Shader>& shader, VertexArray* vertexArray)
+		inline static void DrawMesh(Ref<Mesh>& mesh, Ref<Shader>& shader, Ref<VertexArray>& vertexArray)
 		{
 			s_RendererAPI->DrawMesh(mesh, shader, vertexArray);
 		}

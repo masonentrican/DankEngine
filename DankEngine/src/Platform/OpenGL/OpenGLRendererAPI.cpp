@@ -28,6 +28,76 @@ namespace Dank {
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
 
+	void OpenGLRendererAPI::DrawModel(Model model)
+	{
+		Ref<Shader>& shader = model.GetShader();
+		for (Mesh mesh : model.GetMeshes())
+		{
+			VertexArray *vertexArray = VertexArray::Create();
+			vertexArray->Bind();
+			Ref<VertexBuffer>& vertexBuffer = VertexBuffer::Create((float*)&mesh._vertices[0], mesh._vertices.size() * sizeof(Vertex));
+			Ref<IndexBuffer>& indexBuffer = IndexBuffer::Create(&mesh._indices[0], mesh._indices.size());
+			vertexBuffer->SetVertexAttribute(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+			vertexBuffer->SetVertexAttribute(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+			vertexBuffer->SetVertexAttribute(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+			vertexArray->Unbind();
+			//SubmitMesh(mesh, vertexArray);
+			DrawMesh(mesh, shader, vertexArray);
+		}
+	}
+
+	void OpenGLRendererAPI::SubmitMesh(Mesh mesh, VertexArray *vertexArray)
+	{
+		//VertexArray *vertexArray = VertexArray::Create();
+	
+		//create and bind vertex array
+		//vertexArray.reset(VertexArray::Create());
+		//vertexArray->Bind();
+		
+
+		//set vertex attributes and stride
+		//vertexBuffer->SetVertexAttribute(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+		//vertexBuffer->SetVertexAttribute(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+		//vertexBuffer->SetVertexAttribute(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+
+		//vertexArray->Unbind();
+	}
+
+	void OpenGLRendererAPI::DrawMesh(Mesh mesh, Ref<Shader> &shader, VertexArray* vertexArray)
+	{
+		unsigned int diffuseNr = 1;
+		unsigned int specularNr = 1;
+		unsigned int normalNr = 1;
+
+		//std::cout << "textures: " << _textures.size() << std::endl;
+		for (unsigned int i = 0; i < mesh._textures.size(); i++)
+		{
+			glActiveTexture(GL_TEXTURE0 + i);
+
+			std::string number;
+			std::string name = mesh._textures[i].type;
+			if (name == "texture_diffuse")
+				number = std::to_string(diffuseNr++);
+			else if (name == "texture_specular")
+				number = std::to_string(specularNr++);
+			else if (name == "texture_normal")
+				number = std::to_string(normalNr++); // transfer unsigned int to stream
+
+			std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformInt((name + number).c_str(), i);
+			glBindTexture(GL_TEXTURE_2D, mesh._textures[i].iD);
+
+
+		}
+
+		vertexArray->Bind();
+		//glBindVertexArray(VAO);
+		//std::cout << "indices size: " << _indices.size() << " drawing" << "vertex array: " << VAO << std::endl;
+		glDrawElements(GL_TRIANGLES, mesh._indices.size(), GL_UNSIGNED_INT, nullptr);
+		vertexArray->Unbind();
+
+		glActiveTexture(GL_TEXTURE0);
+	}
+
 	void OpenGLRendererAPI::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
 	{
 		glViewport(x, y, width, height);

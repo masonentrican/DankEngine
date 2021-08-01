@@ -1,10 +1,8 @@
 #include<dankpch.h>
-#include <DankEngine/Renderer/Mesh.h>
+#include "Mesh.h"
 #include <glad/glad.h>
-#include "DankEngine/Renderer/Renderer.h"
-#include "DankEngine/Renderer/RenderCommand.h"
-#include "Platform/OpenGL/OpenGLShader.h"
 #include <glm/gtc/type_ptr.hpp>
+
 namespace Dank {
 
 	//Ref<Mesh> Mesh::Create(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
@@ -13,11 +11,11 @@ namespace Dank {
 	//	
 	//}
 
-	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) : _vertices(vertices), _indices(indices), _textures(textures)
+	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<MeshTexture> textures) : _vertices(vertices), _indices(indices), _textures(textures)
 	{
-		setupMesh();
+		//setupMesh();
 	}
-
+	/*
 	void Mesh::setupMesh()
 	{
 		//create and bind vertex array
@@ -39,7 +37,7 @@ namespace Dank {
 		_vertexArray->Unbind();
 		
 	}
-
+	
 	void Mesh::Draw(Ref<Shader> shader)
 	{
 		unsigned int diffuseNr = 1;
@@ -74,5 +72,5 @@ namespace Dank {
 			
 			glActiveTexture(GL_TEXTURE0);
 
-	}
+	}*/
 }

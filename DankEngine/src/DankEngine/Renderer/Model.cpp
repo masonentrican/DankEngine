@@ -10,7 +10,7 @@
 
 namespace Dank {
 
-	Model::Model(std::string &path)
+	Model::Model(std::string &path, Ref<Shader> &shader) : _shader(shader)
 	{
 		stbi_set_flip_vertically_on_load(true);
 		loadModel(path);
@@ -40,9 +40,12 @@ namespace Dank {
 	void Model::Draw(Ref<Shader> shader)
 	{
 		for (unsigned int i = 0; i < meshes.size(); i++)
-			meshes[i].Draw(shader);
+			
+			//meshes[i].Draw(shader);
 			//TODO: FIX THIS SHIT
 			//Renderer::DrawMesh(meshes[i], shader);
+			break;
+			
 	}
 
 	void Model::loadModel(std::string path)
@@ -90,7 +93,7 @@ namespace Dank {
 	{
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
-		std::vector<Texture> textures;
+		std::vector<MeshTexture> textures;
 
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 		{
@@ -130,18 +133,18 @@ namespace Dank {
 		//process material
 		
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-		std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+		std::vector<MeshTexture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-		std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+		std::vector<MeshTexture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 		
 		
 		return Mesh(vertices, indices, textures);
 	}
 
-	std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
+	std::vector<MeshTexture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 	{
-		std::vector<Texture> textures;
+		std::vector<MeshTexture> textures;
 		
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 		{
@@ -163,7 +166,7 @@ namespace Dank {
 			if (!skip)
 			{
 				
-				Texture texture;
+				MeshTexture texture;
 				texture.iD = TextureFromFile(str.C_Str(), directory);
 				texture.path = str.C_Str();
 				texture.type = typeName;

@@ -1,5 +1,5 @@
 #pragma once
-#include "Renderer.h"
+//#include "Renderer.h"
 #include <dankpch.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Platform/OpenGL/OpenGLShader.h"
@@ -13,12 +13,18 @@ struct Vertex {
 };
 
 
-struct Texture {
+struct MeshTexture {
 	unsigned int iD;
 	std::string type;
 	std::string path;
 };
 
+struct Material {
+	glm::vec3 Diffuse;
+	glm::vec3 Specular;
+	glm::vec3 Ambient;
+	float Shininess;
+};
 
 namespace Dank{
 	class Mesh
@@ -26,22 +32,15 @@ namespace Dank{
 	public:
 		std::vector<Vertex>       _vertices;
 		std::vector<uint32_t>     _indices;
-		std::vector<Texture>      _textures;
-		unsigned int VAO;
-		void setupMesh();
-		inline Ref<VertexArray> GetVertexArray() { return _vertexArray; }
+		std::vector<MeshTexture>      _textures;
+	
 
-		//static Ref<Mesh> Create(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures); 
-
-		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-		void Draw(Ref<Shader> shader);
+		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<MeshTexture> textures);
+		
 
 
 	private:
-		unsigned int VBO, EBO;
-		Ref<VertexArray> _vertexArray;
-		Ref<VertexBuffer> _vertexBuffer;
-		Ref<IndexBuffer> _indexBuffer;
+	
 		
 	};
 

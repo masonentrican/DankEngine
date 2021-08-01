@@ -15,21 +15,24 @@ namespace Dank {
 	class Model
 	{
 	public:
-		Model(std::string &path);
+		Model(std::string &path, Ref<Shader> &shader);
 		void Draw(Ref<Shader> shader);
-		
-		
+		inline std::vector <Mesh> GetMeshes() { return meshes; }
+		inline Ref<Shader>& GetShader() { return _shader; }
+		inline void SetShader(Ref<Shader>& shader) { _shader = shader; }
 
 	private:
 		//TODO: Make this a vector of shared pointers
-		std::vector<Mesh> meshes;
+		std::vector <Mesh> meshes;
 		std::string directory;
-		std::vector <Texture> textures_loaded;
+		std::vector <MeshTexture> textures_loaded;
+		Ref<Shader> &_shader;
 		void loadModel(std::string path);
 		void processNode(aiNode* node, const aiScene *scene);
 		Mesh processMesh(aiMesh* mesh, const aiScene* scene);
+		
 		unsigned int TextureFromFile(const char* path, const std::string& directory);
-		std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+		std::vector<MeshTexture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 	};
 
 }

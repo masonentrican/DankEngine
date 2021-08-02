@@ -11,8 +11,8 @@
 
 	ModelLayer::ModelLayer() : Layer("Model"), _cameraController(45.0f, 1280.0f/720.0f)
 	{
-		ModelPath = "assets/models/backpack/backpack.obj";
-		
+		//ModelPath = "assets/models/backpack/backpack.obj";
+		ModelPath = "assets/models/base_benis.fbx";
 		//Dank::Model testModel(ModelPath);
 		auto defaultShader = _shaderLibrary.Load("assets/shaders/test.glsl");
 		_defaultShader = _shaderLibrary.Get("test");
@@ -30,7 +30,6 @@
 		Dank::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Dank::RenderCommand::Clear();
 		
-		//_defaultShader = _shaderLibrary.Get("test");
 
 		// render the loaded model
 		glm::mat4 model = glm::mat4(1.0f);
@@ -42,7 +41,6 @@
 
 		Dank::Renderer::DrawModel(ourModel);
 
-		//ourModel->Draw(_defaultShader);
 
 		Dank::Renderer::EndScene();
 

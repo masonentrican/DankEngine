@@ -85,10 +85,13 @@ namespace Dank {
 
 			std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformInt((name + number).c_str(), i);
 			glBindTexture(GL_TEXTURE_2D, mesh->_textures[i].iD);
-
-
+			
 		}
-
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformFloat3("material.ambient", mesh->_material.Ambient);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformFloat3("material.diffuse", mesh->_material.Diffuse);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformFloat3("material.specular", mesh->_material.Specular);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformFloat("material.shininess", mesh->_material.Shininess);
+		
 		vertexArray->Bind();
 		//glBindVertexArray(VAO);
 		//std::cout << "indices size: " << _indices.size() << " drawing" << "vertex array: " << VAO << std::endl;

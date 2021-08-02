@@ -30,7 +30,7 @@ namespace Dank {
 		void loadModel(std::string path);
 		void processNode(aiNode* node, const aiScene *scene);
 		Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-		
+		Material loadMaterial(aiMaterial* mat);
 		unsigned int TextureFromFile(const char* path, const std::string& directory);
 		std::vector<MeshTexture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 	};

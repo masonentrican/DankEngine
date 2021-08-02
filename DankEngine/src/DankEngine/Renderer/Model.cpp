@@ -132,15 +132,42 @@ namespace Dank {
 
 		//process material
 		
+		
+
+
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 		std::vector<MeshTexture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 		std::vector<MeshTexture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 		
+		Material mats = loadMaterial(material);
 		
-		return Mesh(vertices, indices, textures);
+		return Mesh(vertices, indices, textures, mats);
 	}
+
+
+	Material Model::loadMaterial(aiMaterial* mat)
+	{
+		Material material;
+		aiColor3D color(0.f, 0.f, 0.f);
+		float shininess;
+
+		mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+		material.Diffuse = glm::vec3(color.r, color.b, color.g);
+
+		mat->Get(AI_MATKEY_COLOR_AMBIENT, color);
+		material.Ambient = glm::vec3(color.r, color.b, color.g);
+
+		mat->Get(AI_MATKEY_COLOR_SPECULAR, color);
+		material.Specular = glm::vec3(color.r, color.b, color.g);
+
+		mat->Get(AI_MATKEY_SHININESS, shininess);
+		material.Shininess = shininess;
+
+		return material;
+	}
+
 
 	std::vector<MeshTexture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 	{

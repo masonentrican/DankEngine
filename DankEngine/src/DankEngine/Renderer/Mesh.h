@@ -33,9 +33,9 @@ namespace Dank{
 		std::vector<Vertex>       _vertices;
 		std::vector<uint32_t>     _indices;
 		std::vector<MeshTexture>      _textures;
-	
+		Material _material;
 
-		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<MeshTexture> textures);
+		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<MeshTexture> textures, Material mats);
 		
 
 

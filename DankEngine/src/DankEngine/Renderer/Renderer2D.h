@@ -1,5 +1,5 @@
 #pragma once
-
+#include "PerspectiveCamera.h"
 #include "OrthographicCamera.h"
 #include "Texture.h"
 
@@ -11,7 +11,7 @@ namespace Dank
 		static void Init();
 		static void ShutDown();
 		
-		static void BeginScene(const OrthographicCamera& camera);
+		static void BeginScene(const PerspectiveCamera& camera);
 		static void EndScene();
 		static void Flush();
 

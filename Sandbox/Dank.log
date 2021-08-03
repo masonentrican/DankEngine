@@ -1,5 +1,6 @@
-[16:37:16] [info] DANK: Creating window Dank App (1280, 720)
-[16:37:16] [info] DANK: OpenGL Info: 
-[16:37:16] [info] DANK:   Vendor: NVIDIA Corporation
-[16:37:16] [info] DANK:   Renderer: GeForce GTX 960/PCIe/SSE2
-[16:37:16] [info] DANK:   Version: 4.6.0 NVIDIA 460.89
+[17:39:09] [info] DANK: Creating window Dank App (1280, 720)
+[17:39:10] [info] DANK: OpenGL Info: 
+[17:39:10] [info] DANK:   Vendor: NVIDIA Corporation
+[17:39:10] [info] DANK:   Renderer: GeForce GTX 960/PCIe/SSE2
+[17:39:10] [info] DANK:   Version: 4.6.0 NVIDIA 460.89
+[17:39:10] [error] DANK: Program/shader state performance warning: Vertex shader in program 4 is being recompiled based on GL state.

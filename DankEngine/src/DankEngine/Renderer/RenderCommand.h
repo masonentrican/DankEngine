@@ -26,6 +26,26 @@ namespace Dank {
 			s_RendererAPI->DrawIndexed(vertexArray, count);
 		}
 
+		inline static void DrawArraysTriangles()
+		{
+			s_RendererAPI->DrawArraysTriangles();
+		}
+
+		inline static void DrawModel(Ref<Model>& model)
+		{
+			s_RendererAPI->DrawModel(model);
+		}
+
+		inline static void DrawMesh(Ref<Mesh>& mesh, Ref<Shader>& shader, Ref<VertexArray>& vertexArray)
+		{
+			s_RendererAPI->DrawMesh(mesh, shader, vertexArray);
+		}
+
+		inline static void SubmitMesh(Mesh mesh, VertexArray* vertexArray)
+		{
+			s_RendererAPI->SubmitMesh(mesh, vertexArray);
+		}
+
 		inline static void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
 		{
 			s_RendererAPI->SetViewport(x, y, width, height);

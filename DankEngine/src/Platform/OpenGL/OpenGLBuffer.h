@@ -17,6 +17,7 @@ namespace Dank {
 
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
+		virtual void SetVertexAttribute(int index, int size, int type, unsigned char normalized, unsigned long long stride, const void* offset) override;
 
 		virtual void SetData(const void* data, uint32_t size) override;
 

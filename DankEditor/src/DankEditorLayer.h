@@ -20,7 +20,7 @@ namespace Dank
 		virtual void OnImGuiRender() override;
 
 	private:
-		OrthographicCameraController _cameraController;
+		PerspectiveCameraController _cameraController;
 
 		Ref<VertexArray> _vertexArray;
 		Ref<Texture2D> tex_weed, tex_smile;
@@ -28,7 +28,8 @@ namespace Dank
 
 		ShaderLibrary _shaderLibrary;
 		Ref<Shader> _defaultShader;
-
+		Ref<Dank::Model> ourModel;
+		std::string ModelPath;
 		glm::vec3 _shaderDefaultColor = { 1.0f, 1.0f, 1.0f };
 
 		glm::vec2 _viewportSize = { 0, 0 };

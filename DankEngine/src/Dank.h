@@ -28,5 +28,9 @@
 
 #include "DankEngine/Renderer/OrthographicCamera.h"
 #include "DankEngine/Renderer/OrthographicCameraController.h"
+#include "DankEngine/Renderer/PerspectiveCamera.h"
+#include "DankEngine/Renderer/PerspectiveCameraController.h"
 
+#include "DankEngine/Renderer/Model.h"
 #include "DankEngine/Renderer/Texture.h"
+

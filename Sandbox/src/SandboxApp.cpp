@@ -3,9 +3,10 @@
 
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "ImGui/ImGui.h"
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "ModelTest.h"
+#include "DankEngine/Core/EntryPoint.h"
 
 #include "Sandbox2D.h"
 
@@ -160,7 +161,7 @@ public:
 	Sandbox()
 	{
 		// PushLayer(new TestLayer());
-		PushLayer(new Sandbox2D());
+		PushLayer(new ModelLayer());
 	}
 
 	~Sandbox() {}

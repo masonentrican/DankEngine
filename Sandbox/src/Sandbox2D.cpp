@@ -55,7 +55,7 @@ void Sandbox2D::OnUpdate(Dank::Timestep ts)
 		yValue = 0.0f;
 
 	// ----------- BEGIN SCENE -------------//
-	Dank::Renderer2D::BeginScene(_cameraController.GetCamera());
+	//Dank::Renderer2D::BeginScene(_cameraController.GetCamera());
 	
 	//Dank::Renderer2D::DrawQuad({ 0.2f, -0.4f }, { 0.45f, 0.45f }, { 0.2f, 0.7f, 0.3f, 1.0f });
 

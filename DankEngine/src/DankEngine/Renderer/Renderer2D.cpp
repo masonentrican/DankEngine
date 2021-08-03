@@ -114,7 +114,7 @@ namespace Dank
 
 	}
 
-	void Renderer2D::BeginScene(const OrthographicCamera& camera)
+	void Renderer2D::BeginScene(const PerspectiveCamera& camera)
 	{
 		DANK_PROFILE_FUNCTION();
 

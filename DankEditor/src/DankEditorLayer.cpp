@@ -22,6 +22,12 @@ namespace Dank
 		frameBufferSpec.Height = 720;
 
 		_framebuffer = Dank::Framebuffer::Create(frameBufferSpec);
+        //ModelPath = "assets/models/backpack/backpack.obj";
+        ModelPath = "assets/models/bear_joined_decimated.fbx";
+        auto defaultShader = _shaderLibrary.Load("assets/shaders/test.glsl");
+        _defaultShader = _shaderLibrary.Get("test");
+
+        ourModel = std::make_shared<Dank::Model>(Dank::Model(ModelPath, _defaultShader));
 
 	}
 	void DankEditorLayer::OnDetach()
@@ -57,17 +63,24 @@ namespace Dank
 		rotation += ts * 50.0f;
 
 		// ----------- BEGIN SCENE -------------//
-		Dank::Renderer2D::BeginScene(_cameraController.GetCamera());
+        Renderer::BeginScene(_cameraController.GetCamera());
+        
+        Dank::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+        Dank::RenderCommand::Clear();
 
-		Dank::Renderer2D::DrawQuad({ 0.2f, -0.4f }, { 0.45f, 0.45f }, { 0.2f, 0.7f, 0.3f, 1.0f });
 
-		Dank::Renderer2D::DrawQuad({ -0.2f, 0.4f }, { 0.45f, 0.45f }, tex_smile, 1.0f);
+        // render the loaded model
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));	// it's a bit too big for our scene, so scale it down
+        std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->Bind();
+        std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformMat4("model", model);
+        std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformMat4("u_ViewProjection", _cameraController.GetCamera().GetViewProjectionMatrix());
 
-		Dank::Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f, }, { 1.0f, 1.0f }, 45.0f, { 0.2f, 0.3f, 0.7f, 1.0f });
+        Dank::Renderer::DrawModel(ourModel);
 
-		Dank::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, }, { 1.0f, 1.0f }, rotation, tex_weed, 1.0f);
 
-		Dank::Renderer2D::EndScene();
+        Dank::Renderer::EndScene();
 		// -----------  END SCENE  -------------//
 
 		_framebuffer->Unbind();

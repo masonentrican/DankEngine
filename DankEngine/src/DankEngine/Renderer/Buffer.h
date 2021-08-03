@@ -117,6 +117,8 @@ namespace Dank {
 
 		static Ref<VertexBuffer> Create(float* vertices, uint32_t size);
 		static Ref<VertexBuffer> Create(uint32_t size);
+		virtual void SetVertexAttribute(int index, int size, int type, unsigned char normalized, unsigned long long stride, const void* offset) = 0;
+		
 	};
 
 	class IndexBuffer

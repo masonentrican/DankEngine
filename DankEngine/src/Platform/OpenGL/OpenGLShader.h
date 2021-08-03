@@ -35,6 +35,8 @@ namespace Dank {
 		void UploadUniformMat3(const std::string& name, const glm::mat3& matrix);
 		void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
 
+
+
 		virtual const std::string& GetName() const override { return _name; }
 	private:
 		std::string ReadFile(const std::string& filepath);

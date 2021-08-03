@@ -27,7 +27,10 @@ namespace Dank
         auto defaultShader = _shaderLibrary.Load("assets/shaders/test.glsl");
         _objectShader = _shaderLibrary.Get("test");
 
+
         ourModel = std::make_shared<Dank::Model>(Dank::Model(ModelPath, _objectShader));
+        cube = std::make_shared<Dank::Primitive>(Renderer::CreatePrimitive("Cube"));
+       
 
 	}
 	void DankEditorLayer::OnDetach()
@@ -81,11 +84,11 @@ namespace Dank
         glm::vec3 pos(0.0f, 0.0f, 0.0f);
         float size = 0.4f;
         glm::vec3 color(0.0f, 1.0f, 0.0f);
-        Renderer::DrawCube(pos, size, color, _objectShader);
-        Renderer::DrawCube(glm::vec3(0.0f, 0.5f, 0.0f), 0.4f, glm::vec3(1.0f, 0.0f, 0.0f), _objectShader);
-        Renderer::DrawCube(glm::vec3(0.5f, 0.0f, 0.0f), 0.4f, glm::vec3(1.0f, 0.0f, 0.0f), _objectShader);
-        Renderer::DrawCube(glm::vec3(-0.5f, 0.0f, 0.0f), 0.4f, glm::vec3(1.0f, 0.0f, 0.0f), _objectShader);
-        Renderer::DrawCube(glm::vec3(0.0f, -0.5f, 0.0f), 0.4f, glm::vec3(1.0f, 0.0f, 0.0f), _objectShader);
+        Renderer::DrawPrimitive(cube->_VA, cube->_VB, pos, size, color, _objectShader);
+        Renderer::DrawPrimitive(cube->_VA, cube->_VB, glm::vec3(0.0f, 0.5f, 0.0f), 0.4f, glm::vec3(1.0f, 0.0f, 0.0f), _objectShader);
+        Renderer::DrawPrimitive(cube->_VA, cube->_VB, glm::vec3(0.5f, 0.0f, 0.0f), 0.4f, glm::vec3(1.0f, 0.0f, 0.0f), _objectShader);
+        Renderer::DrawPrimitive(cube->_VA, cube->_VB, glm::vec3(-0.5f, 0.0f, 0.0f), 0.4f, glm::vec3(1.0f, 0.0f, 0.0f), _objectShader);
+        Renderer::DrawPrimitive(cube->_VA, cube->_VB, glm::vec3(0.0f, -0.5f, 0.0f), 0.4f, glm::vec3(1.0f, 0.0f, 0.0f), _objectShader);
         Dank::Renderer::EndScene();
 		// -----------  END SCENE  -------------//
 

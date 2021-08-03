@@ -59,9 +59,14 @@ namespace Dank {
 		RenderCommand::SubmitMesh(mesh, vertexArray);
 	}
 
-	void Renderer::DrawCube(glm::vec3 position, float size, glm::vec3 color, Ref<Shader>& shader)
+	void Renderer::DrawPrimitive(Ref<VertexArray>& vertexArray, Ref<VertexBuffer>& vertexBuffer, glm::vec3 position, float size, glm::vec3 color, Ref<Shader>& shader)
 	{
-		RenderCommand::DrawCube(position, size, color, shader);
+		RenderCommand::DrawPrimitive(vertexArray, vertexBuffer, position, size, color, shader);
+	}
+
+	Primitive Renderer::CreatePrimitive(std::string type)
+	{
+		return RenderCommand::CreatePrimitive(type);
 	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)

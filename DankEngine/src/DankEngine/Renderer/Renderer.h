@@ -22,7 +22,8 @@ namespace Dank {
 		static void DrawModel(Ref<Model>& model);
 		static void DrawMesh(Ref<Mesh>& mesh, Ref<Shader>& shader, Ref<VertexArray>& vertexArray);
 		static void SubmitMesh(Mesh mesh, VertexArray* vertexArray);
-		static void DrawCube(glm::vec3 position, float size, glm::vec3 color, Ref<Shader>& shader);
+		static void DrawPrimitive(Ref<VertexArray>& vertexArray, Ref<VertexBuffer>& vertexBuffer, glm::vec3 position, float size, glm::vec3 color, Ref<Shader>& shader);
+		static Primitive CreatePrimitive(std::string type);
 		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 
 		static void OnWindowResize(uint32_t width, uint32_t height);

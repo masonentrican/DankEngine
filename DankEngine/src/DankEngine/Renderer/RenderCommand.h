@@ -46,9 +46,14 @@ namespace Dank {
 			s_RendererAPI->SubmitMesh(mesh, vertexArray);
 		}
 
-		inline static void DrawCube(glm::vec3 position, float size, glm::vec3 color, Ref<Shader>& shader)
+		inline static void DrawPrimitive(Ref<VertexArray>& vertexArray, Ref<VertexBuffer>& vertexBuffer, glm::vec3 position, float size, glm::vec3 color, Ref<Shader>& shader)
 		{
-			s_RendererAPI->DrawCube(position, size, color, shader);
+			s_RendererAPI->DrawPrimitive(vertexArray, vertexBuffer, position, size, color, shader);
+		}
+
+		inline static Primitive CreatePrimitive(std::string type)
+		{
+			return s_RendererAPI->CreatePrimitive(type);
 		}
 
 		inline static void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)

@@ -147,13 +147,9 @@ namespace Dank {
 
 
 
-	void OpenGLRendererAPI::DrawCube(glm::vec3 position, float size, glm::vec3 color, Ref<Shader>& shader)
+	void OpenGLRendererAPI::DrawPrimitive(Ref<VertexArray>& vertexArray, Ref<VertexBuffer>& vertexBuffer, glm::vec3 position, float size, glm::vec3 color, Ref<Shader>& shader)
 	{
-		Ref<VertexArray>& vertexArray = VertexArray::Create();
 		vertexArray->Bind();
-		Ref<VertexBuffer>& vertexBuffer = VertexBuffer::Create(cubeVertices, sizeof(cubeVertices));
-		vertexBuffer->SetVertexAttribute(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-		vertexBuffer->SetVertexAttribute(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, position);
 		model = glm::scale(model, glm::vec3(size));
@@ -163,4 +159,21 @@ namespace Dank {
 		vertexArray->Unbind();
 		
 	}
+
+
+	Primitive OpenGLRendererAPI::CreatePrimitive(std::string type)
+	{
+		if (type == "Cube")
+		{
+			Ref<VertexArray>& vertexArray = VertexArray::Create();
+			vertexArray->Bind();
+			Ref<VertexBuffer>& vertexBuffer = VertexBuffer::Create(cubeVertices, sizeof(cubeVertices));
+			vertexBuffer->SetVertexAttribute(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+			vertexBuffer->SetVertexAttribute(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+			vertexArray->Unbind();
+			return Primitive(vertexArray, vertexBuffer);
+		}
+	}
+
+
 }

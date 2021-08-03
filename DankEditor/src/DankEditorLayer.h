@@ -30,6 +30,7 @@ namespace Dank
 		Ref<Shader> _objectShader;
 		Ref<Shader> _lightShader;
 		Ref<Dank::Model> ourModel;
+		Ref<Primitive> cube;
 		std::string ModelPath;
 		glm::vec3 _shaderDefaultColor = { 1.0f, 1.0f, 1.0f };
 

@@ -40,6 +40,8 @@ namespace Dank {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glEnable(GL_DEPTH_TEST);
+		
+		
 	}
 
 	void OpenGLRendererAPI::SetClearColor(const glm::vec4& color)
@@ -143,4 +145,22 @@ namespace Dank {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
+
+
+	void OpenGLRendererAPI::DrawCube(glm::vec3 position, float size, glm::vec3 color, Ref<Shader>& shader)
+	{
+		Ref<VertexArray>& vertexArray = VertexArray::Create();
+		vertexArray->Bind();
+		Ref<VertexBuffer>& vertexBuffer = VertexBuffer::Create(cubeVertices, sizeof(cubeVertices));
+		vertexBuffer->SetVertexAttribute(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+		vertexBuffer->SetVertexAttribute(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, position);
+		model = glm::scale(model, glm::vec3(size));
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("model", model);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformFloat3("color", color);
+		DrawArraysTriangles();
+		vertexArray->Unbind();
+		
+	}
 }

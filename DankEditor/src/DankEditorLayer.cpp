@@ -7,7 +7,7 @@
 
 namespace Dank
 {
-	DankEditorLayer::DankEditorLayer() : Layer("DankEditorLayer"), _cameraController(1280.0f / 720.0f)
+	DankEditorLayer::DankEditorLayer() : Layer("DankEditorLayer"), _cameraController(60.0f, 1280.0f / 720.0f)
 	{
 
 	}
@@ -25,9 +25,9 @@ namespace Dank
         //ModelPath = "assets/models/backpack/backpack.obj";
         ModelPath = "assets/models/bear_joined_decimated.fbx";
         auto defaultShader = _shaderLibrary.Load("assets/shaders/test.glsl");
-        _defaultShader = _shaderLibrary.Get("test");
+        _objectShader = _shaderLibrary.Get("test");
 
-        ourModel = std::make_shared<Dank::Model>(Dank::Model(ModelPath, _defaultShader));
+        ourModel = std::make_shared<Dank::Model>(Dank::Model(ModelPath, _objectShader));
 
 	}
 	void DankEditorLayer::OnDetach()
@@ -70,16 +70,22 @@ namespace Dank
 
 
         // render the loaded model
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));	// it's a bit too big for our scene, so scale it down
-        std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->Bind();
-        std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformMat4("model", model);
-        std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformMat4("u_ViewProjection", _cameraController.GetCamera().GetViewProjectionMatrix());
+        // glm::mat4 model = glm::mat4(1.0f);
+        // model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+        // model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));	// it's a bit too big for our scene, so scale it down
+         std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->Bind();
+        // std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->UploadUniformMat4("model", model);
+         std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->UploadUniformMat4("u_ViewProjection", _cameraController.GetCamera().GetViewProjectionMatrix());
 
-        Dank::Renderer::DrawModel(ourModel);
-
-
+       //  Dank::Renderer::DrawModel(ourModel);
+        glm::vec3 pos(0.0f, 0.0f, 0.0f);
+        float size = 0.4f;
+        glm::vec3 color(0.0f, 1.0f, 0.0f);
+        Renderer::DrawCube(pos, size, color, _objectShader);
+        Renderer::DrawCube(glm::vec3(0.0f, 0.5f, 0.0f), 0.4f, glm::vec3(1.0f, 0.0f, 0.0f), _objectShader);
+        Renderer::DrawCube(glm::vec3(0.5f, 0.0f, 0.0f), 0.4f, glm::vec3(1.0f, 0.0f, 0.0f), _objectShader);
+        Renderer::DrawCube(glm::vec3(-0.5f, 0.0f, 0.0f), 0.4f, glm::vec3(1.0f, 0.0f, 0.0f), _objectShader);
+        Renderer::DrawCube(glm::vec3(0.0f, -0.5f, 0.0f), 0.4f, glm::vec3(1.0f, 0.0f, 0.0f), _objectShader);
         Dank::Renderer::EndScene();
 		// -----------  END SCENE  -------------//
 

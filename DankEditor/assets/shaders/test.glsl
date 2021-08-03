@@ -16,6 +16,7 @@ void main()
     gl_Position = u_ViewProjection * model * vec4(a_Position, 1.0);
 }
 
+
 #type fragment
 #version 330 core
 out vec4 FragColor;
@@ -32,7 +33,7 @@ in vec2 TexCoords;
 
 uniform sampler2D texture_diffuse1;
 uniform Material material;
-
+uniform vec3 color;
 
 void main()
 {    
@@ -42,7 +43,7 @@ void main()
     vec3 specular = material.specular;
     vec3 objectColor = vec3(1.0, 0.5, 0.31);
     vec3 result = diffuse;
-    FragColor = vec4(result, 1.0);
+    FragColor = vec4(color, 1.0);
    //FragColor = texture(texture_diffuse1, TexCoords);
     
 }

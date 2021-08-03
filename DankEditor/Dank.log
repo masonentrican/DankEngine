@@ -1,6 +1,6 @@
-[18:12:20] [info] DANK: Creating window Dank Editor (1280, 720)
-[18:12:21] [info] DANK: OpenGL Info: 
-[18:12:21] [info] DANK:   Vendor: NVIDIA Corporation
-[18:12:21] [info] DANK:   Renderer: GeForce GTX 960/PCIe/SSE2
-[18:12:21] [info] DANK:   Version: 4.6.0 NVIDIA 460.89
-[18:12:21] [error] DANK: Program/shader state performance warning: Vertex shader in program 4 is being recompiled based on GL state.
+[13:17:50] [info] DANK: Creating window Dank Editor (1280, 720)
+[13:17:51] [info] DANK: OpenGL Info: 
+[13:17:51] [info] DANK:   Vendor: NVIDIA Corporation
+[13:17:51] [info] DANK:   Renderer: GeForce GTX 960/PCIe/SSE2
+[13:17:51] [info] DANK:   Version: 4.6.0 NVIDIA 460.89
+[13:17:51] [error] DANK: Program/shader state performance warning: Vertex shader in program 4 is being recompiled based on GL state.

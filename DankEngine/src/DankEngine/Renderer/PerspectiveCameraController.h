@@ -21,14 +21,14 @@ namespace Dank {
 		PerspectiveCamera _camera;
 		float _aspectRatio;
 		float _FOV;
-		float _cameraSpeed = 0.05f;
+		float _cameraSpeed = 0.02f;
 		float _lastX;
 		float _lastY;
 		float _sensitivity = 0.05f;
-		float _panSens = 0.03f;
+		float _panSens = 0.009f;
 		float _yaw = -90.0f;
 		float _pitch = 0.0f;
-		glm::vec3 _cameraPosition = glm::vec3(0.0f, 0.0f, 3.0f);
+		glm::vec3 _cameraPosition = glm::vec3(0.0f, 0.0f, 25.0f);
 		glm::vec3 _cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 		glm::vec3 _cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 	};

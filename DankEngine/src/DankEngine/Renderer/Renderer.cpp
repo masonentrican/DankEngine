@@ -59,6 +59,11 @@ namespace Dank {
 		RenderCommand::SubmitMesh(mesh, vertexArray);
 	}
 
+	void Renderer::DrawCube(glm::vec3 position, float size, glm::vec3 color, Ref<Shader>& shader)
+	{
+		RenderCommand::DrawCube(position, size, color, shader);
+	}
+
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)
 	{
 		RenderCommand::SetViewport(0, 0, width, height);

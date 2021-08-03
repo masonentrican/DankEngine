@@ -20,7 +20,7 @@ namespace Dank
 		virtual void OnImGuiRender() override;
 
 	private:
-		PerspectiveCameraController _cameraController;
+		OrthographicCameraController _cameraController;
 
 		Ref<VertexArray> _vertexArray;
 		Ref<Texture2D> tex_weed, tex_smile;
@@ -36,10 +36,14 @@ namespace Dank
 		glm::vec2 _viewportSize = { 0, 0 };
 
 		Ref<Scene> _activeScene;
+
 		Entity _squareEntity;
+		Entity _cameraEntity;
+		Entity _cameraEntity2;
+
+		bool _primaryCamera = false;
 
 		bool _viewportFocused = false;
 		bool _viewportHovered = false;
-		bool _3DViewport = false;
 	};
 }

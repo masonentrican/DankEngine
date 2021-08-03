@@ -10,11 +10,6 @@
 
 namespace Dank {
 
-	static void DoMath(const glm::mat4& transform)
-	{
-
-	}
-
 	static void OnTransformConstruct(entt::registry& registry, entt::entity entity)
 	{
 
@@ -39,13 +34,46 @@ namespace Dank {
 
 	void Scene::OnUpdate(Timestep ts)
 	{
-		auto group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-		for (auto entity : group)
-		{
-			auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+		// Render 2D
 
-			Renderer2D::DrawQuad(transform, sprite.Color);
+		Camera* mainCamera = nullptr;
+		glm::mat4* cameraTransform = nullptr;
+
+		// Locate the main camera
+		{
+			DANK_PROFILE_SCOPE("Entt Camera Transform lookup");
+
+			auto group = _registry.view<TransformComponent, CameraComponent>();
+			for (auto entity : group)
+			{
+				auto& [transform, camera] = group.get<TransformComponent, CameraComponent>(entity);
+
+				if (camera.Primary)
+				{
+					mainCamera = &camera.Camera;
+					cameraTransform = &transform.Transform;
+					break;
+				}
+
+			}
 		}
+
+		// If main camera found, begin rendering
+		if (mainCamera)
+		{
+			Renderer2D::BeginScene(mainCamera->GetProjection(), *cameraTransform);
+
+			auto group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+			for (auto entity : group)
+			{
+				auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+
+				Renderer2D::DrawQuad(transform, sprite.Color);
+			}
+
+			Renderer2D::EndScene();
+		}
+		
 
 
 	}

@@ -7,15 +7,15 @@
 
 namespace Dank
 {
-	DankEditorLayer::DankEditorLayer() : Layer("DankEditorLayer"), _cameraController(60.0f, 1280.0f / 720.0f)
+	DankEditorLayer::DankEditorLayer() : Layer("DankEditorLayer"), _cameraController(1280.0f / 720.0f)
 	{
 
 	}
 
 	void DankEditorLayer::OnAttach()
 	{
-		tex_weed = Dank::Texture2D::Create("assets/textures/weedleaf.png");
-		tex_smile = Dank::Texture2D::Create("assets/textures/awesomeface.png");
+		tex_weed = Texture2D::Create("assets/textures/weedleaf.png");
+		tex_smile = Texture2D::Create("assets/textures/awesomeface.png");
 
         auto shader3D = _shaderLibrary.Load("assets/shaders/test.glsl");
         _3DShader = _shaderLibrary.Get("test");
@@ -25,18 +25,27 @@ namespace Dank
 
         ourModel = CreateRef<Model>(Model(ModelPath, _3DShader));
 
-		Dank::FramebufferSpecification frameBufferSpec;
+		FramebufferSpecification frameBufferSpec;
 		frameBufferSpec.Width = 1280;
 		frameBufferSpec.Height = 720;
 
-		_framebuffer = Dank::Framebuffer::Create(frameBufferSpec);
+		_framebuffer = Framebuffer::Create(frameBufferSpec);
 
+
+
+        // Entity Testing
         _activeScene = CreateRef<Scene>();
 
         auto square = _activeScene->CreateEntity("Square from an entity");
         square.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
-
         _squareEntity = square;
+
+        _cameraEntity = _activeScene->CreateEntity("Camera Entity");
+        _cameraEntity.AddComponent<CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+        
+        _cameraEntity2 = _activeScene->CreateEntity("Clip-space cam");
+        auto& cc = _cameraEntity2.AddComponent<CameraComponent>(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f));
+        cc.Primary = false;
 
 
 
@@ -46,7 +55,7 @@ namespace Dank
 		DANK_PROFILE_FUNCTION();
 	}
 
-	void DankEditorLayer::OnUpdate(Dank::Timestep ts)
+	void DankEditorLayer::OnUpdate(Timestep ts)
 	{
 		DANK_PROFILE_FUNCTION();
 
@@ -59,53 +68,32 @@ namespace Dank
             _cameraController.OnResize(_viewportSize.x, _viewportSize.y);
         }
 
-        Dank::Renderer2D::ResetStats();
 
+        // Reset stats
+        Renderer2D::ResetStats();
+
+
+        // Update cam controller if focused
         if(_viewportFocused)
 		    _cameraController.OnUpdate(ts);
 
+
+        // Bind the frame buffer
 		_framebuffer->Bind();
 
-		Dank::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-		Dank::RenderCommand::Clear();
+        // Clear it
+		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+		RenderCommand::Clear();
 
+        // Update the scene
+        _activeScene->OnUpdate(ts);
 
-
-        if (_3DViewport)
-        {
-            // ----------- BEGIN 3D SCENE -------------//
-            Renderer::BeginScene(_cameraController.GetCamera());
-
-            // render the loaded model
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-            model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));	// it's a bit too big for our scene, so scale it down
-            _3DShader->Bind();
-            _3DShader->SetMat4("model", model);
-            _3DShader->SetMat4("u_ViewProjection", _cameraController.GetCamera().GetViewProjectionMatrix());
-
-            Dank::Renderer::DrawModel(ourModel);
-
-
-            Dank::Renderer::EndScene();
-            // -----------  END 3D SCENE  -------------//
-        }
-        else
-        {
-
-            Renderer2D::BeginScene(_cameraController.GetCamera());
-
-            _activeScene->OnUpdate(ts);
-
-            Renderer2D::EndScene();
-
-        }
-
+        // Unbind the frame buffer
         _framebuffer->Unbind();
 
 	}
 
-	void DankEditorLayer::OnEvent(Dank::Event& e)
+	void DankEditorLayer::OnEvent(Event& e)
 	{
 		_cameraController.OnEvent(e);
 	}
@@ -177,7 +165,7 @@ namespace Dank
 
             ImGui::Begin("Stats");
 
-            auto stats = Dank::Renderer2D::GetStats();
+            auto stats = Renderer2D::GetStats();
             ImGui::Text("Renderer2D Stats:");
             ImGui::Text("Draw Calls: %d", stats.DrawCalls);
             ImGui::Text("Quads: %d", stats.QuadCount);
@@ -186,9 +174,9 @@ namespace Dank
             ImGui::NewLine();
 
             ImGui::Text("Application Stats:");
-            ImGui::Text("FPS: %f", Dank::Application::Get().GetFps());
-            ImGui::Text("Frame Count: %d", Dank::Application::Get().GetFrameCount());
-            ImGui::Text("Runtime: %f", Dank::Application::Get().GetRunTime());
+            ImGui::Text("FPS: %f", Application::Get().GetFps());
+            ImGui::Text("Frame Count: %d", Application::Get().GetFrameCount());
+            ImGui::Text("Runtime: %f", Application::Get().GetRunTime());
             ImGui::NewLine();        
 
             // Debug out square entity stuff
@@ -201,6 +189,19 @@ namespace Dank
                 auto& squareColor = _squareEntity.GetComponent<SpriteRendererComponent>().Color;
                 ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
                 ImGui::Separator();
+            }
+
+            // Point to the last column of the mat4 transform matrix.
+            ImGui::DragFloat3("Camera Transform",
+                glm::value_ptr(_cameraEntity.GetComponent<TransformComponent>().Transform[3]));
+
+            ImGui::DragFloat3("Near Clip Camera Transform",
+                glm::value_ptr(_cameraEntity2.GetComponent<TransformComponent>().Transform[3]));
+
+            if (ImGui::Checkbox("Swap to Near Clip Camera", &_primaryCamera))
+            {
+                _cameraEntity.GetComponent<CameraComponent>().Primary = !_primaryCamera;
+                _cameraEntity2.GetComponent<CameraComponent>().Primary = _primaryCamera;
             }
 
             ImGui::End();

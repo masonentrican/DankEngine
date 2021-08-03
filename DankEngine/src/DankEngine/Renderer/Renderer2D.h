@@ -1,7 +1,8 @@
 #pragma once
-#include "PerspectiveCamera.h"
-#include "OrthographicCamera.h"
-#include "Texture.h"
+#include "DankEngine/Renderer/PerspectiveCamera.h"
+#include "DankEngine/Renderer/OrthographicCamera.h"
+#include "DankEngine/Renderer/Texture.h"
+#include "DankEngine/Renderer/Camera.h"
 
 namespace Dank
 {
@@ -11,8 +12,12 @@ namespace Dank
 		static void Init();
 		static void ShutDown();
 		
-		static void BeginScene(const PerspectiveCamera& camera);
+		static void BeginScene(const Camera& camera, const glm::mat4& transform);
+		static void BeginScene(const OrthographicCamera& camera); // TODO: Handle through camera and scene
+		static void BeginScene(const PerspectiveCamera& camera); // TODO: Handle through camera and scene
+
 		static void EndScene();
+
 		static void Flush();
 
 		// 2D Primitives

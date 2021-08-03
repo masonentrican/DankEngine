@@ -18,19 +18,18 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 
 IncludeDir = {}
-IncludeDir["GLFW"] = "DankEngine/vendor/GLFW/include"
-IncludeDir["Glad"] = "DankEngine/vendor/Glad/include"
-IncludeDir["ImGui"] = "DankEngine/vendor/ImGui"
-IncludeDir["glm"] = "DankEngine/vendor/glm"
-IncludeDir["stb_image"] = "DankEngine/vendor/stb_image"
---IncludeDir["assimp"] = "DankEngine/vendor/assimp"
+IncludeDir["GLFW"]       = "DankEngine/vendor/GLFW/include"
+IncludeDir["Glad"]       = "DankEngine/vendor/Glad/include"
+IncludeDir["ImGui"]      = "DankEngine/vendor/ImGui"
+IncludeDir["glm"]        = "DankEngine/vendor/glm"
+IncludeDir["stb_image"]  = "DankEngine/vendor/stb_image"
+IncludeDir["assimp"]     = "DankEngine/vendor/assimp/include"
 
 
 group "Dependencies"
 	include "DankEngine/vendor/GLFW"
 	include "DankEngine/vendor/Glad"
 	include "DankEngine/vendor/ImGui"
-	--include "DankEngine/vendor/assimp"
 	
 
 group ""
@@ -68,23 +67,19 @@ project "DankEngine"
 	
 	libdirs
 	{
-		"DankEngine/vendor/assimp/lib"
+		"DankEngine/vendor/assimp/build/lib/Debug"
 	}
 	
 	includedirs
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
-		"%{prj.name}/vendor/assimp/build/include/assimp",
 		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.assimp}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
-		
-
-
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.assimp}"		
 	}
 
 	links
@@ -95,7 +90,6 @@ project "DankEngine"
 		"opengl32.lib",
 		"assimp-vc142-mtd.lib",
 		"assimp-vc142-mtd.dll"
-		
 	}
 
 	
@@ -147,7 +141,8 @@ project "Sandbox"
 		"DankEngine/vendor/spdlog/include",
 		"DankEngine/src",
 		"DankEngine/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.assimp}"
 	}
 
 	links
@@ -201,7 +196,8 @@ project "DankEditor"
 		"DankEngine/vendor/spdlog/include",
 		"DankEngine/src",
 		"DankEngine/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.assimp}"
 	}
 
 	links

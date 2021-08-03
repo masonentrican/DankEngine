@@ -7,7 +7,7 @@
 
 namespace Dank
 {
-	DankEditorLayer::DankEditorLayer() : Layer("DankEditorLayer"), _cameraController(1280.0f / 720.0f)
+	DankEditorLayer::DankEditorLayer() : Layer("DankEditorLayer"), _cameraController(60.0f, 1280.0f / 720.0f)
 	{
 
 	}
@@ -33,7 +33,6 @@ namespace Dank
 	void DankEditorLayer::OnDetach()
 	{
 		DANK_PROFILE_FUNCTION();
-
 	}
 
 	void DankEditorLayer::OnUpdate(Dank::Timestep ts)
@@ -72,7 +71,7 @@ namespace Dank
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));	// it's a bit too big for our scene, so scale it down
+        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));	// it's a bit too big for our scene, so scale it down
         std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->Bind();
         std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformMat4("model", model);
         std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformMat4("u_ViewProjection", _cameraController.GetCamera().GetViewProjectionMatrix());

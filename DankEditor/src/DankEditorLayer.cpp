@@ -17,17 +17,28 @@ namespace Dank
 		tex_weed = Dank::Texture2D::Create("assets/textures/weedleaf.png");
 		tex_smile = Dank::Texture2D::Create("assets/textures/awesomeface.png");
 
+        auto shader3D = _shaderLibrary.Load("assets/shaders/test.glsl");
+        _3DShader = _shaderLibrary.Get("test");
+
+        //ModelPath = "assets/models/backpack/backpack.obj";
+        ModelPath = "assets/models/bear_joined_decimated.fbx";
+
+        ourModel = CreateRef<Model>(Model(ModelPath, _3DShader));
+
 		Dank::FramebufferSpecification frameBufferSpec;
 		frameBufferSpec.Width = 1280;
 		frameBufferSpec.Height = 720;
 
 		_framebuffer = Dank::Framebuffer::Create(frameBufferSpec);
-        //ModelPath = "assets/models/backpack/backpack.obj";
-        ModelPath = "assets/models/bear_joined_decimated.fbx";
-        auto defaultShader = _shaderLibrary.Load("assets/shaders/test.glsl");
-        _defaultShader = _shaderLibrary.Get("test");
 
-        ourModel = std::make_shared<Dank::Model>(Dank::Model(ModelPath, _defaultShader));
+        _activeScene = CreateRef<Scene>();
+
+        auto square = _activeScene->CreateEntity("Square from an entity");
+        square.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
+
+        _squareEntity = square;
+
+
 
 	}
 	void DankEditorLayer::OnDetach()
@@ -58,31 +69,39 @@ namespace Dank
 		Dank::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Dank::RenderCommand::Clear();
 
-		static float rotation = 0.0f;
-		rotation += ts * 50.0f;
-
-		// ----------- BEGIN SCENE -------------//
-        Renderer::BeginScene(_cameraController.GetCamera());
-        
-        Dank::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-        Dank::RenderCommand::Clear();
 
 
-        // render the loaded model
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));	// it's a bit too big for our scene, so scale it down
-        std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->Bind();
-        std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformMat4("model", model);
-        std::dynamic_pointer_cast<Dank::OpenGLShader>(_defaultShader)->UploadUniformMat4("u_ViewProjection", _cameraController.GetCamera().GetViewProjectionMatrix());
+        if (_3DViewport)
+        {
+            // ----------- BEGIN 3D SCENE -------------//
+            Renderer::BeginScene(_cameraController.GetCamera());
 
-        Dank::Renderer::DrawModel(ourModel);
+            // render the loaded model
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+            model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));	// it's a bit too big for our scene, so scale it down
+            _3DShader->Bind();
+            _3DShader->SetMat4("model", model);
+            _3DShader->SetMat4("u_ViewProjection", _cameraController.GetCamera().GetViewProjectionMatrix());
+
+            Dank::Renderer::DrawModel(ourModel);
 
 
-        Dank::Renderer::EndScene();
-		// -----------  END SCENE  -------------//
+            Dank::Renderer::EndScene();
+            // -----------  END 3D SCENE  -------------//
+        }
+        else
+        {
 
-		_framebuffer->Unbind();
+            Renderer2D::BeginScene(_cameraController.GetCamera());
+
+            _activeScene->OnUpdate(ts);
+
+            Renderer2D::EndScene();
+
+        }
+
+        _framebuffer->Unbind();
 
 	}
 
@@ -143,7 +162,9 @@ namespace Dank
         {
             if (ImGui::BeginMenu("File"))
             {
+
                 if (ImGui::MenuItem("Close")) Application::Get().Close();
+                
                 ImGui::EndMenu();
             }
 
@@ -168,7 +189,20 @@ namespace Dank
             ImGui::Text("FPS: %f", Dank::Application::Get().GetFps());
             ImGui::Text("Frame Count: %d", Dank::Application::Get().GetFrameCount());
             ImGui::Text("Runtime: %f", Dank::Application::Get().GetRunTime());
-            ImGui::NewLine();            
+            ImGui::NewLine();        
+
+            // Debug out square entity stuff
+            if (_squareEntity)
+            {
+                ImGui::Separator();
+                auto& tag = _squareEntity.GetComponent<TagComponent>().Tag;
+                ImGui::Text("%s", tag.c_str());
+
+                auto& squareColor = _squareEntity.GetComponent<SpriteRendererComponent>().Color;
+                ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+                ImGui::Separator();
+            }
+
             ImGui::End();
         }
 

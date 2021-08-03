@@ -24,6 +24,7 @@ IncludeDir["ImGui"]      = "DankEngine/vendor/ImGui"
 IncludeDir["glm"]        = "DankEngine/vendor/glm"
 IncludeDir["stb_image"]  = "DankEngine/vendor/stb_image"
 IncludeDir["assimp"]     = "DankEngine/vendor/assimp/include"
+IncludeDir["entt"]       = "DankEngine/vendor/entt"
 
 
 group "Dependencies"
@@ -79,7 +80,8 @@ project "DankEngine"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
-		"%{IncludeDir.assimp}"		
+		"%{IncludeDir.assimp}",
+		"%{IncludeDir.entt}"
 	}
 
 	links
@@ -142,7 +144,8 @@ project "Sandbox"
 		"DankEngine/src",
 		"DankEngine/vendor",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.assimp}"
+		"%{IncludeDir.assimp}",
+		"%{IncludeDir.entt}"
 	}
 
 	links
@@ -197,7 +200,8 @@ project "DankEditor"
 		"DankEngine/src",
 		"DankEngine/vendor",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.assimp}"
+		"%{IncludeDir.assimp}",
+		"%{IncludeDir.entt}"
 	}
 
 	links

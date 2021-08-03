@@ -14,6 +14,9 @@
 
 #include "DankEngine/ImGui/ImGuiLayer.h"
 
+#include "DankEngine/Scene/Scene.h"
+#include "DankEngine/Scene/Entity.h"
+#include "DankEngine/Scene/Components.h"
 
 
 // Renderer

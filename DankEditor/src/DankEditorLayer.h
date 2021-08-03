@@ -27,14 +27,19 @@ namespace Dank
 		Ref<Framebuffer> _framebuffer;
 
 		ShaderLibrary _shaderLibrary;
-		Ref<Shader> _defaultShader;
+		Ref<Shader> _2DShader;
+		Ref<Shader> _3DShader;
 		Ref<Dank::Model> ourModel;
 		std::string ModelPath;
 		glm::vec3 _shaderDefaultColor = { 1.0f, 1.0f, 1.0f };
 
 		glm::vec2 _viewportSize = { 0, 0 };
 
+		Ref<Scene> _activeScene;
+		Entity _squareEntity;
+
 		bool _viewportFocused = false;
 		bool _viewportHovered = false;
+		bool _3DViewport = false;
 	};
 }

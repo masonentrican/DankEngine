@@ -1,18 +1,18 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "DankEngine/Renderer/Camera.h"
+#include "SceneCamera.h"
 
 namespace Dank
 {
 	struct CameraComponent
 	{
-		Dank::Camera Camera;
+		SceneCamera Camera;
 		bool Primary = true; //TODO: Should probably be in scene
+		bool FixedAspectRatio = false;
 
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
-		CameraComponent(const glm::mat4& projection) : Camera(projection) {}
 	};
 
 	struct TagComponent

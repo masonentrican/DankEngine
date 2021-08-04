@@ -20,6 +20,7 @@ namespace Dank
 		{
 			// PushLayer(new TestLayer());
 			PushLayer(new DankEditorLayer());
+
 		}
 
 		~DankEditor() {}

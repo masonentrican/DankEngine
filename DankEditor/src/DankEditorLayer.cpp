@@ -41,12 +41,11 @@ namespace Dank
         _squareEntity = square;
 
         _cameraEntity = _activeScene->CreateEntity("Camera Entity");
-        _cameraEntity.AddComponent<CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+        _cameraEntity.AddComponent<CameraComponent>();
         
         _cameraEntity2 = _activeScene->CreateEntity("Clip-space cam");
-        auto& cc = _cameraEntity2.AddComponent<CameraComponent>(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f));
+        auto& cc = _cameraEntity2.AddComponent<CameraComponent>();
         cc.Primary = false;
-
 
 
 	}
@@ -66,6 +65,8 @@ namespace Dank
         {
             _framebuffer->Resize((uint32_t)_viewportSize.x, (uint32_t)_viewportSize.y);
             _cameraController.OnResize(_viewportSize.x, _viewportSize.y);
+
+            _activeScene->OnViewportResize((uint32_t)_viewportSize.x, (uint32_t)_viewportSize.y);
         }
 
 
@@ -198,11 +199,16 @@ namespace Dank
             ImGui::DragFloat3("Near Clip Camera Transform",
                 glm::value_ptr(_cameraEntity2.GetComponent<TransformComponent>().Transform[3]));
 
-            if (ImGui::Checkbox("Swap to Near Clip Camera", &_primaryCamera))
+            if (ImGui::Checkbox("Swap to Second Camera", &_primaryCamera))
             {
                 _cameraEntity.GetComponent<CameraComponent>().Primary = !_primaryCamera;
                 _cameraEntity2.GetComponent<CameraComponent>().Primary = _primaryCamera;
             }
+
+            auto& camera = _cameraEntity2.GetComponent<CameraComponent>().Camera;
+            float orthoSize = camera.GetOrthographicSize();
+            if (ImGui::DragFloat("Second camera ortho size", &orthoSize))
+                camera.SetOrthographicSize(orthoSize);
 
             ImGui::End();
         }

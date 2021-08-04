@@ -41,6 +41,8 @@ namespace Dank
 		Entity _cameraEntity;
 		Entity _cameraEntity2;
 
+		Entity _qiana;
+
 		bool _primaryCamera = false;
 
 		bool _viewportFocused = false;

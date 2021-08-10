@@ -1,6 +1,8 @@
 #include "DankEditorLayer.h"
 #include "ImGui/imgui.h"
 
+#include "DankEngine/NativeScripts/CameraController.h"
+
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/random.hpp>
@@ -45,36 +47,7 @@ namespace Dank
         
         _cameraEntity2 = _activeScene->CreateEntity("Clip-space cam");
         auto& cc = _cameraEntity2.AddComponent<CameraComponent>();
-        cc.Primary = false;
-        
-
-        class CameraController : public ScriptableEntity
-        {
-        public:
-            void OnCreate()
-            {                
-            }
-
-            void OnDestroy()
-            {
-            }
-            
-            void OnUpdate(Timestep ts)
-            {
-                auto& transform = GetComponent<TransformComponent>().Transform;
-                float speed = 5.0f;
-
-                if (Input::IsKeyPressed(DANK_KEY_A))
-                    transform[3][0] -= speed * ts;
-                if (Input::IsKeyPressed(DANK_KEY_D))
-                    transform[3][0] += speed * ts;
-                if (Input::IsKeyPressed(DANK_KEY_W))
-                    transform[3][1] += speed * ts;
-                if (Input::IsKeyPressed(DANK_KEY_S))
-                    transform[3][1] -= speed * ts;
-            }
-            
-        };
+        cc.Primary = false;        
 
         _cameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
         _cameraEntity2.AddComponent<NativeScriptComponent>().Bind<CameraController>();

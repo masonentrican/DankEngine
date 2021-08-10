@@ -64,6 +64,12 @@ namespace Dank {
 		RenderCommand::DrawPrimitive(vertexArray, vertexBuffer, position, size, color, shader);
 	}
 
+
+	void Renderer::DrawLightSource(Ref<VertexArray>& vertexArray, Ref<VertexBuffer>& vertexBuffer, glm::vec3 position, float size, Ref<Shader>& shader)
+	{
+		RenderCommand::DrawLightSource(vertexArray, vertexBuffer, position, size, shader);
+	}
+
 	Primitive Renderer::CreatePrimitive(std::string type)
 	{
 		return RenderCommand::CreatePrimitive(type);

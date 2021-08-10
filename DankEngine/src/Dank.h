@@ -34,3 +34,4 @@
 #include "DankEngine/Renderer/Model.h"
 #include "DankEngine/Renderer/Texture.h"
 #include "DankEngine/Renderer/Primitive.h"
+#include "DankEngine/Renderer/LightSource.h"

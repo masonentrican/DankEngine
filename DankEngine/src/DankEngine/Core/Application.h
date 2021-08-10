@@ -31,6 +31,7 @@ namespace Dank {
 		inline float GetRunTime() { return _runTime; }
 		inline float GetFps() { return _fps; }
 		inline uint32_t GetFrameCount() { return _frameCount; }
+		inline float GetLastFrameTime() { return _lastFrameTime; }
 
 		ImGuiLayer* GetImGuiLayer() { return _imGuiLayer; }
 

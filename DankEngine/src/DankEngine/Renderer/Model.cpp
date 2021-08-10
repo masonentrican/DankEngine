@@ -79,6 +79,14 @@ namespace Dank {
 			vector.z = mesh->mVertices[i].z;
 			vertex.Position = vector;
 
+			if (mesh->HasNormals())
+			{
+				vector.x = mesh->mNormals[i].x;
+				vector.y = mesh->mNormals[i].y;
+				vector.z = mesh->mNormals[i].z;
+				vertex.Normal = vector;
+			}
+
 			if (mesh->mTextureCoords[0])
 			{
 				glm::vec2 vec;
@@ -114,7 +122,9 @@ namespace Dank {
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 		std::vector<MeshTexture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-		
+		std::vector<MeshTexture> normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal");
+		textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+
 		Material mats = loadMaterial(material);
 		
 		return Mesh(vertices, indices, textures, mats);
@@ -130,7 +140,7 @@ namespace Dank {
 		mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
 		material.Diffuse = glm::vec3(color.r, color.g, color.b);
 
-		mat->Get(AI_MATKEY_COLOR_AMBIENT, color);
+		//mat->Get(AI_MATKEY_COLOR_AMBIENT, color);
 		material.Ambient = glm::vec3(color.r, color.g, color.b);
 
 		mat->Get(AI_MATKEY_COLOR_SPECULAR, color);

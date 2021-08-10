@@ -24,13 +24,14 @@ namespace Dank
 		_framebuffer = Dank::Framebuffer::Create(frameBufferSpec);
         //ModelPath = "assets/models/backpack/backpack.obj";
         ModelPath = "assets/models/bear_joined_decimated.fbx";
-        auto defaultShader = _shaderLibrary.Load("assets/shaders/test.glsl");
-        _objectShader = _shaderLibrary.Get("test");
-
+        auto defaultShader = _shaderLibrary.Load("assets/shaders/object.glsl");
+        _objectShader = _shaderLibrary.Get("object");
+        auto lightShader = _shaderLibrary.Load("assets/shaders/lightsource.glsl");
+        _lightShader = _shaderLibrary.Get("lightsource");
 
         ourModel = std::make_shared<Dank::Model>(Dank::Model(ModelPath, _objectShader));
         cube = std::make_shared<Dank::Primitive>(Renderer::CreatePrimitive("Cube"));
-       
+        light = std::make_shared<LightSource>(LightSource(glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)));
 
 	}
 	void DankEditorLayer::OnDetach()
@@ -71,24 +72,35 @@ namespace Dank
         Dank::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
         Dank::RenderCommand::Clear();
 
+        float lightX = 2.0f * sin(Dank::Application::Get().GetLastFrameTime());
+        float lightY = 0.0f;
+        float lightZ = 1.5f * cos(Dank::Application::Get().GetLastFrameTime());
+        glm::vec3 lightPos = glm::vec3(lightX, lightY, lightZ);
 
+        light->SetPosition(lightPos);
         // render the loaded model
-        // glm::mat4 model = glm::mat4(1.0f);
-        // model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        // model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));	// it's a bit too big for our scene, so scale it down
+         glm::mat4 model = glm::mat4(1.0f);
+         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+         model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));	// it's a bit too big for our scene, so scale it down
          std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->Bind();
-        // std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->UploadUniformMat4("model", model);
+         std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->UploadUniformMat4("model", model);
          std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->UploadUniformMat4("u_ViewProjection", _cameraController.GetCamera().GetViewProjectionMatrix());
-
-       //  Dank::Renderer::DrawModel(ourModel);
-        glm::vec3 pos(0.0f, 0.0f, 0.0f);
-        float size = 0.4f;
-        glm::vec3 color(0.0f, 1.0f, 0.0f);
-        Renderer::DrawPrimitive(cube->_VA, cube->_VB, pos, size, color, _objectShader);
-        Renderer::DrawPrimitive(cube->_VA, cube->_VB, glm::vec3(0.0f, 0.5f, 0.0f), 0.4f, glm::vec3(1.0f, 0.0f, 0.0f), _objectShader);
-        Renderer::DrawPrimitive(cube->_VA, cube->_VB, glm::vec3(0.5f, 0.0f, 0.0f), 0.4f, glm::vec3(1.0f, 0.0f, 0.0f), _objectShader);
-        Renderer::DrawPrimitive(cube->_VA, cube->_VB, glm::vec3(-0.5f, 0.0f, 0.0f), 0.4f, glm::vec3(1.0f, 0.0f, 0.0f), _objectShader);
-        Renderer::DrawPrimitive(cube->_VA, cube->_VB, glm::vec3(0.0f, -0.5f, 0.0f), 0.4f, glm::vec3(1.0f, 0.0f, 0.0f), _objectShader);
+         std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->UploadUniformFloat3("viewPos", _cameraController.GetPosition());
+         std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->UploadUniformFloat3("lightPos", light->_position);
+         std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->UploadUniformFloat3("light.ambient", light->_ambient);
+         std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->UploadUniformFloat3("light.diffuse", light->_diffuse);
+         std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->UploadUniformFloat3("light.specular", light->_specular);
+         std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->Unbind();
+         std::dynamic_pointer_cast<Dank::OpenGLShader>(_lightShader)->Bind();
+         std::dynamic_pointer_cast<Dank::OpenGLShader>(_lightShader)->UploadUniformMat4("u_ViewProjection", _cameraController.GetCamera().GetViewProjectionMatrix());
+         std::dynamic_pointer_cast<Dank::OpenGLShader>(_lightShader)->Unbind();
+         Dank::Renderer::DrawModel(ourModel);
+        glm::vec3 pos(2.0f, 0.0f, 2.0f);
+        float size = 1.0f;
+        glm::vec3 color(1.0f, 0.0f, 0.0f);
+        
+       Renderer::DrawPrimitive(cube->_VA, cube->_VB, pos, size, color, _objectShader);
+        Renderer::DrawLightSource(light->_VA, light->_VB, light->_position, 0.2f, _lightShader);
         Dank::Renderer::EndScene();
 		// -----------  END SCENE  -------------//
 

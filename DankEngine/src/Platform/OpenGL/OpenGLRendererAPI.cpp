@@ -68,6 +68,7 @@ namespace Dank {
 	void OpenGLRendererAPI::DrawModel(Ref<Model>& model)
 	{
 		Ref<Shader>& shader = model->GetShader();
+		shader->Bind();
 		for (Mesh mesh : model->GetMeshes())
 		{
 			Ref<VertexArray>& vertexArray = VertexArray::Create();
@@ -81,6 +82,7 @@ namespace Dank {
 			//SubmitMesh(mesh, vertexArray);
 			DrawMesh(std::make_shared<Mesh>(mesh), shader, vertexArray);
 		}
+		shader->Unbind();
 	}
 
 	void OpenGLRendererAPI::SubmitMesh(Mesh mesh, VertexArray *vertexArray)
@@ -114,15 +116,25 @@ namespace Dank {
 			std::string number;
 			std::string name = mesh->_textures[i].type;
 			if (name == "texture_diffuse")
+			{
 				number = std::to_string(diffuseNr++);
+				std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformInt("diffuseLoaded", 1);
+			}
 			else if (name == "texture_specular")
+			{
 				number = std::to_string(specularNr++);
+				std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformInt("specularLoaded", 1);
+			}
 			else if (name == "texture_normal")
-				number = std::to_string(normalNr++); // transfer unsigned int to stream
-
+				number = std::to_string(normalNr++); 
+			
 			std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformInt((name + number).c_str(), i);
 			glBindTexture(GL_TEXTURE_2D, mesh->_textures[i].iD);
 			
+		}
+		if (mesh->_textures.size() == 0)
+		{
+			std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformInt("diffuseLoaded", 0);
 		}
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformFloat3("material.ambient", mesh->_material.Ambient);
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformFloat3("material.diffuse", mesh->_material.Diffuse);
@@ -149,17 +161,35 @@ namespace Dank {
 
 	void OpenGLRendererAPI::DrawPrimitive(Ref<VertexArray>& vertexArray, Ref<VertexBuffer>& vertexBuffer, glm::vec3 position, float size, glm::vec3 color, Ref<Shader>& shader)
 	{
+		shader->Bind();
 		vertexArray->Bind();
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, position);
 		model = glm::scale(model, glm::vec3(size));
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("model", model);
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformFloat3("color", color);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformFloat3("material.ambient", color);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformFloat3("material.diffuse", color);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformFloat3("material.specular", glm::vec3(1.0f));
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformFloat("material.shininess", 32.0f);
 		DrawArraysTriangles();
 		vertexArray->Unbind();
-		
+		shader->Unbind();
 	}
 
+	void OpenGLRendererAPI::DrawLightSource(Ref<VertexArray>& vertexArray, Ref<VertexBuffer>& vertexBuffer, glm::vec3 position, float size, Ref<Shader>& shader)
+	{
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, position);
+		model = glm::scale(model, glm::vec3(size));
+
+		shader->Bind();
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("model", model);
+		vertexArray->Bind();
+		DrawArraysTriangles();
+		vertexArray->Unbind();
+		shader->Unbind();
+	}
+	
 
 	Primitive OpenGLRendererAPI::CreatePrimitive(std::string type)
 	{
@@ -168,8 +198,8 @@ namespace Dank {
 			Ref<VertexArray>& vertexArray = VertexArray::Create();
 			vertexArray->Bind();
 			Ref<VertexBuffer>& vertexBuffer = VertexBuffer::Create(cubeVertices, sizeof(cubeVertices));
-			vertexBuffer->SetVertexAttribute(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-			vertexBuffer->SetVertexAttribute(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+			vertexBuffer->SetVertexAttribute(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+			vertexBuffer->SetVertexAttribute(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 			vertexArray->Unbind();
 			return Primitive(vertexArray, vertexBuffer);
 		}

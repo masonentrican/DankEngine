@@ -15,6 +15,7 @@ namespace Dank {
 		void SetRotation(const glm::vec3& newFront) { _front = newFront; RecalculateViewMatrix(); }
 		void SetProjection(float aspectRatio);
 
+		
 		const glm::mat4& GetProjectionMatrix() const { return _projectionMatrix; }
 		const glm::mat4& GetViewMatrix() const { return _viewMatrix; }
 		const glm::mat4& GetViewProjectionMatrix() const { return _viewProjectionMatrix; }

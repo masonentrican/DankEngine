@@ -56,6 +56,11 @@ namespace Dank {
 			return s_RendererAPI->CreatePrimitive(type);
 		}
 
+		inline static void DrawLightSource(Ref<VertexArray>& vertexArray, Ref<VertexBuffer>& vertexBuffer, glm::vec3 position, float size, Ref<Shader>& shader)
+		{
+			s_RendererAPI->DrawLightSource(vertexArray, vertexBuffer, position, size, shader);
+		}
+
 		inline static void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
 		{
 			s_RendererAPI->SetViewport(x, y, width, height);

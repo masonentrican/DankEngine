@@ -27,7 +27,8 @@ namespace Dank {
 		virtual void DrawMesh(Ref<Mesh>& mesh, Ref<Shader>& shader, Ref<VertexArray>& vertexArray) = 0;
 		virtual void SubmitMesh(Mesh mesh, VertexArray* vertexArray) = 0;
 		virtual Primitive CreatePrimitive(std::string type) = 0;
-		virtual void DrawPrimitive(Ref<VertexArray>& vertexArray, Ref<VertexBuffer>& vertexBuffer, glm::vec3 position, float size, glm::vec3 color, Ref<Shader>& shader) = 0;
+		virtual void DrawPrimitive(Ref<VertexArray>& vertexArray, Ref<VertexBuffer>& vertexBuffer, glm::vec3 position, float size, glm::vec3 color,  Ref<Shader>& shader) = 0;
+		virtual void DrawLightSource(Ref<VertexArray>& vertexArray, Ref<VertexBuffer>& vertexBuffer, glm::vec3 position, float size, Ref<Shader>& shader) = 0;
 		inline static API GetAPI() { return s_API; }
 		
 	private:

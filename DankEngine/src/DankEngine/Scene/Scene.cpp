@@ -10,11 +10,6 @@
 
 namespace Dank {
 
-	static void OnTransformConstruct(entt::registry& registry, entt::entity entity)
-	{
-
-	}
-
 	Scene::Scene()
 	{
 	}
@@ -38,14 +33,15 @@ namespace Dank {
 		{
 			_registry.view<NativeScriptComponent>().each([=](auto entity, auto& nativeScriptComponent)
 			{
+				// TODO: Move to on scene play once it exists.
 				if (!nativeScriptComponent.Instance)
 				{
-					nativeScriptComponent.InstantiateFunction();
+					nativeScriptComponent.Instance = nativeScriptComponent.Instantiate();
 					nativeScriptComponent.Instance->_entity = Entity{ entity, this };
-					nativeScriptComponent.OnCreateFunction(nativeScriptComponent.Instance);
+					nativeScriptComponent.Instance->OnCreate();
 				}
 
-				nativeScriptComponent.OnUpdateFunction(nativeScriptComponent.Instance, ts);
+				nativeScriptComponent.Instance->OnUpdate(ts);
 			});
 		}
 
@@ -81,7 +77,7 @@ namespace Dank {
 			auto group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)
 			{
-				auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
 				Renderer2D::DrawQuad(transform, sprite.Color);
 			}

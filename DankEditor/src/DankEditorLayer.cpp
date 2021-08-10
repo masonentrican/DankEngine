@@ -57,7 +57,6 @@ namespace Dank
 
             void OnDestroy()
             {
-
             }
             
             void OnUpdate(Timestep ts)
@@ -78,6 +77,7 @@ namespace Dank
         };
 
         _cameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+        _cameraEntity2.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
 
 	}

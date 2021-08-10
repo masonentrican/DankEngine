@@ -18,7 +18,7 @@
 
 
 // Used to bind event callbacks easily. See Application cpp constructor for example
-#define DANK_BIND_EVENT(x) std::bind(&x, this, std::placeholders::_1)
+#define DANK_BIND_EVENT(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 
 
 // Attempts to assert a given argument. If this fails, it is logged and a WINDOWS SPECIFIC

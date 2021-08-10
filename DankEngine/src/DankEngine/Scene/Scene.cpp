@@ -34,8 +34,23 @@ namespace Dank {
 
 	void Scene::OnUpdate(Timestep ts)
 	{
-		// Render 2D
+		// Update scripts
+		{
+			_registry.view<NativeScriptComponent>().each([=](auto entity, auto& nativeScriptComponent)
+			{
+				if (!nativeScriptComponent.Instance)
+				{
+					nativeScriptComponent.InstantiateFunction();
+					nativeScriptComponent.Instance->_entity = Entity{ entity, this };
+					nativeScriptComponent.OnCreateFunction(nativeScriptComponent.Instance);
+				}
 
+				nativeScriptComponent.OnUpdateFunction(nativeScriptComponent.Instance, ts);
+			});
+		}
+
+
+		// Render 2D
 		Camera* mainCamera = nullptr;
 		glm::mat4* cameraTransform = nullptr;
 

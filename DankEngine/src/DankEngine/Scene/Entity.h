@@ -41,6 +41,19 @@ namespace Dank {
 		}
 
 		operator bool() const { return _entityHandle != entt::null; }
+		operator uint32_t() const { return (uint32_t)_entityHandle; }
+
+		// Is equal compare
+		bool operator==(const Entity& other) const
+		{
+			return _entityHandle == other._entityHandle && _scene == other._scene;
+		}
+
+		// Not equal compare
+		bool operator!=(const Entity& other) const
+		{
+			return !(*this == other);
+		}
 
 	private:
 		entt::entity _entityHandle { 0 };

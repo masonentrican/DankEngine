@@ -3,6 +3,8 @@
 #include "Dank.h"
 #include "DankEngine/Core/Core.h"
 
+#include "Panels/SceneHierarchyPanel.h"
+
 namespace Dank
 {
 
@@ -41,7 +43,7 @@ namespace Dank
 		Entity _cameraEntity;
 		Entity _cameraEntity2;
 
-		Entity _qiana;
+		SceneHierarchyPanel _sceneHierarchyPanel;
 
 		bool _primaryCamera = false;
 

@@ -50,7 +50,10 @@ namespace Dank
         cc.Primary = false;        
 
         _cameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-        _cameraEntity2.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+        _cameraEntity2.AddComponent<NativeScriptComponent>().Bind<CameraController>(); 
+
+        // Setup Scene Hierarchy Panel
+        _sceneHierarchyPanel.SetContext(_activeScene);
 
 
 	}
@@ -218,8 +221,17 @@ namespace Dank
             ImGui::End();
         }
 
+        // Scene Hierarchy Panel
+        {
+            DANK_PROFILE_SCOPE("Scene Hierarchy Panel");
+
+            _sceneHierarchyPanel.OnImGuiRender();
+        }
+
         // Viewport
         {
+            DANK_PROFILE_SCOPE("Viewport");
+
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
             ImGui::Begin("Viewport");            
             

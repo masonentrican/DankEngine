@@ -6,6 +6,8 @@
 #include "DankEngine/Scene/Scene.h"
 #include "DankEngine/Scene/Entity.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace Dank
 {
 	class SceneHierarchyPanel
@@ -20,6 +22,7 @@ namespace Dank
 
 	private:
 		void DrawEntityNode(Entity entity);
+		void DrawComponents(Entity entity);
 
 	private:
 		Ref<Scene> _context;

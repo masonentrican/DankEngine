@@ -47,7 +47,7 @@ namespace Dank
 		SpriteRendererComponent(const glm::vec4& color) : Color(color) {}
 	};
 
-	// Avoiding overrides to prevent v table for performance.
+
 	struct NativeScriptComponent
 	{
 		ScriptableEntity* Instance = nullptr;

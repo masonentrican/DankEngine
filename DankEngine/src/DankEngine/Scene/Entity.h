@@ -30,7 +30,7 @@ namespace Dank {
 		template<typename T>
 		bool HasComponent()
 		{
-			return _scene->_registry.has<T>(_entityHandle);
+			return _scene->_registry.any_of<T>(_entityHandle);
 		}
 
 		template<typename T>
@@ -56,7 +56,7 @@ namespace Dank {
 		}
 
 	private:
-		entt::entity _entityHandle { 0 };
+		entt::entity _entityHandle { entt::null };
 		Scene* _scene = nullptr;
 	};
 

@@ -38,14 +38,19 @@ namespace Dank
         // Entity Testing
         _activeScene = CreateRef<Scene>();
 
-        auto square = _activeScene->CreateEntity("Square from an entity");
-        square.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
-        _squareEntity = square;
+        auto greenSquare = _activeScene->CreateEntity("Green Square");
+        greenSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
 
-        _cameraEntity = _activeScene->CreateEntity("Camera Entity");
+        auto redSquare = _activeScene->CreateEntity("Red Square");
+        redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
+
+        _squareEntity = greenSquare;
+
+
+        _cameraEntity = _activeScene->CreateEntity("Camera 1");
         _cameraEntity.AddComponent<CameraComponent>();
         
-        _cameraEntity2 = _activeScene->CreateEntity("Clip-space cam");
+        _cameraEntity2 = _activeScene->CreateEntity("Camera 2");
         auto& cc = _cameraEntity2.AddComponent<CameraComponent>();
         cc.Primary = false;        
 

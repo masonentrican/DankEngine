@@ -39,23 +39,21 @@ namespace Dank
         _activeScene = CreateRef<Scene>();
 
         auto greenSquare = _activeScene->CreateEntity("Green Square");
-        greenSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
+        greenSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 0.5f });
 
         auto redSquare = _activeScene->CreateEntity("Red Square");
-        redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
+        redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });        
+        redSquare.GetComponent<TransformComponent>().Position = glm::vec3(0.5f, 0.0f, -0.1f);
 
-        _squareEntity = greenSquare;
-
-
-        _cameraEntity = _activeScene->CreateEntity("Camera 1");
-        _cameraEntity.AddComponent<CameraComponent>();
+        auto cameraEntity = _activeScene->CreateEntity("Camera 1");
+        cameraEntity.AddComponent<CameraComponent>();        
+        cameraEntity.GetComponent<TransformComponent>().Position = glm::vec3(0.0f, 0.0f, 5.0f);
         
-        _cameraEntity2 = _activeScene->CreateEntity("Camera 2");
-        auto& cc = _cameraEntity2.AddComponent<CameraComponent>();
-        cc.Primary = false;        
+        auto cameraEntity2 = _activeScene->CreateEntity("Camera 2");
+        cameraEntity2.AddComponent<CameraComponent>().Primary = false;        
 
-        _cameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-        _cameraEntity2.AddComponent<NativeScriptComponent>().Bind<CameraController>(); 
+        cameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+        cameraEntity2.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
         // Setup Scene Hierarchy Panel
         _sceneHierarchyPanel.SetContext(_activeScene);
@@ -175,12 +173,11 @@ namespace Dank
 
         // Stats Window
         {
-            DANK_PROFILE_SCOPE("Stats Window");
+            DANK_PROFILE_SCOPE("Stats");
 
             ImGui::Begin("Stats");
 
             auto stats = Renderer2D::GetStats();
-            ImGui::Text("Renderer2D Stats:");
             ImGui::Text("Draw Calls: %d", stats.DrawCalls);
             ImGui::Text("Quads: %d", stats.QuadCount);
             ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
@@ -192,36 +189,6 @@ namespace Dank
             ImGui::Text("Frame Count: %d", Application::Get().GetFrameCount());
             ImGui::Text("Runtime: %f", Application::Get().GetRunTime());
             ImGui::NewLine();        
-
-            // Debug out square entity stuff
-            if (_squareEntity)
-            {
-                ImGui::Separator();
-                auto& tag = _squareEntity.GetComponent<TagComponent>().Tag;
-                ImGui::Text("%s", tag.c_str());
-
-                auto& squareColor = _squareEntity.GetComponent<SpriteRendererComponent>().Color;
-                ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
-                ImGui::Separator();
-            }
-
-            // Point to the last column of the mat4 transform matrix.
-            ImGui::DragFloat3("Camera Transform",
-                glm::value_ptr(_cameraEntity.GetComponent<TransformComponent>().Transform[3]));
-
-            ImGui::DragFloat3("Near Clip Camera Transform",
-                glm::value_ptr(_cameraEntity2.GetComponent<TransformComponent>().Transform[3]));
-
-            if (ImGui::Checkbox("Swap to Second Camera", &_primaryCamera))
-            {
-                _cameraEntity.GetComponent<CameraComponent>().Primary = !_primaryCamera;
-                _cameraEntity2.GetComponent<CameraComponent>().Primary = _primaryCamera;
-            }
-
-            auto& camera = _cameraEntity2.GetComponent<CameraComponent>().Camera;
-            float orthoSize = camera.GetOrthographicSize();
-            if (ImGui::DragFloat("Second camera ortho size", &orthoSize))
-                camera.SetOrthographicSize(orthoSize);
 
             ImGui::End();
         }

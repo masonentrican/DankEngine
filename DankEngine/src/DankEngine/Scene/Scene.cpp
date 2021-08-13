@@ -48,7 +48,7 @@ namespace Dank {
 
 		// Render 2D
 		Camera* mainCamera = nullptr;
-		glm::mat4* cameraTransform = nullptr;
+		glm::mat4 cameraTransform;
 
 		// Locate the main camera
 		{
@@ -62,7 +62,7 @@ namespace Dank {
 				if (camera.Primary)
 				{
 					mainCamera = &camera.Camera;
-					cameraTransform = &transform.Transform;
+					cameraTransform = transform.GetTransform();
 					break;
 				}
 
@@ -72,14 +72,14 @@ namespace Dank {
 		// If main camera found, begin rendering
 		if (mainCamera)
 		{
-			Renderer2D::BeginScene(mainCamera->GetProjection(), *cameraTransform);
+			Renderer2D::BeginScene(mainCamera->GetProjection(), cameraTransform);
 
 			auto group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)
 			{
 				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-				Renderer2D::DrawQuad(transform, sprite.Color);
+				Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
 			}
 
 			Renderer2D::EndScene();

@@ -39,10 +39,6 @@ namespace Dank
 
 		Ref<Scene> _activeScene;
 
-		Entity _squareEntity;
-		Entity _cameraEntity;
-		Entity _cameraEntity2;
-
 		SceneHierarchyPanel _sceneHierarchyPanel;
 
 		bool _primaryCamera = false;

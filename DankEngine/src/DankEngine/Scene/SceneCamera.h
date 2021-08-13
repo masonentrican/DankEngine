@@ -46,7 +46,7 @@ namespace Dank
 		void RecalculateProjection();
 
 	private:
-		ProjectionType _projectionType = ProjectionType::Orthographic;
+		ProjectionType _projectionType = ProjectionType::Perspective;
 
 		float _orthographicSize = 10.0f;
 		float _orthographicNearClip = -1.0f;

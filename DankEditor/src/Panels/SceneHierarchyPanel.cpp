@@ -1,6 +1,7 @@
 #include "SceneHierarchyPanel.h"
 
 #include <ImGui/imgui.h>
+#include <ImGui/imgui_internal.h>
 
 #include "DankEngine/Scene/Components.h"
 
@@ -63,6 +64,69 @@ namespace Dank
 
 	}
 
+	static void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
+	{
+		ImGui::PushID(label.c_str());
+
+		// Set the columns to 2 so we can seperate labels on left from values on right
+		ImGui::Columns(2);		
+
+		// Set label on left column
+		ImGui::SetColumnWidth(0, columnWidth);
+		ImGui::Text(label.c_str());
+		ImGui::NextColumn();
+
+		// This is based on ImGui::DragScalarN from DragFloat to essentially build our own imgui widget.
+		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0,0 });
+
+		// Calculate a line height and button size for the x,y,z buttons
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+
+		// Styles the button and allow resetting the value of x when button is clicked
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.9f, 0.2f, 0.2f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
+		if (ImGui::Button("X", buttonSize))
+			values.x = resetValue;
+		ImGui::PopStyleColor(3);
+
+		ImGui::SameLine();
+		ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f"); // ## stops label from showing
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.6f, 0.15f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.1f, 0.7f, 0.2f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.6f, 0.15f, 1.0f });
+		if (ImGui::Button("Y", buttonSize))
+			values.y = resetValue;
+		ImGui::PopStyleColor(3);
+
+		ImGui::SameLine();
+		ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.15f, 0.8f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.1f, 0.2f, 0.9f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.15f, 0.8f, 1.0f });
+		if (ImGui::Button("Z", buttonSize))
+			values.z = resetValue;
+		ImGui::PopStyleColor(3);
+
+		ImGui::SameLine();
+		ImGui::DragFloat("##Z", &values.z, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
+
+		ImGui::PopStyleVar();
+
+		ImGui::Columns(1);
+
+		ImGui::PopID();
+	}
+
 	void SceneHierarchyPanel::DrawComponents(Entity entity)
 	{
 		if (entity.HasComponent<TagComponent>())
@@ -82,8 +146,14 @@ namespace Dank
 		{
 			if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform"))
 			{
-				auto& transform = entity.GetComponent<TransformComponent>().Transform;
-				ImGui::DragFloat3("Position", glm::value_ptr(transform[3]), 0.1f);
+				auto& tc = entity.GetComponent<TransformComponent>();
+				DrawVec3Control("Position", tc.Position);
+
+				glm::vec3 rotation = glm::degrees(tc.Rotation);
+				DrawVec3Control("Rotation", rotation);
+				tc.Rotation = glm::radians(rotation);
+
+				DrawVec3Control("Scale", tc.Scale, 1.0f);
 
 				ImGui::TreePop();
 			}

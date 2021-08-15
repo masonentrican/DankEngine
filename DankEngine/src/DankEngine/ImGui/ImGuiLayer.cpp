@@ -39,6 +39,13 @@ namespace Dank {
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
+		// Default font
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/lato/Lato-Regular.ttf", 14.0f);
+
+		// Load additional font options
+		io.Fonts->AddFontFromFileTTF("assets/fonts/roboto/Roboto-Regular.ttf", 14.0f);
+		io.Fonts->AddFontFromFileTTF("assets/fonts/montserrat/Montserrat-Regular.ttf", 14.0f);
+
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
 

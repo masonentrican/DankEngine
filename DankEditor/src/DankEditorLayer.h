@@ -45,5 +45,8 @@ namespace Dank
 
 		bool _viewportFocused = false;
 		bool _viewportHovered = false;
+
+		// UI toggles
+		bool _ui_editor_style = false;
 	};
 }

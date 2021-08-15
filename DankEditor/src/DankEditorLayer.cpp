@@ -38,6 +38,13 @@ namespace Dank
         // Entity Testing
         _activeScene = CreateRef<Scene>();
 
+        auto cameraEntity = _activeScene->CreateEntity("Camera Entity");
+        cameraEntity.AddComponent<CameraComponent>();
+        cameraEntity.GetComponent<TransformComponent>().Position = glm::vec3(0.0f, 0.0f, 5.0f);
+
+        cameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+
+        /*
         auto greenSquare = _activeScene->CreateEntity("Square Entity 2");
         greenSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 0.5f });
 
@@ -45,11 +52,11 @@ namespace Dank
         redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
         redSquare.GetComponent<TransformComponent>().Position = glm::vec3(0.5f, 0.0f, -0.1f);
 
-        auto cameraEntity = _activeScene->CreateEntity("Camera Entity");
-        cameraEntity.AddComponent<CameraComponent>();
-        cameraEntity.GetComponent<TransformComponent>().Position = glm::vec3(0.0f, 0.0f, 5.0f);
 
-        cameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+
+
+
+        */
 
         // Setup Scene Hierarchy Panel
         _sceneHierarchyPanel.SetContext(_activeScene);
@@ -154,17 +161,30 @@ namespace Dank
             ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
         }
 
+        //ImGui::ShowDemoWindow();
+
+        // Menu bar
         if (ImGui::BeginMenuBar())
         {
             if (ImGui::BeginMenu("File"))
             {
-
+                ImGui::MenuItem("Style Editor", NULL, &_ui_editor_style);
                 if (ImGui::MenuItem("Close")) Application::Get().Close();
 
                 ImGui::EndMenu();
             }
 
+
             ImGui::EndMenuBar();
+        }
+
+
+        // Editor Style
+        if (_ui_editor_style)
+        {
+	        ImGui::Begin("Editor Style Settings", &_ui_editor_style);
+        	ImGui::ShowStyleEditor();
+        	ImGui::End();
         }
 
         // Stats Window

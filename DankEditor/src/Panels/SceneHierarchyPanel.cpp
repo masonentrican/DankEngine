@@ -292,7 +292,7 @@ namespace Dank
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
 			bool open = ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), treeNodeFlags, "Sprite Renderer");
 			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
-			if (ImGui::Button("+", ImVec2{ 20, 20 }))
+			if (ImGui::Button("x", ImVec2{ 20, 20 }))
 			{
 				ImGui::OpenPopup("ComponentSettings");
 			}

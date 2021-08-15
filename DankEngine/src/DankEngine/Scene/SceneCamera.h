@@ -50,12 +50,12 @@ namespace Dank
 
 		float _orthographicSize = 10.0f;
 		float _orthographicNearClip = -1.0f;
-		float _orthographicFarClip = 1.0f;		
+		float _orthographicFarClip = 5000.0f;		
 
 		float _perspectiveFov = glm::radians(50.0f);
 		float _perspectiveNearClip = 0.01f;
 		float _perspectiveFarClip = 5000.0f;
 
-		float _aspectRatio = 0.0f;
+		float _aspectRatio = 1.0f;
 	};
 }

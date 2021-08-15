@@ -9,15 +9,15 @@
 
 namespace Dank
 {
-	DankEditorLayer::DankEditorLayer() : Layer("DankEditorLayer"), _cameraController(1280.0f / 720.0f)
-	{
+    DankEditorLayer::DankEditorLayer() : Layer("DankEditorLayer"), _cameraController(1280.0f / 720.0f)
+    {
 
-	}
+    }
 
-	void DankEditorLayer::OnAttach()
-	{
-		tex_weed = Texture2D::Create("assets/textures/weedleaf.png");
-		tex_smile = Texture2D::Create("assets/textures/awesomeface.png");
+    void DankEditorLayer::OnAttach()
+    {
+        tex_weed = Texture2D::Create("assets/textures/weedleaf.png");
+        tex_smile = Texture2D::Create("assets/textures/awesomeface.png");
 
         auto shader3D = _shaderLibrary.Load("assets/shaders/test.glsl");
         _3DShader = _shaderLibrary.Get("test");
@@ -27,47 +27,43 @@ namespace Dank
 
         ourModel = CreateRef<Model>(Model(ModelPath, _3DShader));
 
-		FramebufferSpecification frameBufferSpec;
-		frameBufferSpec.Width = 1280;
-		frameBufferSpec.Height = 720;
+        FramebufferSpecification frameBufferSpec;
+        frameBufferSpec.Width = 1280;
+        frameBufferSpec.Height = 720;
 
-		_framebuffer = Framebuffer::Create(frameBufferSpec);
+        _framebuffer = Framebuffer::Create(frameBufferSpec);
 
 
 
         // Entity Testing
         _activeScene = CreateRef<Scene>();
 
-        auto greenSquare = _activeScene->CreateEntity("Green Square");
+        auto greenSquare = _activeScene->CreateEntity("Square Entity 2");
         greenSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 0.5f });
 
-        auto redSquare = _activeScene->CreateEntity("Red Square");
-        redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });        
+        auto redSquare = _activeScene->CreateEntity("Square Entity 1");
+        redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
         redSquare.GetComponent<TransformComponent>().Position = glm::vec3(0.5f, 0.0f, -0.1f);
 
-        auto cameraEntity = _activeScene->CreateEntity("Camera 1");
-        cameraEntity.AddComponent<CameraComponent>();        
+        auto cameraEntity = _activeScene->CreateEntity("Camera Entity");
+        cameraEntity.AddComponent<CameraComponent>();
         cameraEntity.GetComponent<TransformComponent>().Position = glm::vec3(0.0f, 0.0f, 5.0f);
-        
-        auto cameraEntity2 = _activeScene->CreateEntity("Camera 2");
-        cameraEntity2.AddComponent<CameraComponent>().Primary = false;        
 
         cameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-        cameraEntity2.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
         // Setup Scene Hierarchy Panel
         _sceneHierarchyPanel.SetContext(_activeScene);
 
 
-	}
-	void DankEditorLayer::OnDetach()
-	{
-		DANK_PROFILE_FUNCTION();
-	}
+    }
+    void DankEditorLayer::OnDetach()
+    {
+        DANK_PROFILE_FUNCTION();
+    }
 
-	void DankEditorLayer::OnUpdate(Timestep ts)
-	{
-		DANK_PROFILE_FUNCTION();
+    void DankEditorLayer::OnUpdate(Timestep ts)
+    {
+        DANK_PROFILE_FUNCTION();
 
         // Resize viewport if need be
         if (FramebufferSpecification spec = _framebuffer->GetSpecification();
@@ -86,16 +82,16 @@ namespace Dank
 
 
         // Update cam controller if focused
-        if(_viewportFocused)
-		    _cameraController.OnUpdate(ts);
+        if (_viewportFocused)
+            _cameraController.OnUpdate(ts);
 
 
         // Bind the frame buffer
-		_framebuffer->Bind();
+        _framebuffer->Bind();
 
         // Clear it
-		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-		RenderCommand::Clear();
+        RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+        RenderCommand::Clear();
 
         // Update the scene
         _activeScene->OnUpdate(ts);
@@ -103,12 +99,12 @@ namespace Dank
         // Unbind the frame buffer
         _framebuffer->Unbind();
 
-	}
+    }
 
-	void DankEditorLayer::OnEvent(Event& e)
-	{
-		_cameraController.OnEvent(e);
-	}
+    void DankEditorLayer::OnEvent(Event& e)
+    {
+        _cameraController.OnEvent(e);
+    }
 
     void DankEditorLayer::OnImGuiRender()
     {
@@ -164,7 +160,7 @@ namespace Dank
             {
 
                 if (ImGui::MenuItem("Close")) Application::Get().Close();
-                
+
                 ImGui::EndMenu();
             }
 
@@ -188,7 +184,7 @@ namespace Dank
             ImGui::Text("FPS: %f", Application::Get().GetFps());
             ImGui::Text("Frame Count: %d", Application::Get().GetFrameCount());
             ImGui::Text("Runtime: %f", Application::Get().GetRunTime());
-            ImGui::NewLine();        
+            ImGui::NewLine();
 
             ImGui::End();
         }
@@ -205,17 +201,17 @@ namespace Dank
             DANK_PROFILE_SCOPE("Viewport");
 
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
-            ImGui::Begin("Viewport");            
-            
+            ImGui::Begin("Viewport");
+
             // Check if the viewport is focused and hovered so we can
             // tell the ImGui layer whether or not events should be
             // marked as handled once recieved.
-            _viewportFocused = ImGui::IsWindowFocused(); 
+            _viewportFocused = ImGui::IsWindowFocused();
             _viewportHovered = ImGui::IsWindowHovered();
-            Application::Get().GetImGuiLayer()->AllowEvents(_viewportFocused && _viewportHovered);            
+            Application::Get().GetImGuiLayer()->AllowEvents(_viewportFocused && _viewportHovered);
 
-            ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();            
-            _viewportSize = { viewportPanelSize.x, viewportPanelSize.y };         
+            ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+            _viewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
             // Send the frame buffer image to the viewport panel
             uint32_t frameBufferTextureId = _framebuffer->GetColorAttachmentRendererID();
@@ -224,8 +220,8 @@ namespace Dank
             ImGui::End();
             ImGui::PopStyleVar();
         }
-        
+
 
         ImGui::End();   // Docking End
-	}
+    }
 }

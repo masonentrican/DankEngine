@@ -30,7 +30,7 @@ namespace Dank
 
 	void SceneCamera::SetViewportSize(uint32_t width, uint32_t height)
 	{
-		_aspectRatio = (float)width / (float)height;
+		_aspectRatio = ((float)width / (float)height) > 0 ? (float)width / (float)height : 1.0f; // glm is mad with 0 aspect ratio
 		RecalculateProjection();
 	}
 

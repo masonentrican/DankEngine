@@ -10,14 +10,6 @@
 
 namespace Dank {
 
-	Scene::Scene()
-	{
-	}
-
-	Scene::~Scene()
-	{
-	}
-
 	Entity Scene::CreateEntity(const std::string& name)
 	{
 		Entity entity = { _registry.create(), this };
@@ -25,6 +17,11 @@ namespace Dank {
 		auto& tag = entity.AddComponent<TagComponent>();
 		tag.Tag = name.empty() ? "Entity" : name;
 		return entity;
+	}
+
+	void Scene::DestroyEntity(Entity entity)
+	{
+		_registry.destroy(entity);
 	}
 
 	void Scene::OnUpdate(Timestep ts)
@@ -54,8 +51,8 @@ namespace Dank {
 		{
 			DANK_PROFILE_SCOPE("Entt Camera Transform lookup");
 
-			auto view = _registry.view<TransformComponent, CameraComponent>();
-			for (auto entity : view)
+			auto const view = _registry.view<TransformComponent, CameraComponent>();
+			for (auto const entity : view)
 			{
 				auto& [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
 
@@ -74,8 +71,8 @@ namespace Dank {
 		{
 			Renderer2D::BeginScene(mainCamera->GetProjection(), cameraTransform);
 
-			auto group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-			for (auto entity : group)
+			const auto group = _registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+			for (const auto entity : group)
 			{
 				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
@@ -92,13 +89,45 @@ namespace Dank {
 		_viewportHeight = height;
 
 		// Resize any non-fixed aspect ratio camera
-		auto view = _registry.view<CameraComponent>();
-		for (auto entity : view)
+		const auto view = _registry.view<CameraComponent>();
+		for (const auto entity : view)
 		{
 			auto& cameraComponent = view.get<CameraComponent>(entity);
 			if (!cameraComponent.FixedAspectRatio)
 				cameraComponent.Camera.SetViewportSize(width, height);
 		}
+	}
+
+	template <typename T>
+	void Scene::OnComponentAdded(Entity entity, T& component)
+	{
+		static_assert(false);
+	}
+
+	template<>
+	void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<TransformComponent>(Entity entity, TransformComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
+	{
+		component.Camera.SetViewportSize(_viewportWidth, _viewportHeight);
+	}
+
+	template<>
+	void Scene::OnComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
+	{
 	}
 
 	

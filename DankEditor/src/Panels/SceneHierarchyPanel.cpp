@@ -180,7 +180,7 @@ namespace Dank
 			
 			ImGui::Separator();
 			bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, name.c_str());
-			ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.45f);
+			ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.42f);
 
 			if (ImGui::Button("...", ImVec2{ 20, 20 }))
 			{

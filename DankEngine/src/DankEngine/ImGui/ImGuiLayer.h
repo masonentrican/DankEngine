@@ -20,6 +20,8 @@ namespace Dank {
 		void Begin();
 		void End();
 
+		void SetDarkThemeColors();
+
 		void AllowEvents(bool allow) { _allowEvents = allow; }		
 	private:
 		bool _allowEvents = false;

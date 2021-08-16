@@ -51,11 +51,6 @@ namespace Dank
         auto redSquare = _activeScene->CreateEntity("Square Entity 1");
         redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
         redSquare.GetComponent<TransformComponent>().Position = glm::vec3(0.5f, 0.0f, -0.1f);
-
-
-
-
-
         */
 
         // Setup Scene Hierarchy Panel
@@ -155,11 +150,17 @@ namespace Dank
 
         // DockSpace
         ImGuiIO& io = ImGui::GetIO();
+        ImGuiStyle& style = ImGui::GetStyle();
+
+        style.WindowMinSize.x = 350.0f; //TODO: Temporary hard 350pixel min width
+
         if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
         {
             ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
             ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
         }
+
+        style.WindowMinSize.x = 32.0f; //TODO: Back to imgui default min
 
         //ImGui::ShowDemoWindow();
 

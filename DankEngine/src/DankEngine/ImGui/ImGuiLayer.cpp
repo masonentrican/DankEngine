@@ -43,6 +43,7 @@ namespace Dank {
 		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/lato/Lato-Regular.ttf", 14.0f);
 
 		// Load additional font options
+		io.Fonts->AddFontFromFileTTF("assets/fonts/lato/Lato-Black.ttf", 14.0f);
 		io.Fonts->AddFontFromFileTTF("assets/fonts/roboto/Roboto-Regular.ttf", 14.0f);
 		io.Fonts->AddFontFromFileTTF("assets/fonts/montserrat/Montserrat-Regular.ttf", 14.0f);
 

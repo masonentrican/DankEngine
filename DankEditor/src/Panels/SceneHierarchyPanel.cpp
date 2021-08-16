@@ -43,35 +43,7 @@ namespace Dank
 
 		ImGui::Begin("Properties");
 		if (_selectionContext)
-		{
 			DrawComponents(_selectionContext);
-
-			if (ImGui::Button("Add Component"))
-				ImGui::OpenPopup("AddComponent");
-
-			if (ImGui::BeginPopup("AddComponent"))
-			{
-				if (ImGui::MenuItem("Transform"))
-				{
-					_selectionContext.AddComponent<TransformComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("Sprite Renderer"))
-				{
-					_selectionContext.AddComponent<SpriteRendererComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("Camera"))
-				{
-					_selectionContext.AddComponent<CameraComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-
-				ImGui::EndPopup();
-			}
-		}
 			
 
 		ImGui::End();
@@ -237,6 +209,7 @@ namespace Dank
 
 	void SceneHierarchyPanel::DrawComponents(Entity entity)
 	{
+		
 		// Tag Component UI, unique.
 		if (entity.HasComponent<TagComponent>())
 		{
@@ -245,11 +218,43 @@ namespace Dank
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
 			strcpy_s(buffer, sizeof(buffer), tag.c_str());
-			if (ImGui::InputText("Tag", buffer, sizeof(buffer)))
+			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
 			{
 				tag = std::string(buffer);
 			}
 		}
+
+		ImGui::SameLine();
+		ImGui::PushItemWidth(-1);
+
+		if (ImGui::Button("Add Component"))
+			ImGui::OpenPopup("AddComponent");
+
+		if (ImGui::BeginPopup("AddComponent"))
+		{
+			if (ImGui::MenuItem("Transform"))
+			{
+				_selectionContext.AddComponent<TransformComponent>();
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::MenuItem("Sprite Renderer"))
+			{
+				_selectionContext.AddComponent<SpriteRendererComponent>();
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::MenuItem("Camera"))
+			{
+				_selectionContext.AddComponent<CameraComponent>();
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+
+		ImGui::PopItemWidth();
+
 		
 		// Transform Component UI
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)

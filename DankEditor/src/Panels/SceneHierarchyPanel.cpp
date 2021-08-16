@@ -195,21 +195,25 @@ namespace Dank
 	template<typename T, typename UIFunction>
 	static void DrawComponent(const std::string& name, Entity entity, UIFunction uiFunction)
 	{
+		ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
+		treeNodeFlags |= ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
+
 		if (entity.HasComponent<T>())
 		{
-			ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed;
-			treeNodeFlags |= ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
-
+			
 			auto& component = entity.GetComponent<T>();
 
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
+			ImVec2 contentRegionAvailable = ImGui::GetContentRegionAvail(); // Content region avail takes into account scrollbar space
+			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f; // ImGui arbitrarily used this 2.0f magnitude
+			
+			ImGui::Separator();
 			bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, name.c_str());
-			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
+			ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.45f);
+
 			if (ImGui::Button("...", ImVec2{ 20, 20 }))
 			{
 				ImGui::OpenPopup("ComponentSettings");
 			}
-			ImGui::PopStyleVar();
 
 			bool removeComponent = false;
 			if (ImGui::BeginPopup("ComponentSettings"))

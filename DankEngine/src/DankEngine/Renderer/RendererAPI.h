@@ -22,6 +22,7 @@ namespace Dank {
 
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount) = 0;		
 		virtual void DrawArraysTriangles() = 0;
+		virtual void DrawArraysTriangles(uint32_t& count) = 0;
 		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
 		virtual void DrawModel(Ref<Model>& model) = 0;
 		virtual void DrawMesh(Ref<Mesh>& mesh, Ref<Shader>& shader, Ref<VertexArray>& vertexArray) = 0;

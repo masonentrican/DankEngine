@@ -3,30 +3,21 @@
 layout (location = 0) in vec3 a_Position;
 layout (location = 1) in vec3 a_Normal;
 layout (location = 2) in vec2 a_TexCoords;
-layout (location = 3) in vec3 a_Color;
-layout (location = 4) in vec4 a_Model1;
-layout (location = 5) in vec4 a_Model2;
-layout (location = 6) in vec4 a_Model3;
-layout (location = 7) in vec4 a_Model4;
 
 out vec2 TexCoords;
 out vec3 Normal;
 out vec3 FragPos;
-out vec3 Color;
 
-//uniform mat4 model;
+uniform mat4 model;
 uniform mat4 u_ViewProjection;
 uniform mat4 u_Transform;
 
 void main()
 {
-    mat4 model = mat4(a_Model1, a_Model2, a_Model3, a_Model4);
     TexCoords = a_TexCoords;
-    gl_Position = u_ViewProjection * model * vec4(a_Position, 1.0f);
+    gl_Position = u_ViewProjection * model * vec4(a_Position, 1.0);
     FragPos = vec3(model * vec4(a_Position, 1.0));
     Normal = mat3(transpose(inverse(model))) * a_Normal;
-    //Normal = a_Normal;
-    Color = a_Color;
   
 }
 
@@ -54,7 +45,6 @@ struct Light {
 in vec2 TexCoords;
 in vec3 Normal;
 in vec3 FragPos;
-in vec3 Color;
 
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_specular1;
@@ -97,24 +87,24 @@ void main()
     else {
     
     //ambient
-    vec3 ambient = light.ambient * Color;
+    vec3 ambient = light.ambient * material.ambient;
 
     //diffuse
     vec3 norm = normalize(Normal);
 
     vec3 lightDir = normalize(lightPos - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = light.diffuse * (diff * Color);
+    vec3 diffuse = light.diffuse * (diff * material.diffuse);
        //specular
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
    
-    vec3 specular = light.specular * (spec * vec3(1.0)); 
+    vec3 specular = light.specular * (spec * material.specular); 
 
     vec3 result = ambient + diffuse + specular; 
     FragColor = vec4(result, 1.0);
-  
+   //FragColor = texture(texture_diffuse1, TexCoords);
     }
  
    

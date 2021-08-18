@@ -31,6 +31,11 @@ namespace Dank {
 			s_RendererAPI->DrawArraysTriangles();
 		}
 
+		inline static void DrawArraysTriangles(uint32_t& count)
+		{
+			s_RendererAPI->DrawArraysTriangles(count);
+		}
+
 		inline static void DrawModel(Ref<Model>& model)
 		{
 			s_RendererAPI->DrawModel(model);

@@ -5,7 +5,7 @@
 namespace Dank {
 
 
-	Primitive::Primitive(Ref<VertexArray>& VA, Ref<VertexBuffer>& VB) : _VA(VA), _VB(VB)
+	Primitive::Primitive(std::vector<float>& vertices) : _vertices(vertices)
 	{
 
 	}

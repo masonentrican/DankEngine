@@ -65,6 +65,11 @@ namespace Dank {
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
 
+	void OpenGLRendererAPI::DrawArraysTriangles(uint32_t& count)
+	{
+		glDrawArrays(GL_TRIANGLES, 0, count);
+	}
+
 	void OpenGLRendererAPI::DrawModel(Ref<Model>& model)
 	{
 		Ref<Shader>& shader = model->GetShader();
@@ -195,14 +200,17 @@ namespace Dank {
 	{
 		if (type == "Cube")
 		{
+			/*
 			Ref<VertexArray>& vertexArray = VertexArray::Create();
 			vertexArray->Bind();
 			Ref<VertexBuffer>& vertexBuffer = VertexBuffer::Create(cubeVertices, sizeof(cubeVertices));
 			vertexBuffer->SetVertexAttribute(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 			vertexBuffer->SetVertexAttribute(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-			vertexArray->Unbind();
-			return Primitive(vertexArray, vertexBuffer);
+			vertexArray->Unbind();*/
+			std::vector<float> vertices(std::begin(cubeVertices), std::end(cubeVertices));
+			return Primitive(std::vector<float>(vertices));
 		}
+		
 	}
 
 

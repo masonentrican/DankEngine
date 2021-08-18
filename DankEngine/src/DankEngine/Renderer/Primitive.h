@@ -7,13 +7,12 @@ namespace Dank {
 	class Primitive
 	{
 	public:
-		Ref<VertexArray> _VA;
-		Ref<VertexBuffer> _VB;
+		std::vector<float> _vertices;
 		float _size;
 		glm::vec3 _color;
 		glm::vec3 _position;
 
-		Primitive(Ref<VertexArray>& VA, Ref<VertexBuffer>& VB);
+		Primitive(std::vector<float>& vertices);
 
 	private:
 

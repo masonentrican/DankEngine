@@ -4,6 +4,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/random.hpp>
+#include "DankEngine/Renderer/BatchRenderer.h"
 
 namespace Dank
 {
@@ -16,7 +17,7 @@ namespace Dank
 	{
 		tex_weed = Dank::Texture2D::Create("assets/textures/weedleaf.png");
 		tex_smile = Dank::Texture2D::Create("assets/textures/awesomeface.png");
-
+        BatchRenderer::Init();
 		Dank::FramebufferSpecification frameBufferSpec;
 		frameBufferSpec.Width = 1280;
 		frameBufferSpec.Height = 720;
@@ -24,8 +25,8 @@ namespace Dank
 		_framebuffer = Dank::Framebuffer::Create(frameBufferSpec);
         //ModelPath = "assets/models/backpack/backpack.obj";
         ModelPath = "assets/models/bear_joined_decimated.fbx";
-        auto defaultShader = _shaderLibrary.Load("assets/shaders/object.glsl");
-        _objectShader = _shaderLibrary.Get("object");
+        //auto defaultShader = _shaderLibrary.Load("assets/shaders/object.glsl");
+        _objectShader = BatchRenderer::GetShader();
         auto lightShader = _shaderLibrary.Load("assets/shaders/lightsource.glsl");
         _lightShader = _shaderLibrary.Get("lightsource");
 
@@ -53,7 +54,7 @@ namespace Dank
             _cameraController.OnResize(_viewportSize.x, _viewportSize.y);
         }
 
-        Dank::Renderer2D::ResetStats();
+        Dank::BatchRenderer::ResetStats();
 
         if(_viewportFocused)
 		    _cameraController.OnUpdate(ts);
@@ -67,7 +68,7 @@ namespace Dank
 		rotation += ts * 50.0f;
 
 		// ----------- BEGIN SCENE -------------//
-        Renderer::BeginScene(_cameraController.GetCamera());
+        BatchRenderer::BeginScene(_cameraController.GetCamera());
         
         Dank::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
         Dank::RenderCommand::Clear();
@@ -79,11 +80,12 @@ namespace Dank
 
         light->SetPosition(lightPos);
         // render the loaded model
-         glm::mat4 model = glm::mat4(1.0f);
-         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-         model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));	// it's a bit too big for our scene, so scale it down
+         //glm::mat4 model = glm::mat4(1.0f);
+         //model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+         //model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));	// it's a bit too big for our scene, so scale it down
+        
          std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->Bind();
-         std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->UploadUniformMat4("model", model);
+         //std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->UploadUniformMat4("model", model);
          std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->UploadUniformMat4("u_ViewProjection", _cameraController.GetCamera().GetViewProjectionMatrix());
          std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->UploadUniformFloat3("viewPos", _cameraController.GetPosition());
          std::dynamic_pointer_cast<Dank::OpenGLShader>(_objectShader)->UploadUniformFloat3("lightPos", light->_position);
@@ -94,14 +96,26 @@ namespace Dank
          std::dynamic_pointer_cast<Dank::OpenGLShader>(_lightShader)->Bind();
          std::dynamic_pointer_cast<Dank::OpenGLShader>(_lightShader)->UploadUniformMat4("u_ViewProjection", _cameraController.GetCamera().GetViewProjectionMatrix());
          std::dynamic_pointer_cast<Dank::OpenGLShader>(_lightShader)->Unbind();
-         Dank::Renderer::DrawModel(ourModel);
+         //Dank::Renderer::DrawModel(ourModel);
         glm::vec3 pos(2.0f, 0.0f, 2.0f);
-        float size = 1.0f;
+        float size = 0.5f;
         glm::vec3 color(1.0f, 0.0f, 0.0f);
-        
-       Renderer::DrawPrimitive(cube->_VA, cube->_VB, pos, size, color, _objectShader);
+        glm::vec3 pos2(0.0f, 0.0f, 0.0f);
+        glm::vec3 color2(0.0f, 1.0f, 0.0f);
         Renderer::DrawLightSource(light->_VA, light->_VB, light->_position, 0.2f, _lightShader);
-        Dank::Renderer::EndScene();
+
+        for (int x = -50; x < 50; x++)
+        {
+            for (int z = -50; z < 50; z++)
+            {
+                float c1 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+                float c2 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+                float c3 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+                BatchRenderer::SubmitObject(cube->_vertices, glm::vec3(x, 0, z), size, glm::vec3(c1, c2, c3));
+            }
+        }
+        
+        BatchRenderer::EndScene();
 		// -----------  END SCENE  -------------//
 
 		_framebuffer->Unbind();
@@ -178,12 +192,12 @@ namespace Dank
 
             ImGui::Begin("Stats");
 
-            auto stats = Dank::Renderer2D::GetStats();
-            ImGui::Text("Renderer2D Stats:");
+            auto stats = Dank::BatchRenderer::GetStats();
+            ImGui::Text("Batch Renderer Stats:");
             ImGui::Text("Draw Calls: %d", stats.DrawCalls);
-            ImGui::Text("Quads: %d", stats.QuadCount);
-            ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
-            ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
+            ImGui::Text("Objects: %d", stats.ObjectCount);
+            ImGui::Text("Vertices: %d", stats.VertexCount);
+            //ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
             ImGui::NewLine();
 
             ImGui::Text("Application Stats:");

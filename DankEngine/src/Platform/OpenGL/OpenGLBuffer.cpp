@@ -57,6 +57,12 @@ namespace Dank {
 		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}
 
+	void OpenGLVertexBuffer::SetData(const void* data, uint32_t offset, uint32_t size)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, _rendererId);
+		glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
+	}
+
 	//-------------------------------------------------
 	//					Index Buffer
 	//-------------------------------------------------

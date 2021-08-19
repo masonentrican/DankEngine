@@ -5,7 +5,7 @@
 namespace Dank {
 
 
-	Primitive::Primitive(std::vector<float>& vertices) : _vertices(vertices)
+	Primitive::Primitive(std::vector<float>& vertices, std::vector<unsigned int>& indices) : _vertices(vertices), _indices(indices)
 	{
 
 	}

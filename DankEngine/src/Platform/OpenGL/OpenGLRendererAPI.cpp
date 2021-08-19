@@ -208,7 +208,8 @@ namespace Dank {
 			vertexBuffer->SetVertexAttribute(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 			vertexArray->Unbind();*/
 			std::vector<float> vertices(std::begin(cubeVertices), std::end(cubeVertices));
-			return Primitive(std::vector<float>(vertices));
+			std::vector<unsigned int> indices(std::begin(cubeIndices), std::end(cubeIndices));
+			return Primitive(std::vector<float>(vertices), std::vector<unsigned int>(indices));
 		}
 		
 	}

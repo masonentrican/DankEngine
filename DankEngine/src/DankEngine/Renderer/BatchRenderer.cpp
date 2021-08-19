@@ -1,6 +1,7 @@
 #include "dankpch.h"
 #include "BatchRenderer.h"
 #include "glm/glm.hpp"
+#include <algorithm>
 
 namespace Dank {
 
@@ -18,14 +19,19 @@ namespace Dank {
 	struct BatchData
 	{
 		static const uint32_t MaxVertices = 409600;
-		uint32_t NumUsedVertices = 0;
+		static const uint32_t MaxIndices = MaxVertices * 1.5f;
 
+		uint32_t NumUsedVertices = 0;
+		uint32_t NumUsedIndices = 0;
+		uint32_t IndiceOffset = 0;
 		Ref<VertexArray>	ObjectVertexArray;
 		Ref<VertexBuffer>	ObjectVertexBuffer;
 		Ref<Shader>			DefaultShader;
 
 		Vertex3D* ObjectVertexBufferBase = nullptr;
 		Vertex3D* ObjectVertexBufferPtr = nullptr;
+
+		std::vector<uint32_t> ObjectIndexBuffer;
 
 		BatchRenderer::Statistics stats;
 
@@ -78,6 +84,8 @@ namespace Dank {
 
 		uint32_t dataSize = (uint8_t*)(s_Data.ObjectVertexBufferPtr) - (uint8_t*)s_Data.ObjectVertexBufferBase;
 		s_Data.ObjectVertexBuffer->SetData(s_Data.ObjectVertexBufferBase, dataSize);
+		Ref<IndexBuffer> objectIndexBuffer = IndexBuffer::Create(&s_Data.ObjectIndexBuffer[0], s_Data.ObjectIndexBuffer.size());
+		s_Data.ObjectVertexArray->SetIndexBuffer(objectIndexBuffer);
 		Flush();
 	}
 
@@ -86,15 +94,19 @@ namespace Dank {
 		s_Data.DefaultShader->Bind();
 		s_Data.ObjectVertexArray->Bind();
 		s_Data.DefaultShader->SetInt("diffuseLoaded", 0);
-		RenderCommand::DrawArraysTriangles(s_Data.NumUsedVertices);
+		RenderCommand::DrawIndexed(s_Data.ObjectVertexArray, s_Data.NumUsedIndices);
 		s_Data.ObjectVertexArray->Unbind();
 		s_Data.stats.DrawCalls++;
+		s_Data.ObjectIndexBuffer.clear();
+		s_Data.IndiceOffset = 0;
+		s_Data.NumUsedVertices = 0;
 	}
 
 	void BatchRenderer::FlushAndReset()
 	{
 		EndScene(); 
 		s_Data.NumUsedVertices = 0;
+		s_Data.NumUsedIndices = 0;
 		s_Data.ObjectVertexBufferPtr = s_Data.ObjectVertexBufferBase;
 	}
 
@@ -126,6 +138,50 @@ namespace Dank {
 
 
 	}
+
+
+	void BatchRenderer::SubmitObject(std::vector<float>& vertices, std::vector<unsigned int>& indices , glm::vec3 position, float size, glm::vec3 color)
+	{
+		if (s_Data.NumUsedVertices + vertices.size() >= BatchData::MaxVertices)
+			FlushAndReset();
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::scale(glm::mat4(1.0f), glm::vec3(size));
+		s_Data.ObjectVertexArray->Bind();
+		for (int i = 0; i < vertices.size(); i += 8)
+		{
+
+			s_Data.ObjectVertexBufferPtr->position = glm::vec3(vertices[i], vertices[i + 1], vertices[i + 2]);
+			s_Data.ObjectVertexBufferPtr->normal = glm::vec3(vertices[i + 3], vertices[i + 4], vertices[i + 5]);
+			s_Data.ObjectVertexBufferPtr->texCoords = glm::vec2(vertices[i + 6], vertices[i + 7]);
+			s_Data.ObjectVertexBufferPtr->color = color;
+			s_Data.ObjectVertexBufferPtr->model = transform;
+
+			s_Data.ObjectVertexBufferPtr++;
+			vertexCount++;
+		}
+
+		s_Data.ObjectVertexArray->Unbind();
+
+		
+		for (int i = 0; i < indices.size(); i++)
+		{
+			
+			s_Data.ObjectIndexBuffer.emplace_back((s_Data.IndiceOffset) + indices[i]);
+			
+		}
+
+		s_Data.IndiceOffset += (*max_element(indices.begin(), indices.end()) + 1);
+		
+
+		//s_Data.ObjectIndexBuffer.insert(s_Data.ObjectIndexBuffer.end(), indices.begin(), indices.end());
+
+		s_Data.NumUsedIndices += indices.size();
+		s_Data.NumUsedVertices += (vertices.size() / 8);
+		s_Data.stats.ObjectCount++;
+
+
+	}
+
 
 	void BatchRenderer::ResetStats()
 	{

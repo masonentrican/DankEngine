@@ -17,6 +17,7 @@ namespace Dank {
 
 		static void Init();
 		static void SubmitObject(std::vector<float>& vertices, glm::vec3 position, float size, glm::vec3 color);
+		static void SubmitObject(std::vector<float>& vertices, std::vector<unsigned int>& indices , glm::vec3 position, float size, glm::vec3 color);
 		static void BeginScene(const PerspectiveCamera& camera);
 		static Ref<Shader>& GetShader();
 		static void EndScene();

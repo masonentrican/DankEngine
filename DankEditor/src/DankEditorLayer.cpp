@@ -34,6 +34,9 @@ namespace Dank
         cube = std::make_shared<Dank::Primitive>(Renderer::CreatePrimitive("Cube"));
         light = std::make_shared<LightSource>(LightSource(glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)));
 
+
+
+
 	}
 	void DankEditorLayer::OnDetach()
 	{
@@ -103,17 +106,20 @@ namespace Dank
         glm::vec3 pos2(0.0f, 0.0f, 0.0f);
         glm::vec3 color2(0.0f, 1.0f, 0.0f);
         Renderer::DrawLightSource(light->_VA, light->_VB, light->_position, 0.2f, _lightShader);
-
-        for (int x = -50; x < 50; x++)
+        
+        for (int x = 0; x < 100; x++)
         {
-            for (int z = -50; z < 50; z++)
+            for (int z = 0; z < 100; z++)
             {
-                float c1 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-                float c2 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-                float c3 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-                BatchRenderer::SubmitObject(cube->_vertices, glm::vec3(x, 0, z), size, glm::vec3(c1, c2, c3));
+                if ((x ^ z) % (50 * Application::Get().GetFrameCount() + 1) < 1)
+                    color = glm::vec3(0.0f, 1.0f, 0.0f);
+                else
+                    color = glm::vec3(0.0f, 0.0f, 0.0f);
+
+                BatchRenderer::SubmitObject(cube->_vertices, cube->_indices , glm::vec3(x, 0, z), size, color);
             }
         }
+
         
         BatchRenderer::EndScene();
 		// -----------  END SCENE  -------------//

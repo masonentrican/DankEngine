@@ -35,10 +35,11 @@ namespace Dank
 
         _framebuffer = Framebuffer::Create(frameBufferSpec);
 
-
-
-        // Entity Testing
+        // Create the scene and set the hierarchy panel context.
         _activeScene = CreateRef<Scene>();
+        _sceneHierarchyPanel.SetContext(_activeScene);
+
+
 
 /*
         auto cameraEntity = _activeScene->CreateEntity("Camera Entity");
@@ -52,11 +53,8 @@ namespace Dank
 */
 
         // Setup Scene Hierarchy Panel
-        _sceneHierarchyPanel.SetContext(_activeScene);
 
-        SceneSerializer serializer(_activeScene);
-        //serializer.SerializeToYAML("assets/scenes/DemoScene.scene");
-    	serializer.DeserializeYAML("assets/scenes/DemoScene.scene");
+       
 
 
     }
@@ -173,7 +171,24 @@ namespace Dank
         {
             if (ImGui::BeginMenu("File"))
             {
+                if (ImGui::MenuItem("Save"))
+                {
+                    SceneSerializer serializer(_activeScene);
+                    serializer.SerializeToYAML("assets/scenes/DemoScene.scene");
+                }
+
+                if (ImGui::MenuItem("Load"))
+                {
+                    // Reset the scene and context
+                    _activeScene = CreateRef<Scene>();
+                    _sceneHierarchyPanel.SetContext(_activeScene);
+
+                    SceneSerializer serializer(_activeScene);
+                    serializer.DeserializeYAML("assets/scenes/DemoScene.scene");
+                }
+
                 ImGui::MenuItem("Style Editor", NULL, &_ui_editor_style);
+
                 if (ImGui::MenuItem("Close")) Application::Get().Close();
 
                 ImGui::EndMenu();

@@ -2,13 +2,13 @@ Scene: Scene Name
 Entities:
   - Entity: 69420
     TagComponent:
-      Tag: Square
+      Tag: Test
     TransformComponent:
-      Position: [0, 0, 0]
+      Position: [1.70000005, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     SpriteRendererComponent:
-      Color: [0, 0.699999988, 0, 1]
+      Color: [1, 1, 1, 1]
   - Entity: 69420
     TagComponent:
       Tag: Camera Entity
@@ -27,3 +27,12 @@ Entities:
         OrthographicFar: 5000
       Primary: true
       FixedAspectRatio: false
+  - Entity: 69420
+    TagComponent:
+      Tag: Square
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [0, 0.699999988, 0, 1]

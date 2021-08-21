@@ -25,12 +25,14 @@ IncludeDir["glm"]        = "DankEngine/vendor/glm"
 IncludeDir["stb_image"]  = "DankEngine/vendor/stb_image"
 IncludeDir["assimp"]     = "DankEngine/vendor/assimp/include"
 IncludeDir["entt"]       = "DankEngine/vendor/entt"
+IncludeDir["yaml_cpp"]   = "DankEngine/vendor/yaml-cpp/include"
 
 
 group "Dependencies"
 	include "DankEngine/vendor/GLFW"
 	include "DankEngine/vendor/Glad"
 	include "DankEngine/vendor/ImGui"
+	include "DankEngine/vendor/yaml-cpp"
 	
 
 group ""
@@ -81,7 +83,8 @@ project "DankEngine"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.assimp}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.yaml_cpp}"
 	}
 
 	links
@@ -91,7 +94,8 @@ project "DankEngine"
 		"ImGui",
 		"opengl32.lib",
 		"assimp-vc142-mtd.lib",
-		"assimp-vc142-mtd.dll"
+		"assimp-vc142-mtd.dll",
+		"yaml-cpp"
 	}
 
 	

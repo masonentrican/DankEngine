@@ -7,6 +7,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/random.hpp>
 
+#include "DankEngine/Scene/SceneSerializer.h"
+
 namespace Dank
 {
     DankEditorLayer::DankEditorLayer() : Layer("DankEditorLayer"), _cameraController(1280.0f / 720.0f)
@@ -38,23 +40,23 @@ namespace Dank
         // Entity Testing
         _activeScene = CreateRef<Scene>();
 
+/*
         auto cameraEntity = _activeScene->CreateEntity("Camera Entity");
         cameraEntity.AddComponent<CameraComponent>();
         cameraEntity.GetComponent<TransformComponent>().Position = glm::vec3(0.0f, 0.0f, 5.0f);
-
         cameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
-        /*
-        auto greenSquare = _activeScene->CreateEntity("Square Entity 2");
-        greenSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 0.5f });
-
-        auto redSquare = _activeScene->CreateEntity("Square Entity 1");
-        redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
-        redSquare.GetComponent<TransformComponent>().Position = glm::vec3(0.5f, 0.0f, -0.1f);
-        */
+        auto square = _activeScene->CreateEntity("Square");
+        auto& sr = square.AddComponent<SpriteRendererComponent>();
+        sr.Color = glm::vec4(0.0f,0.7f,0.0f,1.0f);
+*/
 
         // Setup Scene Hierarchy Panel
         _sceneHierarchyPanel.SetContext(_activeScene);
+
+        SceneSerializer serializer(_activeScene);
+        //serializer.SerializeToYAML("assets/scenes/DemoScene.scene");
+    	serializer.DeserializeYAML("assets/scenes/DemoScene.scene");
 
 
     }
@@ -147,6 +149,8 @@ namespace Dank
 
         if (opt_fullscreen)
             ImGui::PopStyleVar(2);
+
+        ImGui::ShowDemoWindow();
 
         // DockSpace
         ImGuiIO& io = ImGui::GetIO();

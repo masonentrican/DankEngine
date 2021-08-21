@@ -1,5 +1,8 @@
-[19:47:14] [info] DANK: Creating window Dank Editor (1280, 720)
-[19:47:14] [info] DANK: OpenGL Info: 
-[19:47:14] [info] DANK:   Vendor: NVIDIA Corporation
-[19:47:14] [info] DANK:   Renderer: NVIDIA GeForce RTX 3080/PCIe/SSE2
-[19:47:14] [info] DANK:   Version: 4.6.0 NVIDIA 471.11
+[11:10:16] [info] DANK: Creating window Dank Editor (1280, 720)
+[11:10:16] [info] DANK: OpenGL Info: 
+[11:10:16] [info] DANK:   Vendor: NVIDIA Corporation
+[11:10:16] [info] DANK:   Renderer: NVIDIA GeForce RTX 3080/PCIe/SSE2
+[11:10:16] [info] DANK:   Version: 4.6.0 NVIDIA 471.11
+[11:10:17] [trace] DANK: Deserializing scene 'Scene Name'
+[11:10:17] [trace] DANK: Deserializing entity guid(69420), name(Square)
+[11:10:17] [trace] DANK: Deserializing entity guid(69420), name(Camera Entity)

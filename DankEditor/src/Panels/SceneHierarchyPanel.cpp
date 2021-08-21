@@ -4,6 +4,7 @@
 #include <ImGui/imgui_internal.h>
 
 #include "DankEngine/Scene/Components.h"
+#include "DankEngine/NativeScripts/CameraController.h"
 
 namespace Dank
 {
@@ -250,6 +251,12 @@ namespace Dank
 				ImGui::CloseCurrentPopup();
 			}
 
+			if (ImGui::MenuItem("CameraController"))
+			{
+				_selectionContext.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+				ImGui::CloseCurrentPopup();
+			}
+
 			ImGui::EndPopup();
 		}
 
@@ -339,6 +346,11 @@ namespace Dank
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto& component)
 		{
 			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+		});
+
+		DrawComponent<NativeScriptComponent>("Native Script Component",entity, [](auto& component)
+		{
+			ImGui::Text("This is a native script component");
 		});
 
 

@@ -8,6 +8,7 @@
 #include <glm/gtc/random.hpp>
 
 #include "DankEngine/Scene/SceneSerializer.h"
+#include "DankEngine/Utils/PlatformUtils.h"
 
 namespace Dank
 {
@@ -51,11 +52,6 @@ namespace Dank
         auto& sr = square.AddComponent<SpriteRendererComponent>();
         sr.Color = glm::vec4(0.0f,0.7f,0.0f,1.0f);
 */
-
-        // Setup Scene Hierarchy Panel
-
-       
-
 
     }
     void DankEditorLayer::OnDetach()
@@ -105,7 +101,8 @@ namespace Dank
 
     void DankEditorLayer::OnEvent(Event& e)
     {
-        _cameraController.OnEvent(e);
+        EventDispatcher dispatcher(e);
+        dispatcher.Dispatch<KeyPressedEvent>(DANK_BIND_EVENT(DankEditorLayer::OnKeyPressed));
     }
 
     void DankEditorLayer::OnImGuiRender()
@@ -171,21 +168,14 @@ namespace Dank
         {
             if (ImGui::BeginMenu("File"))
             {
-                if (ImGui::MenuItem("Save"))
-                {
-                    SceneSerializer serializer(_activeScene);
-                    serializer.SerializeToYAML("assets/scenes/DemoScene.scene");
-                }
+                if (ImGui::MenuItem("New","Ctrl+N"))
+                    NewScene();
 
-                if (ImGui::MenuItem("Load"))
-                {
-                    // Reset the scene and context
-                    _activeScene = CreateRef<Scene>();
-                    _sceneHierarchyPanel.SetContext(_activeScene);
+                if (ImGui::MenuItem("Open...", "Ctrl+O"))
+                    OpenScene();
 
-                    SceneSerializer serializer(_activeScene);
-                    serializer.DeserializeYAML("assets/scenes/DemoScene.scene");
-                }
+                if (ImGui::MenuItem("Save As...","Ctrl+Shift+S"))
+                    SaveSceneAs();
 
                 ImGui::MenuItem("Style Editor", NULL, &_ui_editor_style);
 
@@ -263,5 +253,74 @@ namespace Dank
 
 
         ImGui::End();   // Docking End
+    }
+
+    bool DankEditorLayer::OnKeyPressed(KeyPressedEvent& e)
+    {
+        if (e.GetRepeatCount() > 0)
+            return false;
+
+        bool control = Input::IsKeyPressed(DANK_KEY_LEFT_CONTROL) || Input::IsKeyPressed(DANK_KEY_RIGHT_CONTROL);
+        bool shift = Input::IsKeyPressed(DANK_KEY_LEFT_SHIFT) || Input::IsKeyPressed(DANK_KEY_RIGHT_SHIFT);
+
+
+        switch (e.GetKeyCode())
+        {
+        case DANK_KEY_N:
+	    {
+	        if (control)
+                NewScene();
+            break;
+	    }
+
+        case DANK_KEY_O:
+        {
+            if (control)
+                OpenScene();
+            break;
+        }
+
+        case DANK_KEY_S:
+        {
+            if (control && shift)
+                SaveSceneAs();
+        	break;
+        }
+
+        default:
+            break;
+        }
+	    
+    }
+
+    void DankEditorLayer::NewScene()
+    {
+        _activeScene = CreateRef<Scene>();
+        _activeScene->OnViewportResize((uint32_t)_viewportSize.x, (uint32_t)_viewportSize.y);
+        _sceneHierarchyPanel.SetContext(_activeScene);
+    }
+
+    void DankEditorLayer::OpenScene()
+    {
+        std::string filepath = FileDialogs::OpenFile("Dank Engine Scene (*.dank)\0*.dank\0");
+        if (!filepath.empty())
+        {
+            _activeScene = CreateRef<Scene>();
+            _activeScene->OnViewportResize((uint32_t)_viewportSize.x, (uint32_t)_viewportSize.y);
+            _sceneHierarchyPanel.SetContext(_activeScene);
+
+            SceneSerializer serializer(_activeScene);
+            serializer.DeserializeYAML(filepath);
+        }
+    }
+
+    void DankEditorLayer::SaveSceneAs()
+    {
+        std::string filepath = FileDialogs::SaveFile("Dank Engine Scene (*.dank)\0*.dank\0");
+        if (!filepath.empty())
+        {
+            SceneSerializer serializer(_activeScene);
+            serializer.SerializeToYAML(filepath);
+        }
     }
 }

@@ -20,7 +20,12 @@ namespace Dank
 		void OnEvent(Event& e) override;
 
 		virtual void OnImGuiRender() override;
+	private:
+		void NewScene();
+		void OpenScene();
+		void SaveSceneAs();
 
+		bool OnKeyPressed(KeyPressedEvent& e);
 	private:
 		OrthographicCameraController _cameraController;
 

@@ -9,7 +9,7 @@ namespace Dank {
 	// CATEGORY(S), and passes the keycode into the new instance of KeyEvent.
 	//
 	// To be used by KeyPressedEvents and KeyReleasedEvents
-	class DANK_API KeyEvent : public Event {
+	class KeyEvent : public Event {
 	public:
 		inline int GetKeyCode() const { return _keyCode; }
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
@@ -25,9 +25,11 @@ namespace Dank {
 	// TYPE(S), and passes the keycode and repeatcount into the new instance of KeyPressedEvent
 	//
 	// To be used by the EventDispatcher class defined in Event.h
-	class DANK_API KeyPressedEvent : public KeyEvent {
+	class KeyPressedEvent : public KeyEvent {
 	public:
 		KeyPressedEvent(int keycode, int repeatCount) : KeyEvent(keycode), _repeatCount(repeatCount) {}
+
+		uint16_t GetRepeatCount() const { return _repeatCount; }
 
 		std::string ToString() const override {
 			std::stringstream ss;

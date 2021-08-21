@@ -16,6 +16,7 @@ namespace Dank
 	void SceneHierarchyPanel::SetContext(const Ref<Scene>& context)
 	{
 		_context = context;
+		_selectionContext = {}; // Clear hierarchy selection context when scene changes context
 	}
 
 	void SceneHierarchyPanel::OnImGuiRender()

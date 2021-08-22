@@ -5,7 +5,6 @@
 
 #include "DankEngine/Scene/Components.h"
 #include "DankEngine/NativeScripts/CameraController.h"
-#include "DankEngine/NativeScripts/CodyClass.h"
 
 namespace Dank
 {
@@ -256,12 +255,6 @@ namespace Dank
 			if (ImGui::MenuItem("CameraController"))
 			{
 				_selectionContext.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-				ImGui::CloseCurrentPopup();
-			}
-
-			if (ImGui::MenuItem("Cody Script"))
-			{
-				_selectionContext.AddComponent<NativeScriptComponent>().Bind<CodyClass>();
 				ImGui::CloseCurrentPopup();
 			}
 			

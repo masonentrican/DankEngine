@@ -11,6 +11,8 @@
 #include "DankEngine/Scene/SceneSerializer.h"
 #include "DankEngine/Utils/PlatformUtils.h"
 
+#include "DankEngine/Math/Math.h"
+
 namespace Dank
 {
     DankEditorLayer::DankEditorLayer() : Layer("DankEditorLayer"), _cameraController(1280.0f / 720.0f)
@@ -279,10 +281,20 @@ namespace Dank
                         // Actually manipulate the selected transform
                         if (ImGuizmo::IsUsing())
                         {
-                            glm::vec3 position, rotation, scale;
-
                             // We need to decompose the transform into position, rotation, and scale.
                             // glm has a library for this however it has bloat.
+                            glm::vec3 position, rotation, scale;
+
+                            Math::DecomposeTransform(transform, position, rotation, scale);
+
+                            glm::vec3 deltaRotation = rotation - transformComp.Rotation;
+
+                            transformComp.Rotation += deltaRotation;
+                            transformComp.Position = position;
+                            transformComp.Scale = scale;
+
+                            
+                            
 
                         }
                     }

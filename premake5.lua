@@ -26,6 +26,7 @@ IncludeDir["stb_image"]  = "DankEngine/vendor/stb_image"
 IncludeDir["assimp"]     = "DankEngine/vendor/assimp/include"
 IncludeDir["entt"]       = "DankEngine/vendor/entt"
 IncludeDir["yaml_cpp"]   = "DankEngine/vendor/yaml-cpp/include"
+IncludeDir["ImGuizmo"]	 = "DankEngine/vendor/ImGuizmo"
 
 
 group "Dependencies"
@@ -58,9 +59,9 @@ project "DankEngine"
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl",
 		"%{prj.name}/vendor/stb_image/**.h",
-		"%{prj.name}/vendor/stb_image/**.cpp"
-
-
+		"%{prj.name}/vendor/stb_image/**.cpp",
+		"%{prj.name}/vendor/ImGuizmo/**.h",
+		"%{prj.name}/vendor/ImGuizmo/**.cpp"
 	}
 
 	defines
@@ -84,7 +85,8 @@ project "DankEngine"
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.assimp}",
 		"%{IncludeDir.entt}",
-		"%{IncludeDir.yaml_cpp}"
+		"%{IncludeDir.yaml_cpp}",
+		"%{IncludeDir.ImGuizmo}"
 	}
 
 	links
@@ -98,7 +100,8 @@ project "DankEngine"
 		"yaml-cpp"
 	}
 
-	
+	filter "files:DankEngine/vendor/ImGuizmo/**.cpp"
+		flags { "NoPCH" }
 
 	filter "system:windows"
 		systemversion "latest"
@@ -139,7 +142,7 @@ project "Sandbox"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/src/**.cpp"		
 	}
 
 	includedirs
@@ -196,6 +199,9 @@ project "DankEditor"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+
+		"%{prj.name}/vendor/ImGuizmo/**.h",
+		"%{prj.name}/vendor/ImGuizmo/**.cpp"
 	}
 
 	includedirs
@@ -205,7 +211,8 @@ project "DankEditor"
 		"DankEngine/vendor",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.assimp}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.ImGuizmo}"
 	}
 
 	links

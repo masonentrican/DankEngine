@@ -19,6 +19,7 @@ namespace Dank
 		void SetContext(const Ref<Scene>& scene);
 
 		void OnImGuiRender();
+		Entity GetSelectedEntity() const { return _selectionContext; }
 
 	private:
 		void DrawEntityNode(Entity entity);

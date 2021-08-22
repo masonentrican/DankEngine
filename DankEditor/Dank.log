@@ -1,12 +1,10 @@
-[14:20:36] [info] DANK: Creating window Dank Editor (1280, 720)
-[14:20:37] [info] DANK: OpenGL Info: 
-[14:20:37] [info] DANK:   Vendor: NVIDIA Corporation
-[14:20:37] [info] DANK:   Renderer: NVIDIA GeForce RTX 3080/PCIe/SSE2
-[14:20:37] [info] DANK:   Version: 4.6.0 NVIDIA 471.11
-[14:20:38] [trace] APP: TEST
-[14:20:44] [trace] DANK: Deserializing scene 'Scene Name'
-[14:20:44] [trace] DANK: Deserializing entity guid(69420), name(Front)
-[14:20:44] [trace] DANK: Deserializing entity guid(69420), name(Camera)
-[14:20:44] [trace] DANK: Deserializing entity guid(69420), name(Right)
-[14:20:44] [trace] DANK: Deserializing entity guid(69420), name(Top)
-[14:20:46] [trace] APP: TEST
+[13:31:23] [info] DANK: Creating window Dank Editor (1280, 720)
+[13:31:23] [info] DANK: OpenGL Info: 
+[13:31:23] [info] DANK:   Vendor: NVIDIA Corporation
+[13:31:23] [info] DANK:   Renderer: NVIDIA GeForce RTX 3080/PCIe/SSE2
+[13:31:23] [info] DANK:   Version: 4.6.0 NVIDIA 471.11
+[13:31:29] [trace] DANK: Deserializing scene 'Scene Name'
+[13:31:29] [trace] DANK: Deserializing entity guid(69420), name(Front)
+[13:31:29] [trace] DANK: Deserializing entity guid(69420), name(Camera)
+[13:31:29] [trace] DANK: Deserializing entity guid(69420), name(Right)
+[13:31:29] [trace] DANK: Deserializing entity guid(69420), name(Top)

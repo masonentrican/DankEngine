@@ -53,5 +53,7 @@ namespace Dank
 
 		// UI toggles
 		bool _ui_editor_style = false;
+
+		int _gizmoType = -1;
 	};
 }

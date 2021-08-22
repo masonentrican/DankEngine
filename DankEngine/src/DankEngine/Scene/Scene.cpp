@@ -98,6 +98,18 @@ namespace Dank {
 		}
 	}
 
+	Entity Scene::GetPrimaryCameraEntity()
+	{
+		const auto view = _registry.view<CameraComponent>();
+		for (const auto entity : view)
+		{
+			auto& cc = view.get<CameraComponent>(entity);
+			if (cc.Primary)
+				return Entity{entity, this};
+		}
+		return {};
+	}
+
 	template <typename T>
 	void Scene::OnComponentAdded(Entity entity, T& component)
 	{

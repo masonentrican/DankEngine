@@ -1,5 +1,6 @@
 #include "DankEditorLayer.h"
 #include "ImGui/imgui.h"
+#include "ImGuizmo/ImGuizmo.h"
 
 #include "DankEngine/NativeScripts/CameraController.h"
 
@@ -39,19 +40,6 @@ namespace Dank
         // Create the scene and set the hierarchy panel context.
         _activeScene = CreateRef<Scene>();
         _sceneHierarchyPanel.SetContext(_activeScene);
-
-
-
-/*
-        auto cameraEntity = _activeScene->CreateEntity("Camera Entity");
-        cameraEntity.AddComponent<CameraComponent>();
-        cameraEntity.GetComponent<TransformComponent>().Position = glm::vec3(0.0f, 0.0f, 5.0f);
-        cameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-
-        auto square = _activeScene->CreateEntity("Square");
-        auto& sr = square.AddComponent<SpriteRendererComponent>();
-        sr.Color = glm::vec4(0.0f,0.7f,0.0f,1.0f);
-*/
 
     }
     void DankEditorLayer::OnDetach()
@@ -145,8 +133,6 @@ namespace Dank
         if (opt_fullscreen)
             ImGui::PopStyleVar(2);
 
-        ImGui::ShowDemoWindow();
-
         // DockSpace
         ImGuiIO& io = ImGui::GetIO();
         ImGuiStyle& style = ImGui::GetStyle();
@@ -161,7 +147,6 @@ namespace Dank
 
         style.WindowMinSize.x = 32.0f; //TODO: Back to imgui default min
 
-        //ImGui::ShowDemoWindow();
 
         // Menu bar
         if (ImGui::BeginMenuBar())
@@ -183,7 +168,6 @@ namespace Dank
 
                 ImGui::EndMenu();
             }
-
 
             ImGui::EndMenuBar();
         }
@@ -238,7 +222,7 @@ namespace Dank
             // marked as handled once recieved.
             _viewportFocused = ImGui::IsWindowFocused();
             _viewportHovered = ImGui::IsWindowHovered();
-            Application::Get().GetImGuiLayer()->AllowEvents(_viewportFocused && _viewportHovered);
+            Application::Get().GetImGuiLayer()->AllowEvents(_viewportFocused || _viewportHovered);
 
             ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
             _viewportSize = { viewportPanelSize.x, viewportPanelSize.y };
@@ -246,6 +230,67 @@ namespace Dank
             // Send the frame buffer image to the viewport panel
             uint32_t frameBufferTextureId = _framebuffer->GetColorAttachmentRendererID();
             ImGui::Image((void*)frameBufferTextureId, ImVec2{ _viewportSize.x, _viewportSize.y }, ImVec2{ 0,1 }, ImVec2{ 1,0 });
+
+
+            // Gizmos
+            {
+                Entity selectedEntity = _sceneHierarchyPanel.GetSelectedEntity();
+                if (selectedEntity && _gizmoType != -1)
+                {
+                    ImGuizmo::SetOrthographic(false);
+                    ImGuizmo::SetDrawlist();
+
+                    ImGuizmo::SetRect(
+                        ImGui::GetWindowPos().x,
+                        ImGui::GetWindowPos().y,
+                        ImGui::GetWindowWidth(),
+                        ImGui::GetWindowHeight()
+                    );
+
+                    // Camera
+                    // Need the projection and view
+                    auto cameraEntity = _activeScene->GetPrimaryCameraEntity();
+
+                    // Make sure we actually have a camera
+                    if (cameraEntity)
+                    {
+                        auto& cameraComp = cameraEntity.GetComponent<CameraComponent>().Camera;
+                        const glm::mat4 cameraProj = cameraComp.GetProjection();
+                        glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+                        // Transform
+                        // Need details of entity selected in scene hierarchy
+                        auto& transformComp = selectedEntity.GetComponent<TransformComponent>();
+
+                        // The transform we'll apply modifications to from maniuplating the imguizmo widget
+                        glm::mat4 transform = transformComp.GetTransform();
+
+                        // Draw the manipulate gizmo
+                        ImGuizmo::Manipulate(
+                            glm::value_ptr(cameraView),
+                            glm::value_ptr(cameraProj),
+                            (ImGuizmo::OPERATION)_gizmoType,
+                            ImGuizmo::LOCAL,
+                            glm::value_ptr(transform),
+                            nullptr,
+                            nullptr
+                        );
+
+                        // Actually manipulate the selected transform
+                        if (ImGuizmo::IsUsing())
+                        {
+                            glm::vec3 position, rotation, scale;
+
+                            // We need to decompose the transform into position, rotation, and scale.
+                            // glm has a library for this however it has bloat.
+
+                        }
+                    }
+
+                }
+                
+            }
+
 
             ImGui::End();
             ImGui::PopStyleVar();
@@ -286,10 +331,27 @@ namespace Dank
                 SaveSceneAs();
         	break;
         }
+        // Gizmo control
+        case DANK_KEY_Q:
+            _gizmoType = -1;
+            break;
+
+        case DANK_KEY_W:
+            _gizmoType = ImGuizmo::OPERATION::TRANSLATE;
+            break;
+
+        case DANK_KEY_E:
+            _gizmoType = ImGuizmo::OPERATION::ROTATE;
+            break;
+
+        case DANK_KEY_R:
+            _gizmoType = ImGuizmo::OPERATION::SCALE;
+            break;
 
         default:
             break;
         }
+
 	    
     }
 

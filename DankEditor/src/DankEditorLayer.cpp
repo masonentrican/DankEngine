@@ -293,9 +293,6 @@ namespace Dank
                             transformComp.Position = position;
                             transformComp.Scale = scale;
 
-                            
-                            
-
                         }
                     }
 

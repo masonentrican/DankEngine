@@ -35,4 +35,5 @@
    ```sh
    GenerateProjectFiles.bat
    ```
-3. Build and Run in Visual Studio 2019
+3. Build assimp using cmake and copy the dll to the root folder (Temporary until build system is modified)
+4. Build and Run in Visual Studio 2019

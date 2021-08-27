@@ -12,6 +12,7 @@ namespace Dank {
 		glm::vec3 normal;
 		glm::vec2 texCoords;
 		float texIndex;
+		float texturesLoaded;
 		glm::vec3 color;
 		glm::mat4 model;
 
@@ -60,6 +61,7 @@ namespace Dank {
 			{ ShaderDataType::Float3, "a_Normal" },
 			{ ShaderDataType::Float2, "a_TexCoords" },
 			{ ShaderDataType::Float, "a_TexIndex" },
+			{ ShaderDataType::Float, "a_TexturesLoaded" },
 			{ ShaderDataType::Float3, "a_Color" },
 			{ ShaderDataType::Float4, "a_Model1"},
 			{ ShaderDataType::Float4, "a_Model2"},
@@ -107,12 +109,10 @@ namespace Dank {
 	void BatchRenderer::Flush()
 	{
 		s_Data.DefaultShader->Bind();
-		
 		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
 		{
 			glBindTextureUnit(i, s_Data.TextureSlots[i]->iD);
 		}
-		s_Data.DefaultShader->SetInt("diffuseLoaded", 1);
 		s_Data.ObjectVertexArray->Bind();
 		RenderCommand::DrawIndexed(s_Data.ObjectVertexArray, s_Data.NumUsedIndices);
 		s_Data.ObjectVertexArray->Unbind();
@@ -248,10 +248,8 @@ namespace Dank {
 				
 			}
 
-			if (subMesh._textures.size() == 0)
-			{
-				s_Data.DefaultShader->SetInt("diffuseLoaded", 0);
-			}
+
+
 			for (int i = 0; i < subMesh._vertices.size(); i++)
 			{
 				s_Data.ObjectVertexBufferPtr->position = subMesh._vertices[i].Position;
@@ -259,9 +257,16 @@ namespace Dank {
 				s_Data.ObjectVertexBufferPtr->texCoords = subMesh._vertices[i].TexCoords;
 				s_Data.ObjectVertexBufferPtr->texIndex = textureIndex;
 				if (subMesh._textures.size() == 0)
+				{
+					s_Data.ObjectVertexBufferPtr->texturesLoaded = 0.0f;
 					s_Data.ObjectVertexBufferPtr->color = subMesh._material.Diffuse;
+				}
 				else
+				{
+					//fucking floating point precision. dont ask lol
+					s_Data.ObjectVertexBufferPtr->texturesLoaded = 1.1f;
 					s_Data.ObjectVertexBufferPtr->color = glm::vec3(0.0f);
+				}
 				s_Data.ObjectVertexBufferPtr->model = transform;
 				s_Data.ObjectVertexBufferPtr++;
 				

@@ -24,14 +24,16 @@ namespace Dank
 
 		_framebuffer = Dank::Framebuffer::Create(frameBufferSpec);
         ModelPath = "assets/models/backpack/backpack.obj";
+        backpackModel = std::make_shared<Dank::Model>(Dank::Model(ModelPath, _objectShader));
         //ModelPath = "assets/models/bear_joined_decimated.fbx";
-        //ModelPath = "assets/models/man.obj";
+        ModelPath = "assets/models/man.obj";
+        ourModel = std::make_shared<Dank::Model>(Dank::Model(ModelPath, _objectShader));
         //auto defaultShader = _shaderLibrary.Load("assets/shaders/object.glsl");
         _objectShader = BatchRenderer::GetShader();
         auto lightShader = _shaderLibrary.Load("assets/shaders/lightsource.glsl");
         _lightShader = _shaderLibrary.Get("lightsource");
 
-        ourModel = std::make_shared<Dank::Model>(Dank::Model(ModelPath, _objectShader));
+        
         cube = std::make_shared<Dank::Primitive>(Renderer::CreatePrimitive("Cube"));
         light = std::make_shared<LightSource>(LightSource(glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)));
 
@@ -118,9 +120,10 @@ namespace Dank
          //       BatchRenderer::SubmitObject(ourModel, glm::vec3(x, 0, z), size);
          //   }
         // }
+        BatchRenderer::SubmitObject(backpackModel, pos2, size);
         BatchRenderer::SubmitObject(ourModel, pos, size);
-        BatchRenderer::SubmitObject(ourModel, pos2, size);
-        BatchRenderer::SubmitObject(ourModel, pos3, size);
+        
+        //BatchRenderer::SubmitObject(ourModel, pos3, size);
 
 
 

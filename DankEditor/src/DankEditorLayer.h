@@ -32,6 +32,7 @@ namespace Dank
 		Ref<Shader> _objectShader;
 		Ref<Shader> _lightShader;
 		Ref<Dank::Model> ourModel;
+		Ref<Dank::Model> backpackModel;
 		Ref<Primitive> cube;
 		Ref<LightSource> light;
 		std::string ModelPath;

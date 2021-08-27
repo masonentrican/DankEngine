@@ -23,8 +23,9 @@ namespace Dank
 		frameBufferSpec.Height = 720;
 
 		_framebuffer = Dank::Framebuffer::Create(frameBufferSpec);
-        //ModelPath = "assets/models/backpack/backpack.obj";
-        ModelPath = "assets/models/bear_joined_decimated.fbx";
+        ModelPath = "assets/models/backpack/backpack.obj";
+        //ModelPath = "assets/models/bear_joined_decimated.fbx";
+        //ModelPath = "assets/models/man.obj";
         //auto defaultShader = _shaderLibrary.Load("assets/shaders/object.glsl");
         _objectShader = BatchRenderer::GetShader();
         auto lightShader = _shaderLibrary.Load("assets/shaders/lightsource.glsl");
@@ -100,18 +101,36 @@ namespace Dank
          std::dynamic_pointer_cast<Dank::OpenGLShader>(_lightShader)->UploadUniformMat4("u_ViewProjection", _cameraController.GetCamera().GetViewProjectionMatrix());
          std::dynamic_pointer_cast<Dank::OpenGLShader>(_lightShader)->Unbind();
          //Dank::Renderer::DrawModel(ourModel);
-        glm::vec3 pos(2.0f, 0.0f, 2.0f);
-        float size = 0.5f;
+        glm::vec3 pos(0.0f, 0.0f, 0.0f);
+        float size = 0.3f;
         glm::vec3 color(1.0f, 0.0f, 0.0f);
-        glm::vec3 pos2(0.0f, 0.0f, 0.0f);
+        glm::vec3 pos2(2.0f, 0.0f, 0.0f);
+        glm::vec3 pos3(4.0f, 0.0f, 0.0f);
         glm::vec3 color2(0.0f, 1.0f, 0.0f);
         Renderer::DrawLightSource(light->_VA, light->_VB, light->_position, 0.2f, _lightShader);
         
-        for (int x = 0; x < 100; x++)
+
+
+        //for (int x = 0; x < 5; x++)
+        //{
+         //   for (int z = 0; z < 5; z++)
+         //   {
+         //       BatchRenderer::SubmitObject(ourModel, glm::vec3(x, 0, z), size);
+         //   }
+        // }
+        BatchRenderer::SubmitObject(ourModel, pos, size);
+        BatchRenderer::SubmitObject(ourModel, pos2, size);
+        BatchRenderer::SubmitObject(ourModel, pos3, size);
+
+
+
+
+        //cube grid
+        /*for (int x = 0; x < 100; x++)
         {
             for (int z = 0; z < 100; z++)
             {
-                if ((x ^ z) % (50 * Application::Get().GetFrameCount() + 1) < 1)
+                if ((x ^ z) % 5 < 1)
                     color = glm::vec3(0.0f, 1.0f, 0.0f);
                 else
                     color = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -119,7 +138,7 @@ namespace Dank
                 BatchRenderer::SubmitObject(cube->_vertices, cube->_indices , glm::vec3(x, 0, z), size, color);
             }
         }
-
+        */
         
         BatchRenderer::EndScene();
 		// -----------  END SCENE  -------------//

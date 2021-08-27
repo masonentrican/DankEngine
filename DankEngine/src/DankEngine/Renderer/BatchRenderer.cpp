@@ -1,6 +1,7 @@
 #include "dankpch.h"
 #include "BatchRenderer.h"
 #include "glm/glm.hpp"
+#include <glad/glad.h>
 #include <algorithm>
 
 namespace Dank {
@@ -10,6 +11,7 @@ namespace Dank {
 		glm::vec3 position;
 		glm::vec3 normal;
 		glm::vec2 texCoords;
+		float texIndex;
 		glm::vec3 color;
 		glm::mat4 model;
 
@@ -18,15 +20,23 @@ namespace Dank {
 	int vertexCount = 0;
 	struct BatchData
 	{
+		//static const uint32_t MaxVertices = 409600;
 		static const uint32_t MaxVertices = 409600;
 		static const uint32_t MaxIndices = MaxVertices * 1.5f;
+		static const uint32_t MaxTextureSlots = 32;
 
 		uint32_t NumUsedVertices = 0;
 		uint32_t NumUsedIndices = 0;
 		uint32_t IndiceOffset = 0;
+		uint32_t TextureSlotIndex = 0;
+		
+
+		std::array<Ref<MeshTexture>, MaxTextureSlots> TextureSlots;
+		
 		Ref<VertexArray>	ObjectVertexArray;
 		Ref<VertexBuffer>	ObjectVertexBuffer;
 		Ref<Shader>			DefaultShader;
+
 
 		Vertex3D* ObjectVertexBufferBase = nullptr;
 		Vertex3D* ObjectVertexBufferPtr = nullptr;
@@ -49,6 +59,7 @@ namespace Dank {
 			{ ShaderDataType::Float3, "a_Position" },
 			{ ShaderDataType::Float3, "a_Normal" },
 			{ ShaderDataType::Float2, "a_TexCoords" },
+			{ ShaderDataType::Float, "a_TexIndex" },
 			{ ShaderDataType::Float3, "a_Color" },
 			{ ShaderDataType::Float4, "a_Model1"},
 			{ ShaderDataType::Float4, "a_Model2"},
@@ -58,10 +69,14 @@ namespace Dank {
 		s_Data.ObjectVertexArray->Unbind();
 
 		s_Data.ObjectVertexArray->AddVertexBuffer(s_Data.ObjectVertexBuffer);
-
+		int32_t samplers[s_Data.MaxTextureSlots];
+		for (uint32_t i = 0; i < s_Data.MaxTextureSlots; i++)
+			samplers[i] = i;
 		s_Data.ObjectVertexBufferBase = new Vertex3D[s_Data.MaxVertices];
 		s_Data.DefaultShader = Shader::Create("assets/shaders/object.glsl");
-		
+		s_Data.DefaultShader->Bind();
+		s_Data.DefaultShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
+		s_Data.DefaultShader->Unbind();
 	}
 
 	Ref<Shader>& BatchRenderer::GetShader()
@@ -92,8 +107,13 @@ namespace Dank {
 	void BatchRenderer::Flush()
 	{
 		s_Data.DefaultShader->Bind();
+		
+		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
+		{
+			glBindTextureUnit(i, s_Data.TextureSlots[i]->iD);
+		}
+		s_Data.DefaultShader->SetInt("diffuseLoaded", 1);
 		s_Data.ObjectVertexArray->Bind();
-		s_Data.DefaultShader->SetInt("diffuseLoaded", 0);
 		RenderCommand::DrawIndexed(s_Data.ObjectVertexArray, s_Data.NumUsedIndices);
 		s_Data.ObjectVertexArray->Unbind();
 		s_Data.stats.DrawCalls++;
@@ -107,6 +127,7 @@ namespace Dank {
 		EndScene(); 
 		s_Data.NumUsedVertices = 0;
 		s_Data.NumUsedIndices = 0;
+		s_Data.TextureSlotIndex = 0;
 		s_Data.ObjectVertexBufferPtr = s_Data.ObjectVertexBufferBase;
 	}
 
@@ -180,6 +201,92 @@ namespace Dank {
 		s_Data.stats.ObjectCount++;
 
 
+	}
+
+
+	void BatchRenderer::SubmitObject(Ref<Model> Model, glm::vec3 position, float size)
+	{
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::scale(glm::mat4(1.0f), glm::vec3(size));
+		s_Data.ObjectVertexArray->Bind();
+		
+		for (Mesh subMesh : Model->GetMeshes())
+		{
+
+			if (s_Data.NumUsedVertices + subMesh._vertices.size() >= BatchData::MaxVertices)
+				FlushAndReset();
+
+
+			float textureIndex = 0.0f;
+			
+			for (unsigned int i = 0; i < subMesh._textures.size(); i++)
+			{
+				bool alreadySlotted = false;
+				
+				for (uint32_t j = 0; j < s_Data.TextureSlotIndex; j++)
+				{
+					// This is ugly, basically just need to be able to compare rendererId's to see if we already have it slotted.
+					if (s_Data.TextureSlots[j]->iD == subMesh._textures[i].iD)
+					{
+						textureIndex = (float)j;
+						alreadySlotted = true;
+						break;
+					}
+					//s_Data.TextureSlotIndex++;
+
+				}
+
+				if (!alreadySlotted)
+				{
+					
+					textureIndex = (float)s_Data.TextureSlotIndex;
+					s_Data.TextureSlots[s_Data.TextureSlotIndex] = CreateRef<MeshTexture>(subMesh._textures[i]);
+					s_Data.TextureSlotIndex++;
+					
+					
+				}
+				
+			}
+
+			if (subMesh._textures.size() == 0)
+			{
+				s_Data.DefaultShader->SetInt("diffuseLoaded", 0);
+			}
+			for (int i = 0; i < subMesh._vertices.size(); i++)
+			{
+				s_Data.ObjectVertexBufferPtr->position = subMesh._vertices[i].Position;
+				s_Data.ObjectVertexBufferPtr->normal = subMesh._vertices[i].Normal;
+				s_Data.ObjectVertexBufferPtr->texCoords = subMesh._vertices[i].TexCoords;
+				s_Data.ObjectVertexBufferPtr->texIndex = textureIndex;
+				if (subMesh._textures.size() == 0)
+					s_Data.ObjectVertexBufferPtr->color = subMesh._material.Diffuse;
+				else
+					s_Data.ObjectVertexBufferPtr->color = glm::vec3(0.0f);
+				s_Data.ObjectVertexBufferPtr->model = transform;
+				s_Data.ObjectVertexBufferPtr++;
+				
+			}
+			
+			s_Data.ObjectVertexArray->Unbind();
+
+
+			for (int i = 0; i < subMesh._indices.size(); i++)
+			{
+
+				s_Data.ObjectIndexBuffer.emplace_back((s_Data.IndiceOffset) + subMesh._indices[i]);
+
+			}
+
+			s_Data.IndiceOffset += (*max_element(subMesh._indices.begin(), subMesh._indices.end()) + 1);
+
+
+			//s_Data.ObjectIndexBuffer.insert(s_Data.ObjectIndexBuffer.end(), indices.begin(), indices.end());
+
+			s_Data.NumUsedIndices += subMesh._indices.size();
+			s_Data.NumUsedVertices += (subMesh._vertices.size());
+			s_Data.stats.VertexCount += subMesh._vertices.size();
+			s_Data.stats.ObjectCount++;
+		}
 	}
 
 
